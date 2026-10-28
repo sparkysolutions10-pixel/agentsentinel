@@ -1,0 +1,32 @@
+{
+  "name": "@agentsentinel/core",
+  "version": "0.1.0",
+  "description": "Universal zero-trust runtime security firewall and AST policy interceptor for AI agents, MCP servers, and autonomous tool execution.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "ai-agents",
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "firewall",
+    "runtime-defense",
+    "tool-calling",
+    "langchain",
+    "vercel-ai"
+  ],
+  "author": "sparkysolutions10-pixel",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  }
+}
