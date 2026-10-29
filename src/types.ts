@@ -10,6 +10,53 @@ export enum Verdict {
   CONFIRM = 'CONFIRM'
 }
 
+/**
+ * Type guard checking if an arbitrary value matches a valid Verdict enum.
+ */
+export function isVerdict(value: unknown): value is Verdict {
+  return typeof value === 'string' && Object.values(Verdict).includes(value as Verdict);
+}
+
+/**
+ * Asserts that a value is a valid Verdict enum, throwing TypeError otherwise.
+ */
+export function assertVerdict(value: unknown): asserts value is Verdict {
+  if (!isVerdict(value)) {
+    throw new TypeError(`[AgentSentinel] Invalid verdict value: "${String(value)}". Expected ALLOW, BLOCK, REDACT, or CONFIRM.`);
+  }
+}
+
+/**
+ * Safely parses any case-insensitive string or value into a standardized Verdict enum.
+ */
+export function parseVerdict(value: unknown, fallback: Verdict = Verdict.BLOCK): Verdict {
+  if (typeof value === 'string') {
+    const normalized = value.trim().toUpperCase();
+    if (isVerdict(normalized)) {
+      return normalized as Verdict;
+    }
+  }
+  return fallback;
+}
+
+/**
+ * Numeric priority ranking of verdicts (higher number = more restrictive).
+ */
+export function getVerdictRank(verdict: Verdict): number {
+  switch (verdict) {
+    case Verdict.BLOCK:
+      return 4;
+    case Verdict.CONFIRM:
+      return 3;
+    case Verdict.REDACT:
+      return 2;
+    case Verdict.ALLOW:
+      return 1;
+    default:
+      return 0;
+  }
+}
+
 export type ToolCategory = 'shell' | 'sql' | 'fs' | 'secrets' | 'network' | 'custom';
 
 export interface ToolCallContext {
