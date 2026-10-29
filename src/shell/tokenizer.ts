@@ -3,16 +3,17 @@
  * Accurately extracts executables, flags, chained pipelines (|, &&, ||), and nested subshells ($(..), `..`).
  */
 
-export type ShellOperator = '|' | '||' | '&&' | ';' | '&' | '>' | '>>' | '<';
+export type ShellChainingOperator = '|' | '||' | '&&' | ';' | '&';
 
 export interface ShellStage {
   raw: string;
   executable: string;
   args: string[];
   flags: string[];
-  operator?: ShellOperator;
+  operator?: ShellChainingOperator;
   subshells: string[];
   envVars: Record<string, string>;
+  redirects: string[];
 }
 
 export interface ParsedShellPipeline {
@@ -24,7 +25,7 @@ export interface ParsedShellPipeline {
 }
 
 /**
- * Splits a raw shell string into atomic shell tokens, respecting quotes and escapes.
+ * Splits a raw shell string into atomic shell tokens, respecting quotes, escapes, and substitutions.
  */
 export function tokenizeShellString(input: string): string[] {
   const tokens: string[] = [];
@@ -87,8 +88,8 @@ export function tokenizeShellString(input: string): string[] {
 
     // When outside quotes and subshells, check operators and whitespace
     if (!inSingleQuote && !inDoubleQuote && inParenSubshell === 0 && !inBacktick) {
-      // Check multi-char operators: &&, ||, >>
-      if ((char === '&' && next === '&') || (char === '|' && next === '|') || (char === '>' && next === '>')) {
+      // Check multi-char chaining operators: &&, ||
+      if ((char === '&' && next === '&') || (char === '|' && next === '|')) {
         if (current.trim()) tokens.push(current.trim());
         tokens.push(char + next);
         current = '';
@@ -96,8 +97,15 @@ export function tokenizeShellString(input: string): string[] {
         continue;
       }
 
-      // Check single-char operators: |, ;, &, >, <
-      if (['|', ';', '&', '>', '<'].includes(char)) {
+      // Check single-char chaining operators: |, ;, & (if not part of redirect like 2>&1)
+      if (char === '|' || char === ';') {
+        if (current.trim()) tokens.push(current.trim());
+        tokens.push(char);
+        current = '';
+        continue;
+      }
+
+      if (char === '&' && next !== '>' && input[i - 1] !== '>') {
         if (current.trim()) tokens.push(current.trim());
         tokens.push(char);
         current = '';
@@ -162,6 +170,8 @@ export function extractSubshellCommands(input: string): string[] {
   return subshells;
 }
 
+const COMMAND_WRAPPERS = new Set(['xargs', 'sudo', 'nohup', 'exec', 'time', 'env', 'doas']);
+
 /**
  * Parses a complete shell command line into structured stages, operators, executables, and subshells.
  */
@@ -183,12 +193,12 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
   const allSubshells: Set<string> = new Set();
 
   let currentTokens: string[] = [];
-  let pendingOperator: ShellOperator | undefined;
 
-  const flushStage = (op?: ShellOperator) => {
+  const flushStage = (op?: ShellChainingOperator) => {
     if (currentTokens.length === 0) return;
 
     const envVars: Record<string, string> = {};
+    const redirects: string[] = [];
     let tokenIdx = 0;
 
     // Extract leading environment variables (e.g. VAR=val cmd)
@@ -200,7 +210,22 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
       tokenIdx++;
     }
 
-    const commandTokens = currentTokens.slice(tokenIdx);
+    const commandTokens: string[] = [];
+    for (let i = tokenIdx; i < currentTokens.length; i++) {
+      const t = currentTokens[i];
+      // Detect redirections (> /dev/null, 2>&1, >> out, < in)
+      if (/^[0-9]*>>?$/.test(t) || t === '<' || t === '2>&1' || t === '&>' || t.startsWith('>')) {
+        redirects.push(t);
+        // If next token is file target (e.g. /dev/null), capture it as redirect target
+        if (i + 1 < currentTokens.length && !currentTokens[i + 1].startsWith('-')) {
+          redirects.push(currentTokens[i + 1]);
+          i++;
+        }
+      } else {
+        commandTokens.push(t);
+      }
+    }
+
     if (commandTokens.length === 0) {
       currentTokens = [];
       return;
@@ -236,6 +261,21 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
       }
     }
 
+    if (executable) {
+      allExecutables.add(executable);
+    }
+
+    // Check wrapper commands (sudo, xargs, etc.) to unwrap forwarded executables
+    if (COMMAND_WRAPPERS.has(executable)) {
+      // Find the first non-flag argument
+      for (const arg of args) {
+        if (!arg.startsWith('-') && !arg.includes('=')) {
+          allExecutables.add(arg);
+          break;
+        }
+      }
+    }
+
     // Check for inline script execution like bash -c "..." or sh -c "..."
     if (['bash', 'sh', 'zsh', 'ksh'].includes(executable)) {
       const cIndex = args.indexOf('-c');
@@ -251,10 +291,6 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
       }
     }
 
-    if (executable) {
-      allExecutables.add(executable);
-    }
-
     stages.push({
       raw: stageRaw,
       executable,
@@ -263,20 +299,21 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
       operator: op,
       subshells,
       envVars,
+      redirects,
     });
 
     currentTokens = [];
   };
 
-  const isOperator = (token: string): token is ShellOperator => {
-    return ['|', '||', '&&', ';', '&', '>', '>>', '<'].includes(token);
+  const isChainingOp = (token: string): token is ShellChainingOperator => {
+    return ['|', '||', '&&', ';', '&'].includes(token);
   };
 
   let hasChained = false;
 
   for (let i = 0; i < rawTokens.length; i++) {
     const token = rawTokens[i];
-    if (isOperator(token)) {
+    if (isChainingOp(token)) {
       hasChained = true;
       flushStage(token);
     } else {

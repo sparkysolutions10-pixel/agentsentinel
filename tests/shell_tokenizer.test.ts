@@ -66,7 +66,8 @@ describe('Shell Command Tokenizer & AST Parser (Issue #26)', () => {
       expect(pipeline.stages[1].args).toEqual(['grep', 'CRITICAL']);
       expect(pipeline.stages[1].operator).toBeUndefined();
 
-      expect(pipeline.allExecutables).toEqual(['find', 'xargs']);
+      expect(pipeline.stages.map((s) => s.executable)).toEqual(['find', 'xargs']);
+      expect(pipeline.allExecutables).toEqual(['find', 'xargs', 'grep']);
     });
 
     it('detects nested executables inside inline bash -c scripts', () => {
