@@ -16,6 +16,7 @@ import {
 } from './types.js';
 
 export * from './types.js';
+export * from './context.js';
 
 export class SentinelEngine {
   private rules: Map<string, SentinelRule> = new Map();
