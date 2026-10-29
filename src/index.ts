@@ -14,22 +14,30 @@ import {
   AfterExecuteHook,
   OnViolationHook
 } from './types.js';
+import { RuleRegistry } from './ruleset.js';
 
 export * from './types.js';
 export * from './context.js';
+export * from './ruleset.js';
 
 export class SentinelEngine {
-  private rules: Map<string, SentinelRule> = new Map();
+  public readonly registry: RuleRegistry = new RuleRegistry();
   private beforeHooks: BeforeExecuteHook[] = [];
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
 
-  public registerRule(rule: SentinelRule): void {
-    this.rules.set(rule.id, rule);
+  public registerRule(rule: SentinelRule): this {
+    this.registry.register(rule);
+    return this;
+  }
+
+  public registerRules(rules: SentinelRule[]): this {
+    this.registry.registerMany(rules);
+    return this;
   }
 
   public getRegisteredRules(): SentinelRule[] {
-    return Array.from(this.rules.values()).sort((a, b) => b.priority - a.priority);
+    return this.registry.getAll();
   }
 
   public beforeExecute(hook: BeforeExecuteHook): this {
@@ -62,7 +70,7 @@ export class SentinelEngine {
       }
     }
 
-    const sortedRules = this.getRegisteredRules();
+    const sortedRules = this.registry.getAll();
     const violations: RuleViolation[] = [];
     let finalVerdict: Verdict = Verdict.ALLOW;
     let currentParams = { ...currentContext.params };
