@@ -21,18 +21,25 @@ import {
   compileDeclarativeRule
 } from './policy.js';
 import { startTimer, HRTimer } from './timer.js';
+import { JSONAuditLogger, AuditEvent, AuditEventSink } from './logger.js';
 
 export * from './types.js';
 export * from './context.js';
 export * from './ruleset.js';
 export * from './policy.js';
 export * from './timer.js';
+export * from './logger.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
+  public readonly logger: JSONAuditLogger;
   private beforeHooks: BeforeExecuteHook[] = [];
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
+
+  constructor(loggerSink?: AuditEventSink) {
+    this.logger = new JSONAuditLogger(loggerSink);
+  }
 
   public registerRule(rule: SentinelRule): this {
     this.registry.register(rule);
@@ -102,6 +109,9 @@ export class SentinelEngine {
 
       if (violation) {
         violations.push(violation);
+
+        // Record in structured audit logger
+        this.logger.log(violation, currentContext, timer.elapsedMs());
 
         // Trigger onViolation hooks asynchronously
         for (const vHook of this.violationHooks) {
