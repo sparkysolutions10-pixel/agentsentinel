@@ -78,12 +78,35 @@ export interface RuleViolation {
   redactedParams?: Record<string, any>;
 }
 
+export interface ConfirmDecision {
+  requestId: string;
+  approved: boolean;
+  verdict: Verdict;
+  reason?: string;
+  timedOut: boolean;
+  latencyMs: number;
+}
+
+export interface ConfirmRequestSummary {
+  requestId: string;
+  toolCallId: string;
+  toolName: string;
+  category?: ToolCategory;
+  params: Record<string, any>;
+  ruleId?: string;
+  reason?: string;
+  prompt: string;
+  createdAt: number;
+  timeoutMs: number;
+}
+
 export interface EvaluationResult {
   verdict: Verdict;
   allowed: boolean;
   violations: RuleViolation[];
   latencyMs: number;
   redactedParams?: Record<string, any>;
+  confirmDecision?: ConfirmDecision;
 }
 
 export interface SentinelRule {
