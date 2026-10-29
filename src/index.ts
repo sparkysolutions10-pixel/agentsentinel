@@ -12,7 +12,8 @@ import {
   ToolCategory,
   BeforeExecuteHook,
   AfterExecuteHook,
-  OnViolationHook
+  OnViolationHook,
+  ConfirmDecision
 } from './types.js';
 import { RuleRegistry } from './ruleset.js';
 import {
@@ -24,6 +25,7 @@ import { startTimer, HRTimer } from './timer.js';
 import { JSONAuditLogger, AuditEvent, AuditEventSink } from './logger.js';
 import { SignedAuditEvent, signAuditEvent, verifyAuditEvent } from './integrity.js';
 import { SlidingEventQueue } from './queue.js';
+import { ConfirmationBridge } from './confirm.js';
 
 export * from './types.js';
 export * from './context.js';
@@ -33,10 +35,12 @@ export * from './timer.js';
 export * from './logger.js';
 export * from './integrity.js';
 export * from './queue.js';
+export * from './confirm.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
   public readonly logger: JSONAuditLogger;
+  public confirmationBridge?: ConfirmationBridge;
   private beforeHooks: BeforeExecuteHook[] = [];
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
@@ -65,6 +69,11 @@ export class SentinelEngine {
 
   public getRegisteredRules(): SentinelRule[] {
     return this.registry.getAll();
+  }
+
+  public setConfirmationBridge(bridge: ConfirmationBridge): this {
+    this.confirmationBridge = bridge;
+    return this;
   }
 
   public beforeExecute(hook: BeforeExecuteHook): this {
@@ -142,6 +151,21 @@ export class SentinelEngine {
       }
     }
 
+    // 3. Process human confirmation bridge if rule evaluated to CONFIRM
+    let confirmDecision: ConfirmDecision | undefined;
+    if (finalVerdict === Verdict.CONFIRM && this.confirmationBridge) {
+      const confirmViolation = violations.find(v => v.verdict === Verdict.CONFIRM);
+      confirmDecision = await this.confirmationBridge.requestConfirmation(currentContext, {
+        violation: confirmViolation
+      });
+
+      if (confirmDecision.approved) {
+        finalVerdict = Verdict.ALLOW;
+      } else {
+        finalVerdict = Verdict.BLOCK;
+      }
+    }
+
     const latencyMs = timer.elapsedMs();
 
     const result: EvaluationResult = {
@@ -149,10 +173,11 @@ export class SentinelEngine {
       allowed: finalVerdict !== Verdict.BLOCK,
       violations,
       latencyMs,
-      redactedParams: finalVerdict === Verdict.REDACT ? currentParams : undefined
+      redactedParams: finalVerdict === Verdict.REDACT ? currentParams : undefined,
+      confirmDecision
     };
 
-    // 3. Execute afterExecute post-telemetry hooks
+    // 4. Execute afterExecute post-telemetry hooks
     for (const hook of this.afterHooks) {
       try {
         await hook(currentContext, result);
