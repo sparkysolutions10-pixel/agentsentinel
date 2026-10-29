@@ -100,6 +100,10 @@ export interface ConfirmRequestSummary {
   timeoutMs: number;
 }
 
+export interface EvaluateOptions {
+  dryRun?: boolean;
+}
+
 export interface EvaluationResult {
   verdict: Verdict;
   allowed: boolean;
@@ -107,6 +111,8 @@ export interface EvaluationResult {
   latencyMs: number;
   redactedParams?: Record<string, any>;
   confirmDecision?: ConfirmDecision;
+  dryRun?: boolean;
+  simulatedVerdict?: Verdict;
 }
 
 export interface SentinelRule {
