@@ -95,4 +95,62 @@ describe('SentinelEngine - Foundational Pipeline', () => {
     expect(result.allowed).toBe(true);
     expect(result.redactedParams?.apiKey).toBe('[REDACTED_API_KEY]');
   });
+
+  it('executes beforeExecute, afterExecute, and onViolation lifecycle hooks', async () => {
+    const engine = new SentinelEngine();
+    const callOrder: string[] = [];
+    let receivedViolationRuleId = '';
+    let afterVerdict: Verdict | null = null;
+
+    engine
+      .beforeExecute((ctx) => {
+        callOrder.push('beforeExecute');
+        return {
+          ...ctx,
+          params: { ...ctx.params, injectedParam: 'secure_token' }
+        };
+      })
+      .onViolation((violation) => {
+        callOrder.push('onViolation');
+        receivedViolationRuleId = violation.ruleId;
+      })
+      .afterExecute((ctx, res) => {
+        callOrder.push('afterExecute');
+        afterVerdict = res.verdict;
+      });
+
+    const mockRule: SentinelRule = {
+      id: 'rule-violation-test',
+      name: 'Violation Tester',
+      category: 'custom',
+      priority: 10,
+      enabled: true,
+      evaluate: (ctx) => {
+        if (ctx.params.injectedParam === 'secure_token') {
+          return {
+            ruleId: 'rule-violation-test',
+            ruleName: 'Violation Tester',
+            severity: 'medium',
+            verdict: Verdict.CONFIRM,
+            reason: 'Requires user confirmation'
+          };
+        }
+        return null;
+      }
+    };
+
+    engine.registerRule(mockRule);
+
+    const result = await engine.evaluate({
+      id: 'test_lifecycle',
+      toolName: 'system:reboot',
+      params: {},
+      timestamp: Date.now()
+    });
+
+    expect(callOrder).toEqual(['beforeExecute', 'onViolation', 'afterExecute']);
+    expect(receivedViolationRuleId).toBe('rule-violation-test');
+    expect(afterVerdict).toBe(Verdict.CONFIRM);
+    expect(result.verdict).toBe(Verdict.CONFIRM);
+  });
 });
