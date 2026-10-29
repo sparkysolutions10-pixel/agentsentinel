@@ -47,3 +47,7 @@ export interface SentinelRule {
   enabled: boolean;
   evaluate(context: ToolCallContext): Promise<RuleViolation | null> | RuleViolation | null;
 }
+
+export type BeforeExecuteHook = (context: ToolCallContext) => Promise<ToolCallContext | void> | ToolCallContext | void;
+export type AfterExecuteHook = (context: ToolCallContext, result: EvaluationResult) => Promise<void> | void;
+export type OnViolationHook = (violation: RuleViolation, context: ToolCallContext) => Promise<void> | void;
