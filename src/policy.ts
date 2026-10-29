@@ -6,6 +6,7 @@ import {
   RuleViolation,
   isVerdict
 } from './types.js';
+import { compilePattern, matchesPattern } from './matcher.js';
 
 export interface DeclarativeRuleMatch {
   tools?: string[];
@@ -94,8 +95,8 @@ export function validatePolicyConfig(raw: unknown): DeclarativePolicyConfig {
       priority: r.priority,
       enabled: r.enabled !== false,
       match: {
-        tools: Array.isArray(r.match?.tools) ? r.match.tools : undefined,
-        patterns: Array.isArray(r.match?.patterns) ? r.match.patterns : undefined,
+        tools: Array.isArray(r.match?.tools) ? r.match.tools.map((t: any) => String(t).trim()) : undefined,
+        patterns: Array.isArray(r.match?.patterns) ? r.match.patterns.map((p: any) => String(p).trim()) : undefined,
         paramMatch: r.match?.paramMatch && typeof r.match.paramMatch === 'object' ? r.match.paramMatch : undefined
       },
       action: {
@@ -117,6 +118,8 @@ export function validatePolicyConfig(raw: unknown): DeclarativePolicyConfig {
  * Compiles a DeclarativeRuleDefinition into an executable SentinelRule.
  */
 export function compileDeclarativeRule(def: DeclarativeRuleDefinition): SentinelRule {
+  const toolPredicates = def.match.tools?.map(compilePattern);
+
   return {
     id: def.id,
     name: def.name,
@@ -124,24 +127,21 @@ export function compileDeclarativeRule(def: DeclarativeRuleDefinition): Sentinel
     priority: def.priority,
     enabled: def.enabled !== false,
     evaluate: (ctx: ToolCallContext): RuleViolation | null => {
-      // 1. Tool name match (wildcard support)
-      if (def.match.tools && def.match.tools.length > 0) {
-        const matchesTool = def.match.tools.some((pattern) => {
-          if (pattern === '*' || pattern === ctx.toolName) return true;
-          if (pattern.endsWith('*')) {
-            const prefix = pattern.slice(0, -1);
-            return ctx.toolName.startsWith(prefix);
-          }
-          return false;
-        });
-
+      // 1. Tool name match with wildcard / glob / regex support
+      if (toolPredicates && toolPredicates.length > 0) {
+        const matchesTool = toolPredicates.some((predicate) => predicate(ctx.toolName));
         if (!matchesTool) return null;
       }
 
       // 2. Pattern match in string parameters
       if (def.match.patterns && def.match.patterns.length > 0) {
         const serialized = JSON.stringify(ctx.params).toLowerCase();
-        const matchedPattern = def.match.patterns.find((p) => serialized.includes(p.toLowerCase()));
+        const matchedPattern = def.match.patterns.find((p) => {
+          if (p.includes('*') || p.includes('?') || p.startsWith('/') || p.startsWith('regex:')) {
+            return matchesPattern(serialized, p);
+          }
+          return serialized.includes(p.toLowerCase());
+        });
         if (!matchedPattern) return null;
       }
 
