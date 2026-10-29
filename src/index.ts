@@ -28,6 +28,7 @@ import { SignedAuditEvent, signAuditEvent, verifyAuditEvent } from './integrity.
 import { SlidingEventQueue } from './queue.js';
 import { ConfirmationBridge } from './confirm.js';
 import { matchesPattern, matchesAnyPattern, compilePattern } from './matcher.js';
+import { parseShellCommand } from './shell/index.js';
 
 export * from './types.js';
 export * from './context.js';
@@ -39,6 +40,7 @@ export * from './integrity.js';
 export * from './queue.js';
 export * from './confirm.js';
 export * from './matcher.js';
+export * from './shell/index.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
