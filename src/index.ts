@@ -44,31 +44,121 @@ export class SentinelEngine {
   private beforeHooks: BeforeExecuteHook[] = [];
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
+  private ruleInjectedListeners: Set<(rule: SentinelRule) => void> = new Set();
+  private ruleRevokedListeners: Set<(ruleId: string) => void> = new Set();
 
   constructor(loggerSink?: AuditEventSink, hmacKey?: string, maxLogCapacity?: number) {
     this.logger = new JSONAuditLogger(loggerSink, hmacKey, maxLogCapacity);
   }
 
   public registerRule(rule: SentinelRule): this {
-    this.registry.register(rule);
-    return this;
+    return this.injectRule(rule);
   }
 
   public registerRules(rules: SentinelRule[]): this {
-    this.registry.registerMany(rules);
-    return this;
-  }
-
-  public loadPolicy(rawConfig: DeclarativePolicyConfig | unknown): this {
-    const validated = validatePolicyConfig(rawConfig);
-    for (const ruleDef of validated.rules) {
-      this.registerRule(compileDeclarativeRule(ruleDef));
+    for (const rule of rules) {
+      this.injectRule(rule);
     }
     return this;
   }
 
+  public loadPolicy(rawConfig: DeclarativePolicyConfig | unknown): this {
+    this.injectPolicy(rawConfig);
+    return this;
+  }
+
+  /**
+   * Dynamically injects or hot-swaps a rule into the active engine at runtime.
+   */
+  public injectRule(rule: SentinelRule): this {
+    this.registry.inject(rule);
+    for (const listener of this.ruleInjectedListeners) {
+      try {
+        listener(rule);
+      } catch (err) {
+        console.error('[AgentSentinel] Error in onRuleInjected listener:', err);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Dynamically injects a declarative policy at runtime.
+   * Returns list of injected rule IDs.
+   */
+  public injectPolicy(rawConfig: DeclarativePolicyConfig | unknown): string[] {
+    const validated = validatePolicyConfig(rawConfig);
+    const ruleIds: string[] = [];
+    for (const ruleDef of validated.rules) {
+      const rule = compileDeclarativeRule(ruleDef);
+      this.injectRule(rule);
+      ruleIds.push(rule.id);
+    }
+    return ruleIds;
+  }
+
+  /**
+   * Revokes an active rule at runtime. Returns true if removed, false otherwise.
+   */
+  public revokeRule(ruleId: string): boolean {
+    const removed = this.registry.revoke(ruleId);
+    if (removed) {
+      for (const listener of this.ruleRevokedListeners) {
+        try {
+          listener(ruleId);
+        } catch (err) {
+          console.error('[AgentSentinel] Error in onRuleRevoked listener:', err);
+        }
+      }
+    }
+    return removed;
+  }
+
+  /**
+   * Revokes multiple rules by IDs at runtime. Returns number of removed rules.
+   */
+  public revokeRules(ruleIds: string[]): number {
+    let count = 0;
+    for (const id of ruleIds) {
+      if (this.revokeRule(id)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public enableRule(ruleId: string): boolean {
+    return this.registry.enable(ruleId);
+  }
+
+  public disableRule(ruleId: string): boolean {
+    return this.registry.disable(ruleId);
+  }
+
+  public hasRule(ruleId: string): boolean {
+    return this.registry.has(ruleId);
+  }
+
+  public getRule(ruleId: string): SentinelRule | undefined {
+    return this.registry.get(ruleId);
+  }
+
   public getRegisteredRules(): SentinelRule[] {
     return this.registry.getAll();
+  }
+
+  public onRuleInjected(listener: (rule: SentinelRule) => void): () => void {
+    this.ruleInjectedListeners.add(listener);
+    return () => {
+      this.ruleInjectedListeners.delete(listener);
+    };
+  }
+
+  public onRuleRevoked(listener: (ruleId: string) => void): () => void {
+    this.ruleRevokedListeners.add(listener);
+    return () => {
+      this.ruleRevokedListeners.delete(listener);
+    };
   }
 
   public setConfirmationBridge(bridge: ConfirmationBridge): this {
