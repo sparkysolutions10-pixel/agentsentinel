@@ -20,11 +20,13 @@ import {
   validatePolicyConfig,
   compileDeclarativeRule
 } from './policy.js';
+import { startTimer, HRTimer } from './timer.js';
 
 export * from './types.js';
 export * from './context.js';
 export * from './ruleset.js';
 export * from './policy.js';
+export * from './timer.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
@@ -70,7 +72,7 @@ export class SentinelEngine {
   }
 
   public async evaluate(context: ToolCallContext): Promise<EvaluationResult> {
-    const start = performance.now();
+    const timer = startTimer();
 
     // 1. Execute beforeExecute hooks in sequential pipeline
     let currentContext: ToolCallContext = { ...context, params: { ...context.params } };
@@ -126,7 +128,7 @@ export class SentinelEngine {
       }
     }
 
-    const latencyMs = Number((performance.now() - start).toFixed(3));
+    const latencyMs = timer.elapsedMs();
 
     const result: EvaluationResult = {
       verdict: finalVerdict,
