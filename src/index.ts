@@ -22,6 +22,7 @@ import {
 } from './policy.js';
 import { startTimer, HRTimer } from './timer.js';
 import { JSONAuditLogger, AuditEvent, AuditEventSink } from './logger.js';
+import { SignedAuditEvent, signAuditEvent, verifyAuditEvent } from './integrity.js';
 
 export * from './types.js';
 export * from './context.js';
@@ -29,6 +30,7 @@ export * from './ruleset.js';
 export * from './policy.js';
 export * from './timer.js';
 export * from './logger.js';
+export * from './integrity.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
@@ -37,8 +39,8 @@ export class SentinelEngine {
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
 
-  constructor(loggerSink?: AuditEventSink) {
-    this.logger = new JSONAuditLogger(loggerSink);
+  constructor(loggerSink?: AuditEventSink, hmacKey?: string) {
+    this.logger = new JSONAuditLogger(loggerSink, hmacKey);
   }
 
   public registerRule(rule: SentinelRule): this {

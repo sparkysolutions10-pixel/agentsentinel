@@ -5,6 +5,7 @@ import {
   Verdict,
   ToolCategory
 } from './types.js';
+import { signAuditEvent, SignedAuditEvent } from './integrity.js';
 
 export interface AuditEvent {
   eventId: string;
@@ -20,6 +21,7 @@ export interface AuditEvent {
   detectedPattern?: string;
   params: Record<string, any>;
   latencyMs: number;
+  signature?: string;
 }
 
 export type AuditEventSink = (event: AuditEvent, formattedJson: string) => void;
@@ -30,16 +32,26 @@ export type AuditEventSink = (event: AuditEvent, formattedJson: string) => void;
 export class JSONAuditLogger {
   private events: AuditEvent[] = [];
   private sink?: AuditEventSink;
+  private hmacKey?: string;
 
-  constructor(sink?: AuditEventSink) {
+  constructor(sink?: AuditEventSink, hmacKey?: string) {
     this.sink = sink;
+    this.hmacKey = hmacKey;
+  }
+
+  /**
+   * Sets or updates the HMAC secret key for tamper-proof log signing.
+   */
+  public setHmacKey(key: string): this {
+    this.hmacKey = key;
+    return this;
   }
 
   /**
    * Records a security violation event and returns the structured AuditEvent.
    */
   public log(violation: RuleViolation, context: ToolCallContext, latencyMs: number = 0): AuditEvent {
-    const event: AuditEvent = {
+    let event: AuditEvent = {
       eventId: randomUUID(),
       timestamp: new Date().toISOString(),
       agentId: context.agentId,
@@ -54,6 +66,10 @@ export class JSONAuditLogger {
       params: { ...context.params },
       latencyMs
     };
+
+    if (this.hmacKey) {
+      event = signAuditEvent(event, this.hmacKey);
+    }
 
     this.events.push(event);
 
