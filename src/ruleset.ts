@@ -28,6 +28,33 @@ export class RuleRegistry {
   }
 
   /**
+   * Dynamically injects or hot-swaps a SentinelRule at runtime.
+   */
+  public inject(rule: SentinelRule): this {
+    return this.register(rule);
+  }
+
+  /**
+   * Revokes a rule by ID at runtime. Returns true if removed, false otherwise.
+   */
+  public revoke(ruleId: string): boolean {
+    return this.unregister(ruleId);
+  }
+
+  /**
+   * Revokes multiple rules by their IDs. Returns count of successfully revoked rules.
+   */
+  public revokeMany(ruleIds: string[]): number {
+    let count = 0;
+    for (const id of ruleIds) {
+      if (this.unregister(id)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
    * Unregisters a rule by ID. Returns true if removed, false otherwise.
    */
   public unregister(ruleId: string): boolean {
