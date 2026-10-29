@@ -102,6 +102,13 @@ export class JSONAuditLogger {
   }
 
   /**
+   * Alias for getEvents() returning recent audit events in chronological order.
+   */
+  public getRecentEvents(): AuditEvent[] {
+    return this.getEvents();
+  }
+
+  /**
    * Clears in-memory audit events.
    */
   public clear(): void {

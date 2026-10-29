@@ -13,7 +13,8 @@ import {
   BeforeExecuteHook,
   AfterExecuteHook,
   OnViolationHook,
-  ConfirmDecision
+  ConfirmDecision,
+  EvaluateOptions
 } from './types.js';
 import { RuleRegistry } from './ruleset.js';
 import {
@@ -43,14 +44,28 @@ export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
   public readonly logger: JSONAuditLogger;
   public confirmationBridge?: ConfirmationBridge;
+  public dryRun: boolean = false;
   private beforeHooks: BeforeExecuteHook[] = [];
   private afterHooks: AfterExecuteHook[] = [];
   private violationHooks: OnViolationHook[] = [];
   private ruleInjectedListeners: Set<(rule: SentinelRule) => void> = new Set();
   private ruleRevokedListeners: Set<(ruleId: string) => void> = new Set();
 
-  constructor(loggerSink?: AuditEventSink, hmacKey?: string, maxLogCapacity?: number) {
+  constructor(
+    loggerSink?: AuditEventSink,
+    hmacKey?: string,
+    maxLogCapacity?: number,
+    options?: { dryRun?: boolean }
+  ) {
     this.logger = new JSONAuditLogger(loggerSink, hmacKey, maxLogCapacity);
+    if (options?.dryRun !== undefined) {
+      this.dryRun = options.dryRun;
+    }
+  }
+
+  public setDryRun(enabled: boolean): this {
+    this.dryRun = enabled;
+    return this;
   }
 
   public registerRule(rule: SentinelRule): this {
@@ -183,8 +198,12 @@ export class SentinelEngine {
     return this;
   }
 
-  public async evaluate(context: ToolCallContext): Promise<EvaluationResult> {
+  public async evaluate(
+    context: ToolCallContext,
+    options: EvaluateOptions = {}
+  ): Promise<EvaluationResult> {
     const timer = startTimer();
+    const isDryRun = options.dryRun ?? this.dryRun;
 
     // 1. Execute beforeExecute hooks in sequential pipeline
     let currentContext: ToolCallContext = { ...context, params: { ...context.params } };
@@ -200,10 +219,10 @@ export class SentinelEngine {
 
     const sortedRules = this.registry.getAll();
     const violations: RuleViolation[] = [];
-    let finalVerdict: Verdict = Verdict.ALLOW;
+    let calculatedVerdict: Verdict = Verdict.ALLOW;
     let currentParams = { ...currentContext.params };
 
-    // 2. Evaluate registered rules with short-circuit on critical BLOCK
+    // 2. Evaluate registered rules with short-circuit on critical BLOCK (unless in dry-run mode)
     for (const rule of sortedRules) {
       if (!rule.enabled) continue;
 
@@ -228,45 +247,55 @@ export class SentinelEngine {
         }
 
         if (violation.verdict === Verdict.BLOCK) {
-          finalVerdict = Verdict.BLOCK;
-          break; // Short-circuit on critical block
+          calculatedVerdict = Verdict.BLOCK;
+          if (!isDryRun) {
+            break; // Short-circuit on critical block in non-dry-run mode
+          }
         } else if (violation.verdict === Verdict.CONFIRM) {
-          finalVerdict = Verdict.CONFIRM;
+          if (calculatedVerdict !== Verdict.BLOCK) {
+            calculatedVerdict = Verdict.CONFIRM;
+          }
         } else if (violation.verdict === Verdict.REDACT) {
           if (violation.redactedParams) {
             currentParams = { ...violation.redactedParams };
           }
-          if (finalVerdict === Verdict.ALLOW) {
-            finalVerdict = Verdict.REDACT;
+          if (calculatedVerdict === Verdict.ALLOW) {
+            calculatedVerdict = Verdict.REDACT;
           }
         }
       }
     }
 
-    // 3. Process human confirmation bridge if rule evaluated to CONFIRM
+    // 3. Process human confirmation bridge if rule evaluated to CONFIRM (only when not dryRun)
     let confirmDecision: ConfirmDecision | undefined;
-    if (finalVerdict === Verdict.CONFIRM && this.confirmationBridge) {
+    if (calculatedVerdict === Verdict.CONFIRM && this.confirmationBridge && !isDryRun) {
       const confirmViolation = violations.find(v => v.verdict === Verdict.CONFIRM);
       confirmDecision = await this.confirmationBridge.requestConfirmation(currentContext, {
         violation: confirmViolation
       });
 
       if (confirmDecision.approved) {
-        finalVerdict = Verdict.ALLOW;
+        calculatedVerdict = Verdict.ALLOW;
       } else {
-        finalVerdict = Verdict.BLOCK;
+        calculatedVerdict = Verdict.BLOCK;
       }
     }
 
     const latencyMs = timer.elapsedMs();
 
+    // In dry-run mode: allow execution, record simulated verdict, and preserve all violation metadata
+    const finalVerdict = isDryRun ? Verdict.ALLOW : calculatedVerdict;
+    const isAllowed = isDryRun ? true : calculatedVerdict !== Verdict.BLOCK;
+
     const result: EvaluationResult = {
       verdict: finalVerdict,
-      allowed: finalVerdict !== Verdict.BLOCK,
+      allowed: isAllowed,
       violations,
       latencyMs,
-      redactedParams: finalVerdict === Verdict.REDACT ? currentParams : undefined,
-      confirmDecision
+      redactedParams: (!isDryRun && calculatedVerdict === Verdict.REDACT) ? currentParams : undefined,
+      confirmDecision,
+      dryRun: isDryRun,
+      simulatedVerdict: isDryRun ? calculatedVerdict : undefined
     };
 
     // 4. Execute afterExecute post-telemetry hooks
