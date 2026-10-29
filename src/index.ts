@@ -15,10 +15,16 @@ import {
   OnViolationHook
 } from './types.js';
 import { RuleRegistry } from './ruleset.js';
+import {
+  DeclarativePolicyConfig,
+  validatePolicyConfig,
+  compileDeclarativeRule
+} from './policy.js';
 
 export * from './types.js';
 export * from './context.js';
 export * from './ruleset.js';
+export * from './policy.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
@@ -33,6 +39,14 @@ export class SentinelEngine {
 
   public registerRules(rules: SentinelRule[]): this {
     this.registry.registerMany(rules);
+    return this;
+  }
+
+  public loadPolicy(rawConfig: DeclarativePolicyConfig | unknown): this {
+    const validated = validatePolicyConfig(rawConfig);
+    for (const ruleDef of validated.rules) {
+      this.registerRule(compileDeclarativeRule(ruleDef));
+    }
     return this;
   }
 
