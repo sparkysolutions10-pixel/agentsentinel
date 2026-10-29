@@ -6,6 +6,7 @@ import {
   ToolCategory
 } from './types.js';
 import { signAuditEvent, SignedAuditEvent } from './integrity.js';
+import { SlidingEventQueue } from './queue.js';
 
 export interface AuditEvent {
   eventId: string;
@@ -27,16 +28,17 @@ export interface AuditEvent {
 export type AuditEventSink = (event: AuditEvent, formattedJson: string) => void;
 
 /**
- * Structured JSON violation audit logger compatible with OpenTelemetry and SIEM log forwarders.
+ * Structured JSON violation audit logger backed by a memory-bounded sliding window queue.
  */
 export class JSONAuditLogger {
-  private events: AuditEvent[] = [];
+  private events: SlidingEventQueue<AuditEvent>;
   private sink?: AuditEventSink;
   private hmacKey?: string;
 
-  constructor(sink?: AuditEventSink, hmacKey?: string) {
+  constructor(sink?: AuditEventSink, hmacKey?: string, capacity: number = 1000) {
     this.sink = sink;
     this.hmacKey = hmacKey;
+    this.events = new SlidingEventQueue<AuditEvent>(capacity);
   }
 
   /**
@@ -93,23 +95,30 @@ export class JSONAuditLogger {
   }
 
   /**
-   * Returns all recorded audit events.
+   * Returns all recorded audit events in chronological order.
    */
   public getEvents(): AuditEvent[] {
-    return [...this.events];
+    return this.events.toArray();
   }
 
   /**
    * Clears in-memory audit events.
    */
   public clear(): void {
-    this.events = [];
+    this.events.clear();
   }
 
   /**
-   * Returns the count of recorded audit events.
+   * Returns the count of recorded audit events currently held in memory.
    */
   public get size(): number {
-    return this.events.length;
+    return this.events.size;
+  }
+
+  /**
+   * Returns the count of dropped events due to buffer overflow.
+   */
+  public get droppedCount(): number {
+    return this.events.droppedCount;
   }
 }
