@@ -79,13 +79,42 @@ export function detectDestructiveDeletion(commandLine: string): DestructiveDetec
     let effectiveArgs = [...stage.args];
     let effectiveFlags = [...stage.flags];
 
-    // Unwrap privilege escalation / command execution wrappers (sudo, doas, nohup, xargs, env, exec)
-    if (['sudo', 'doas', 'nohup', 'xargs', 'env', 'exec'].includes(effectiveExec)) {
+    // Unwrap privilege escalation wrappers (sudo, doas, nohup, xargs, env, exec)
+    if (['sudo', 'doas'].includes(effectiveExec)) {
+      let idx = 0;
+      while (idx < stage.args.length) {
+        const arg = stage.args[idx];
+        if (arg === '-u' || arg === '-g' || arg === '-h' || arg === '-p') {
+          idx += 2;
+          continue;
+        }
+        if (arg.startsWith('-')) {
+          idx++;
+          continue;
+        }
+        effectiveExec = arg.toLowerCase();
+        effectiveArgs = stage.args.slice(idx + 1);
+        effectiveFlags = effectiveArgs.filter((a) => a.startsWith('-'));
+        break;
+      }
+    } else if (['nohup', 'xargs', 'env', 'exec'].includes(effectiveExec)) {
       const innerIdx = stage.args.findIndex((a) => !a.startsWith('-') && !a.includes('='));
       if (innerIdx !== -1) {
         effectiveExec = stage.args[innerIdx].toLowerCase();
         effectiveArgs = stage.args.slice(innerIdx + 1);
         effectiveFlags = effectiveArgs.filter((a) => a.startsWith('-'));
+      }
+    }
+
+    // Check for inline script execution like bash -c "..." or sh -c "..."
+    if (['bash', 'sh', 'zsh', 'ksh'].includes(effectiveExec)) {
+      const cIndex = effectiveArgs.indexOf('-c');
+      if (cIndex !== -1 && cIndex + 1 < effectiveArgs.length) {
+        const inlineScript = effectiveArgs[cIndex + 1];
+        const inlineResult = detectDestructiveDeletion(inlineScript);
+        if (inlineResult.isDestructive) {
+          return inlineResult;
+        }
       }
     }
 
@@ -95,7 +124,7 @@ export function detectDestructiveDeletion(commandLine: string): DestructiveDetec
 
       // Check if recursive deletion flag is present: -r, -R, --recursive, or combined flag containing 'r'
       const isRecursive = flags.some((f) => {
-        if (f === '-r' || f === '-r' || f === '--recursive') return true;
+        if (f === '-r' || f === '--recursive') return true;
         if (f.startsWith('-') && !f.startsWith('--') && f.includes('r')) return true;
         return false;
       });

@@ -256,7 +256,7 @@ export function parseShellCommand(commandString: string): ParsedShellPipeline {
       const stripped = token.replace(/^["']|["']$/g, '');
       args.push(stripped);
 
-      if (token.startsWith('-')) {
+      if (stripped.startsWith('-')) {
         flags.push(stripped);
       }
     }
