@@ -8,6 +8,7 @@ export * from './credit_card_scrubber.js';
 export * from './pii_scrubber.js';
 export * from './email_phone_mask.js';
 export * from './public_allowlist.js';
+export * from './zero_telemetry.js';
 export {
   detectTokenCharacterSet,
   getMaxEntropyForCharset,
