@@ -43,9 +43,11 @@ function extractVectors(params: Record<string, any>): number[][] {
   for (const field of VECTOR_PARAM_FIELDS) {
     const val = params[field];
     if (Array.isArray(val)) {
-      if (val.length > 0 && typeof val[0] === 'number') {
+      if (val.length === 0) {
+        vectors.push([]);
+      } else if (typeof val[0] === 'number') {
         vectors.push(val as number[]);
-      } else if (val.length > 0 && Array.isArray(val[0])) {
+      } else if (Array.isArray(val[0])) {
         // Nested array of vectors: [[0.1, ...], [0.2, ...]]
         for (const item of val) {
           if (Array.isArray(item)) {
