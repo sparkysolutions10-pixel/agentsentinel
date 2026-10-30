@@ -64,6 +64,8 @@ export class McpResourceInspector {
    */
   private normalizePath(p: string): string {
     let normalized = p.replace(/\\/g, '/').toLowerCase();
+    // Support pipe drive syntax (c| -> c:)
+    normalized = normalized.replace(/^([a-z])\|/i, '$1:');
     if (/^\/[a-z]:/.test(normalized)) {
       normalized = normalized.slice(1);
     }
@@ -80,8 +82,11 @@ export class McpResourceInspector {
 
     const trimmed = rawUri.trim();
 
-    // 1. Detect path traversal sequences (both raw and URL-encoded)
+    // 1. Detect null bytes and path traversal sequences
     const decoded = decodeURIComponent(trimmed);
+    if (trimmed.includes('\0') || decoded.includes('\0')) {
+      return { allowed: false, reason: `Null byte injection detected in resource URI: "${rawUri}"` };
+    }
     if (trimmed.includes('..') || decoded.includes('..')) {
       return { allowed: false, reason: `Path traversal sequence ".." detected in resource URI: "${rawUri}"` };
     }
@@ -121,11 +126,26 @@ export class McpResourceInspector {
 
     // 4. File Scheme Checks
     if (scheme === 'file') {
-      // Strip file://
-      let filePath = trimmed.replace(/^file:\/\//i, '');
-      if (/^\/[a-z]:/i.test(filePath)) {
-        filePath = filePath.slice(1);
+      let filePath = trimmed.slice(matchScheme[0].length);
+
+      // Strip //localhost/ if present
+      if (/^\/\/localhost\//i.test(filePath)) {
+        filePath = filePath.slice(11);
+      } else if (filePath.startsWith('//')) {
+        filePath = filePath.slice(2);
       }
+
+      // Convert pipe drive (c|) to colon (c:)
+      filePath = filePath.replace(/^\/?([a-zA-Z])\|/i, '$1:');
+
+      // If Windows drive (e.g. /c:/ or c:/)
+      if (/^\/[a-zA-Z]:/i.test(filePath)) {
+        filePath = filePath.slice(1);
+      } else if (!/^[a-zA-Z]:/i.test(filePath)) {
+        // Unix path: ensure single leading slash
+        filePath = '/' + filePath.replace(/^\/+/, '');
+      }
+
       const normalized = this.normalizePath(filePath);
 
       // Check sensitive system paths
