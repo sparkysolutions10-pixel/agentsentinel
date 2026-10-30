@@ -9,3 +9,4 @@ export * from './privesc.js';
 export * from './shutdown.js';
 export * from './cron.js';
 export * from './firewall.js';
+export * from './envleak.js';
