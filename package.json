@@ -14,7 +14,8 @@
     "README.md",
     "LICENSE",
     "ARCHITECTURE.md",
-    "BENCHMARKS.md"
+    "BENCHMARKS.md",
+    "TROUBLESHOOTING.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
