@@ -12,3 +12,4 @@ export * from './firewall.js';
 export * from './envleak.js';
 export * from './powershell_bypass.js';
 export * from './timeout.js';
+export * from './cwd_confinement.js';
