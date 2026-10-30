@@ -20,7 +20,14 @@ export const DIALECT_SYSTEM_CATALOGS: Record<SqlDialect, DialectCatalogDefinitio
   generic: {
     systemSchemas: ['information_schema'],
     systemTables: ['information_schema'],
-    sensitiveAuthTables: [],
+    sensitiveAuthTables: [
+      'information_schema.user_privileges',
+      'user_privileges',
+      'information_schema.table_privileges',
+      'table_privileges',
+      'information_schema.schema_privileges',
+      'schema_privileges',
+    ],
   },
   postgresql: {
     systemSchemas: ['pg_catalog', 'information_schema', 'pg_toast'],
@@ -37,7 +44,18 @@ export const DIALECT_SYSTEM_CATALOGS: Record<SqlDialect, DialectCatalogDefinitio
       'pg_auth_members',
       'pg_settings',
     ],
-    sensitiveAuthTables: ['pg_shadow', 'pg_authid', 'pg_roles', 'pg_user'],
+    sensitiveAuthTables: [
+      'pg_shadow',
+      'pg_authid',
+      'pg_roles',
+      'pg_user',
+      'information_schema.user_privileges',
+      'user_privileges',
+      'information_schema.table_privileges',
+      'table_privileges',
+      'information_schema.schema_privileges',
+      'schema_privileges',
+    ],
   },
   mysql: {
     systemSchemas: ['information_schema', 'mysql', 'performance_schema', 'sys'],
@@ -49,7 +67,19 @@ export const DIALECT_SYSTEM_CATALOGS: Record<SqlDialect, DialectCatalogDefinitio
       'mysql.procs_priv',
       'mysql.global_grants',
     ],
-    sensitiveAuthTables: ['mysql.user', 'user', 'mysql.tables_priv'],
+    sensitiveAuthTables: [
+      'mysql.user',
+      'user',
+      'mysql.tables_priv',
+      'mysql.db',
+      'mysql.global_grants',
+      'information_schema.user_privileges',
+      'user_privileges',
+      'information_schema.table_privileges',
+      'table_privileges',
+      'information_schema.schema_privileges',
+      'schema_privileges',
+    ],
   },
   sqlite: {
     systemSchemas: [],
@@ -76,6 +106,7 @@ export interface SystemCatalogInspection {
 
 /**
  * Checks if a table or schema identifier matches known system catalogs.
+ * Evaluates sensitive credential/privilege catalogs first to prevent schema overshadowing.
  */
 export function inspectTableIdentifier(
   rawIdentifier: string,
@@ -94,26 +125,31 @@ export function inspectTableIdentifier(
   const dialectsToCheck: SqlDialect[] =
     configuredDialect === 'generic' ? ['postgresql', 'mysql', 'sqlite', 'generic'] : [configuredDialect];
 
+  // 1. FIRST PASS: Check ALL sensitive authentication & privilege tables across all candidate dialects
   for (const dialect of dialectsToCheck) {
     const config = DIALECT_SYSTEM_CATALOGS[dialect];
-
-    // Check sensitive auth tables first
     for (const authTable of config.sensitiveAuthTables) {
+      const lower = authTable.toLowerCase();
       if (
-        normalized === authTable.toLowerCase() ||
-        normalized.endsWith('.' + authTable.toLowerCase())
+        normalized === lower ||
+        normalized === lower.replace(/^information_schema\./, '') ||
+        normalized.endsWith('.' + lower) ||
+        normalized === 'information_schema.' + lower
       ) {
         return {
           isSystemCatalog: true,
           isSensitiveAuth: true,
           detectedDialect: dialect,
           matchedEntity: authTable,
-          reason: `Access to sensitive authentication catalog '${rawIdentifier}' is restricted (${dialect})`,
+          reason: `Access to sensitive authentication/privilege catalog '${rawIdentifier}' is restricted (${dialect})`,
         };
       }
     }
+  }
 
-    // Check schemas (e.g. pg_catalog.xxx, mysql.xxx, information_schema.xxx)
+  // 2. SECOND PASS: Check schemas (e.g. pg_catalog.xxx, mysql.xxx, information_schema.xxx)
+  for (const dialect of dialectsToCheck) {
+    const config = DIALECT_SYSTEM_CATALOGS[dialect];
     for (const schema of config.systemSchemas) {
       if (normalized === schema || normalized.startsWith(schema + '.')) {
         return {
@@ -125,13 +161,14 @@ export function inspectTableIdentifier(
         };
       }
     }
+  }
 
-    // Check system tables
+  // 3. THIRD PASS: Check protected system tables
+  for (const dialect of dialectsToCheck) {
+    const config = DIALECT_SYSTEM_CATALOGS[dialect];
     for (const table of config.systemTables) {
-      if (
-        normalized === table.toLowerCase() ||
-        normalized.endsWith('.' + table.toLowerCase())
-      ) {
+      const lower = table.toLowerCase();
+      if (normalized === lower || normalized.endsWith('.' + lower)) {
         return {
           isSystemCatalog: true,
           isSensitiveAuth: false,
@@ -199,6 +236,12 @@ export function createSystemCatalogGuardRule(options?: SystemCatalogGuardOptions
             /pg_authid/i,
             /mysql\.user/i,
             /sqlite_master/i,
+            /information_schema\.user_privileges/i,
+            /information_schema\.table_privileges/i,
+            /information_schema\.schema_privileges/i,
+            /user_privileges/i,
+            /table_privileges/i,
+            /schema_privileges/i,
           ]) {
             if (pattern.test(rawStmt)) {
               stmt.targetTable = rawStmt.match(pattern)?.[0];
@@ -229,7 +272,7 @@ export function createSystemCatalogGuardRule(options?: SystemCatalogGuardOptions
               };
             }
 
-            // Intercept sensitive authentication reads
+            // Intercept sensitive authentication/privilege reads
             if (inspection.isSensitiveAuth && blockAuthReads) {
               return {
                 ruleId: 'sql-protect-system-catalogs',
