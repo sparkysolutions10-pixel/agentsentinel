@@ -5,6 +5,8 @@
  */
 
 import { SentinelRule, ToolCallContext, RuleViolation, Verdict } from '../types.js';
+import { calculateShannonEntropy } from './shannon_entropy.js';
+export { calculateShannonEntropy } from './shannon_entropy.js';
 
 export interface SecretMatchResult {
   secretType: string;
@@ -12,29 +14,6 @@ export interface SecretMatchResult {
   redactedText: string;
   entropy: number;
   location?: string;
-}
-
-/**
- * Calculates the Shannon Entropy of a string.
- * High randomness strings (keys, hashes, secrets) typically exhibit entropy >= 3.8.
- */
-export function calculateShannonEntropy(str: string): number {
-  if (!str || str.length === 0) return 0;
-
-  const frequencies = new Map<string, number>();
-  for (let i = 0; i < str.length; i++) {
-    const char = str[i];
-    frequencies.set(char, (frequencies.get(char) || 0) + 1);
-  }
-
-  let entropy = 0;
-  const len = str.length;
-  for (const count of frequencies.values()) {
-    const p = count / len;
-    entropy -= p * Math.log2(p);
-  }
-
-  return entropy;
 }
 
 /**
