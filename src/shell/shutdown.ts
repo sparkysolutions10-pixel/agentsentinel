@@ -33,7 +33,7 @@ const SYSTEMCTL_SHUTDOWN_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?systemctl\s+(?:-[a-z
 const INIT_RUNLEVEL_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:init|telinit)\s+([06])(?:\s|$)/i;
 
 // 5. Windows shutdown utility: shutdown [/s|/r|/p|/h] or shutdown.exe
-const WINDOWS_SHUTDOWN_REGEX = /(?:^|[;&|]\s*)(?:shutdown\.exe\s*.*|shutdown\s+.*?(?:\/[srph]))(?:\s|$)/i;
+const WINDOWS_SHUTDOWN_REGEX = /(?:^|[;&|]\s*)(?:[A-Za-z]:\\[^;&|\s]*\\|\S*[\/\\])?(?:shutdown\.exe(?:\s+.*)?|shutdown\s+.*?(?:\/[srph]))(?:\s|$)/i;
 
 // 6. PowerShell Cmdlets: Stop-Computer, Restart-Computer
 const POWERSHELL_POWER_REGEX = /(?:^|[;&|]\s*)(Stop-Computer|Restart-Computer)(?:\s+-[a-zA-Z0-9-]+|\s+-[a-zA-Z0-9:]+)*(?:\s|$)/i;
