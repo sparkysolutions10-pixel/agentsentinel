@@ -28,15 +28,27 @@ export function normalizeJailPath(p: string): string {
   let normalized = decoded.replace(/\\/g, '/');
 
   // Normalize Windows drive letter to lowercase (e.g. C:/ -> c:/)
-  if (/^[a-zA-Z]:\//.test(normalized)) {
-    normalized = normalized[0].toLowerCase() + normalized.slice(1);
+  let drivePrefix = '';
+  if (/^[a-zA-Z]:/.test(normalized)) {
+    drivePrefix = normalized[0].toLowerCase() + ':';
+    normalized = normalized.slice(2);
   }
+
+  // Resolve dot segments (. and ..) cross-platform using posix normalization
+  if (normalized.startsWith('/')) {
+    normalized = path.posix.normalize(normalized);
+  } else {
+    normalized = path.posix.normalize('/' + normalized);
+  }
+
+  normalized = drivePrefix + normalized;
 
   // Remove redundant slashes
   normalized = normalized.replace(/\/+/g, '/');
 
   // Strip trailing slash unless root
-  if (normalized.length > 1 && normalized.endsWith('/')) {
+  const minLen = drivePrefix ? 3 : 1;
+  if (normalized.length > minLen && normalized.endsWith('/')) {
     normalized = normalized.slice(0, -1);
   }
 
@@ -78,12 +90,12 @@ export function inspectWorkspaceJail(
 
   let normalizedTarget: string;
   if (isPosixAbsolute || isWinAbsolute) {
-    normalizedTarget = normalizeJailPath(path.normalize(targetPath));
+    normalizedTarget = normalizeJailPath(targetPath);
   } else {
     // Relative path: resolve against effectiveBase
     const normBase = normalizeJailPath(effectiveBase);
     const normRel = normalizeJailPath(targetPath);
-    normalizedTarget = path.posix.normalize(normBase + '/' + normRel);
+    normalizedTarget = normalizeJailPath(normBase + '/' + normRel);
   }
 
   const targetHasDrive = /^[a-zA-Z]:/.test(normalizedTarget);
