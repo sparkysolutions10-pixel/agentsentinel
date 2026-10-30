@@ -3,3 +3,4 @@ export * from './llm_key_scrubber.js';
 export * from './aws_key_detector.js';
 export * from './github_token_scrubber.js';
 export * from './pem_key_detector.js';
+export * from './web3_key_scrubber.js';
