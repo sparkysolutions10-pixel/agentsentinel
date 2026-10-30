@@ -6,3 +6,4 @@ export * from './reverseshell.js';
 export * from './base64exec.js';
 export * from './curlpipe.js';
 export * from './privesc.js';
+export * from './shutdown.js';
