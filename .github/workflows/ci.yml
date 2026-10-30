@@ -59,3 +59,28 @@ jobs:
 
       - name: Run Test Suite with Bun
         run: bun x vitest run
+
+  coverage:
+    name: Code Coverage with Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Test Coverage
+        run: npm run test:coverage -- --run
+
+      - name: Upload Coverage Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
