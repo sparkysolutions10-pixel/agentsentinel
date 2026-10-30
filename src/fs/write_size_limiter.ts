@@ -30,7 +30,10 @@ export function getContentByteLength(content: unknown): number {
   }
 
   if (typeof content === 'string') {
-    // Universal UTF-8 byte counting without external dependencies
+    // Zero-allocation byte counting when Buffer is available
+    if (typeof Buffer !== 'undefined' && typeof Buffer.byteLength === 'function') {
+      return Buffer.byteLength(content, 'utf8');
+    }
     return new TextEncoder().encode(content).length;
   }
 
@@ -44,6 +47,13 @@ export function getContentByteLength(content: unknown): number {
 
   if (content instanceof ArrayBuffer) {
     return content.byteLength;
+  }
+
+  // Handle stream descriptors, File, Blob, or simulated buffer objects
+  if (typeof content === 'object') {
+    const obj = content as Record<string, unknown>;
+    if (typeof obj.byteLength === 'number') return obj.byteLength;
+    if (typeof obj.size === 'number') return obj.size;
   }
 
   return 0;
