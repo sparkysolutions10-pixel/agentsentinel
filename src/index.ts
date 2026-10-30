@@ -41,6 +41,7 @@ export * from './queue.js';
 export * from './confirm.js';
 export * from './matcher.js';
 export * from './shell/index.js';
+export * from './sql/index.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
