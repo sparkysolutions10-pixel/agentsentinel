@@ -5,3 +5,4 @@ export * from './github_token_scrubber.js';
 export * from './pem_key_detector.js';
 export * from './web3_key_scrubber.js';
 export * from './credit_card_scrubber.js';
+export * from './pii_scrubber.js';
