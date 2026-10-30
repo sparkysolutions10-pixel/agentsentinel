@@ -1,8 +1,9 @@
 /**
  * Windows PowerShell Security Policy Bypass Flag Detector.
  * Identifies and intercepts command invocations that attempt to bypass
- * PowerShell ExecutionPolicy, suppress user interactive prompts, or stealthily
- * hide console windows (-ExecutionPolicy Bypass, -WindowStyle Hidden, -NoProfile, -NonInteractive).
+ * PowerShell ExecutionPolicy, suppress user interactive prompts, stealthily
+ * hide console windows, or launch obfuscated base64 encoded scripts
+ * (-ExecutionPolicy Bypass, -WindowStyle Hidden, -NoProfile, -NonInteractive, -EncodedCommand, -enc, -e).
  */
 
 import { SentinelRule, ToolCallContext, RuleViolation, Verdict } from '../types.js';
@@ -23,7 +24,7 @@ const SET_EP_BYPASS_REGEX = /Set-ExecutionPolicy\s+.*?(?:Bypass|Unrestricted)/i;
 const WINDOW_HIDDEN_REGEX = /(?:-WindowStyle|-w)\s+(?:Hidden|1)/i;
 const NO_PROFILE_REGEX = /(?:-NoProfile|-nop)\b/i;
 const NON_INTERACTIVE_REGEX = /(?:-NonInteractive|-noni)\b/i;
-const NO_LOGO_REGEX = /(?:-NoLogo|-nol)\b/i;
+const ENCODED_COMMAND_REGEX = /(?:-EncodedCommand|-encoded|-enc|-e)\s+[A-Za-z0-9+/=]{4,}/i;
 
 /**
  * Analyzes command line strings for PowerShell bypass and stealth execution flags.
@@ -56,6 +57,9 @@ export function detectPowerShellBypass(rawCommand: string): PowerShellBypassResu
     if (WINDOW_HIDDEN_REGEX.test(rawCommand)) {
       flagsDetected.push('-WindowStyle Hidden');
     }
+    if (ENCODED_COMMAND_REGEX.test(rawCommand)) {
+      flagsDetected.push('-EncodedCommand');
+    }
     if (NO_PROFILE_REGEX.test(rawCommand)) {
       flagsDetected.push('-NoProfile');
     }
@@ -63,9 +67,12 @@ export function detectPowerShellBypass(rawCommand: string): PowerShellBypassResu
       flagsDetected.push('-NonInteractive');
     }
 
-    // Trigger violation if critical bypass flag is used (ExecutionPolicy Bypass, WindowStyle Hidden)
-    // or if stealth combination (NoProfile + NonInteractive) is used
-    if (flagsDetected.includes('-ExecutionPolicy Bypass') || flagsDetected.includes('-WindowStyle Hidden')) {
+    // Trigger violation if critical bypass flag is used
+    if (
+      flagsDetected.includes('-ExecutionPolicy Bypass') ||
+      flagsDetected.includes('-WindowStyle Hidden') ||
+      flagsDetected.includes('-EncodedCommand')
+    ) {
       return {
         isBypass: true,
         flagsDetected,
