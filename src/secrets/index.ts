@@ -7,3 +7,19 @@ export * from './web3_key_scrubber.js';
 export * from './credit_card_scrubber.js';
 export * from './pii_scrubber.js';
 export * from './email_phone_mask.js';
+export {
+  detectTokenCharacterSet,
+  getMaxEntropyForCharset,
+  analyzeTokenEntropy,
+  scanTextForHighEntropyTokens,
+  scanContextForEntropyTokens,
+  createShannonEntropyRule,
+  shannonEntropyRule,
+} from './shannon_entropy.js';
+export type {
+  TokenCharacterSet,
+  EntropyAnalysis,
+  EntropyTokenMatch,
+  EntropyThresholds,
+  ShannonEntropyRuleOptions,
+} from './shannon_entropy.js';
