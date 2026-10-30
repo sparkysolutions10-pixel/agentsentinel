@@ -86,14 +86,38 @@ export function inspectWorkspaceJail(
     normalizedTarget = path.posix.normalize(normBase + '/' + normRel);
   }
 
-  const targetWithoutDrive = normalizedTarget.replace(/^[a-zA-Z]:/, '');
+  const targetHasDrive = /^[a-zA-Z]:/.test(normalizedTarget);
 
   // Check against each allowed root
   for (const root of allowedRoots) {
     const normalizedRoot = normalizeJailPath(root);
-    const rootWithoutDrive = normalizedRoot.replace(/^[a-zA-Z]:/, '');
+    const rootHasDrive = /^[a-zA-Z]:/.test(normalizedRoot);
 
-    // 1. Direct match with drive
+    if (targetHasDrive && rootHasDrive) {
+      const targetDrive = normalizedTarget[0].toLowerCase();
+      const rootDrive = normalizedRoot[0].toLowerCase();
+
+      // Different drive letters can never be inside each other
+      if (targetDrive !== rootDrive) {
+        continue;
+      }
+
+      // Windows paths on the same drive are case-insensitive
+      const targetLower = normalizedTarget.toLowerCase();
+      const rootLower = normalizedRoot.toLowerCase();
+
+      if (targetLower === rootLower) {
+        return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+      }
+
+      const rootWithSlash = rootLower.endsWith('/') ? rootLower : rootLower + '/';
+      if (targetLower.startsWith(rootWithSlash)) {
+        return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+      }
+      continue;
+    }
+
+    // Direct match
     if (normalizedTarget === normalizedRoot) {
       return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
     }
@@ -103,14 +127,19 @@ export function inspectWorkspaceJail(
       return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
     }
 
-    // 2. Cross-platform drive-agnostic match
-    if (targetWithoutDrive === rootWithoutDrive) {
-      return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
-    }
+    // Cross-platform drive-agnostic fallback (e.g. relative base or POSIX root)
+    if (!targetHasDrive || !rootHasDrive) {
+      const targetWithoutDrive = normalizedTarget.replace(/^[a-zA-Z]:/, '');
+      const rootWithoutDrive = normalizedRoot.replace(/^[a-zA-Z]:/, '');
 
-    const rootWithoutDriveWithSlash = rootWithoutDrive.endsWith('/') ? rootWithoutDrive : rootWithoutDrive + '/';
-    if (targetWithoutDrive.startsWith(rootWithoutDriveWithSlash)) {
-      return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+      if (targetWithoutDrive === rootWithoutDrive) {
+        return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+      }
+
+      const rootWithoutDriveWithSlash = rootWithoutDrive.endsWith('/') ? rootWithoutDrive : rootWithoutDrive + '/';
+      if (targetWithoutDrive.startsWith(rootWithoutDriveWithSlash)) {
+        return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+      }
     }
   }
 
