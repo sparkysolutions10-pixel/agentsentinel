@@ -47,6 +47,7 @@ export * from './secrets/index.js';
 export * from './mcp/index.js';
 export * from './sdk/index.js';
 export * from './cli/index.js';
+export * from './benchmarks/index.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
