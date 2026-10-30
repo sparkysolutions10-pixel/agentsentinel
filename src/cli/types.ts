@@ -11,6 +11,8 @@ export interface CliOptions {
   toolName?: string;
   paramsJson?: string;
   targetString?: string;
+  preset?: 'enterprise' | 'developer' | 'minimal';
+  force?: boolean;
 }
 
 export interface CliAuditReport {

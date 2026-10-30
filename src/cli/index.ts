@@ -8,6 +8,7 @@ import { runCli } from './runner.js';
 export * from './types.js';
 export * from './parser.js';
 export * from './runner.js';
+export * from './init.js';
 
 // Auto-execute if invoked as a CLI executable directly, not when imported or tested
 const isCliExecution = Boolean(

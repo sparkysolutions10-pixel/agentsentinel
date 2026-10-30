@@ -53,6 +53,13 @@ export function parseCliArgs(argv: string[]): CliOptions {
       options.paramsJson = args[++i];
     } else if (arg === '--cmd' || arg === '-c') {
       options.targetString = args[++i];
+    } else if (arg === '--preset') {
+      const p = args[++i]?.toLowerCase();
+      if (p === 'developer' || p === 'minimal' || p === 'enterprise') {
+        options.preset = p;
+      }
+    } else if (arg === '--force') {
+      options.force = true;
     } else if (!arg.startsWith('-') && !options.file) {
       options.file = arg;
     }

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { CliOptions, CliAuditReport, CLI_EXIT_CODES } from './types.js';
+import { handleInitCommand } from './init.js';
 import { parseCliArgs } from './parser.js';
 import { SentinelEngine } from '../index.js';
 import { ToolCallContext, Verdict, RuleViolation } from '../types.js';
@@ -178,41 +179,6 @@ Options:
 `;
 }
 
-function handleInitCommand(options: CliOptions, out: (msg: string) => void, err: (msg: string) => void): number {
-  const targetDir = options.file || process.cwd();
-  const targetPath = path.join(targetDir, 'agentsentinel.policy.json');
-
-  if (fs.existsSync(targetPath)) {
-    err(`[AgentSentinel] Error: Configuration already exists at ${targetPath}`);
-    return CLI_EXIT_CODES.INVALID_ARGS;
-  }
-
-  const template = {
-    version: '1.0',
-    name: 'Default Enterprise Agent Security Policy',
-    rules: [
-      {
-        id: 'custom-prohibited-endpoints',
-        name: 'Block Internal Kubernetes API Access',
-        category: 'network',
-        priority: 900,
-        enabled: true,
-        action: 'BLOCK',
-        conditions: [
-          {
-            field: 'params.url',
-            operator: 'contains',
-            value: 'kubernetes.default.svc',
-          },
-        ],
-      },
-    ],
-  };
-
-  fs.writeFileSync(targetPath, JSON.stringify(template, null, 2), 'utf8');
-  out(`[AgentSentinel] Created security policy configuration: ${targetPath}`);
-  return CLI_EXIT_CODES.SUCCESS;
-}
 
 async function handleCheckCommand(options: CliOptions, out: (msg: string) => void, err: (msg: string) => void): Promise<number> {
   const target = options.targetString || options.file;
