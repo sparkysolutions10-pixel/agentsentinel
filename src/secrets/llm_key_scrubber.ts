@@ -86,16 +86,22 @@ export function maskLLMKey(key: string): string {
   return `${prefix}***${suffix}`;
 }
 
+export interface ScrubLLMKeysOptions {
+  replacement?: string;
+}
+
 /**
  * Scans a string, identifies all LLM API keys, and returns the scrubbed string.
+ * Supports custom replacement string (e.g. '[REDACTED_API_KEY]').
  */
-export function scrubLLMKeys(text: string): LLMScrubResult {
+export function scrubLLMKeys(text: string, options?: ScrubLLMKeysOptions): LLMScrubResult {
   if (!text || typeof text !== 'string') {
     return { hasMatches: false, scrubbedText: text || '', matches: [] };
   }
 
   const matches: LLMKeyMatch[] = [];
   let scrubbedText = text;
+  const customReplacement = options?.replacement;
 
   for (const { provider, keyType, pattern } of LLM_KEY_PATTERNS) {
     pattern.lastIndex = 0;
@@ -103,7 +109,7 @@ export function scrubLLMKeys(text: string): LLMScrubResult {
 
     while ((match = pattern.exec(text)) !== null) {
       const rawKey = match[0];
-      const redactedKey = maskLLMKey(rawKey);
+      const redactedKey = customReplacement ?? maskLLMKey(rawKey);
 
       matches.push({
         provider,
@@ -114,7 +120,7 @@ export function scrubLLMKeys(text: string): LLMScrubResult {
         endIndex: match.index + rawKey.length,
       });
 
-      // Replace in scrubbedText
+      // Replace all occurrences in scrubbedText
       scrubbedText = scrubbedText.split(rawKey).join(redactedKey);
     }
   }
@@ -167,6 +173,7 @@ export function scanContextForLLMKeys(ctx: ToolCallContext): LLMKeyMatch[] {
 
 export interface LLMKeyScrubberOptions {
   mode?: 'block' | 'redact';
+  replacement?: string;
 }
 
 /**
