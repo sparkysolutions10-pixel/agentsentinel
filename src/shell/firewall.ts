@@ -33,35 +33,35 @@ export interface FirewallDisableResult {
 }
 
 // 1. ufw disable / reset: ufw disable, ufw reset
-const UFW_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?ufw\s+(?:--force\s+)?(disable|reset)(?:\s|$)/i;
+const UFW_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?ufw\s+(?:--force\s+)?(disable|reset)(?:\s|[;&|]|$)/i;
 
 // 2. iptables / ip6tables flush all (-F, --flush, -X)
-const IPTABLES_FLUSH_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:iptables|ip6tables)\s+(?:-[a-zA-Z0-9-]+\s+)*(?:-F|--flush|-X|--delete-chain)(?:\s|$)/i;
+const IPTABLES_FLUSH_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:iptables|ip6tables)\s+.*?(?:-F|--flush|-X|--delete-chain)(?:\s|[;&|]|$)/i;
 
 // 3. iptables permissive policy (iptables -P INPUT ACCEPT)
-const IPTABLES_POLICY_ACCEPT_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:iptables|ip6tables)\s+-P\s+(?:INPUT|FORWARD)\s+ACCEPT(?:\s|$)/i;
+const IPTABLES_POLICY_ACCEPT_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:iptables|ip6tables)\s+-P\s+(?:INPUT|FORWARD)\s+ACCEPT(?:\s|[;&|]|$)/i;
 
 // 4. nftables flush ruleset
-const NFTABLES_FLUSH_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?nft\s+flush\s+ruleset(?:\s|$)/i;
+const NFTABLES_FLUSH_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?nft\s+flush\s+ruleset(?:\s|[;&|]|$)/i;
 
 // 5. firewalld stop or disable
-const FIREWALLD_STOP_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?systemctl\s+(?:stop|disable|mask)\s+firewalld(?:\.service)?(?:\s|$)/i;
-const FIREWALL_CMD_PANIC_OFF = /(?:^|[;&|]\s*)(?:sudo\s+)?firewall-cmd\s+.*?(?:--panic-off|--set-default-zone=trusted)(?:\s|$)/i;
+const FIREWALLD_STOP_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?systemctl\s+(?:stop|disable|mask)\s+firewalld(?:\.service)?(?:\s|[;&|]|$)/i;
+const FIREWALL_CMD_PANIC_OFF = /(?:^|[;&|]\s*)(?:sudo\s+)?firewall-cmd\s+.*?(?:--panic-off|--set-default-zone=trusted)(?:\s|[;&|]|$)/i;
 
 // 6. Windows netsh advfirewall state off / disable
-const NETSH_DISABLE_REGEX = /(?:^|[;&|]\s*)netsh(?:\.exe)?\s+(?:advfirewall\s+set\s+(?:allprofiles|currentprofile|domainprofile|privateprofile|publicprofile)\s+state\s+off|firewall\s+set\s+opmode\s+(?:disable|mode=disable))(?:\s|$)/i;
+const NETSH_DISABLE_REGEX = /(?:^|[;&|]\s*)netsh(?:\.exe)?\s+(?:advfirewall\s+set\s+(?:allprofiles|currentprofile|domainprofile|privateprofile|publicprofile)\s+state\s+off|firewall\s+set\s+opmode\s+(?:disable|mode=disable))(?:\s|[;&|]|$)/i;
 
 // 7. PowerShell Set-NetFirewallProfile -Enabled False
-const PS_FIREWALL_DISABLE_REGEX = /(?:^|[;&|]\s*)Set-NetFirewallProfile\s+.*?-Enabled\s+(?:False|\$false|0)(?:\s|$)/i;
+const PS_FIREWALL_DISABLE_REGEX = /(?:^|[;&|]\s*)Set-NetFirewallProfile\s+.*?-Enabled\s+(?:False|\$false|0)(?:\s|[;&|]|$)/i;
 
 // 8. Windows Defender disablement (Set-MpPreference -DisableRealtimeMonitoring $true)
-const DEFENDER_DISABLE_REGEX = /(?:^|[;&|]\s*)Set-MpPreference\s+.*?-DisableRealtimeMonitoring\s+(?:\$true|1|True)(?:\s|$)/i;
+const DEFENDER_DISABLE_REGEX = /(?:^|[;&|]\s*)Set-MpPreference\s+.*?-DisableRealtimeMonitoring\s+(?:\$true|1|True)(?:\s|[;&|]|$)/i;
 
 // 9. SELinux setenforce 0 / Permissive
-const SELINUX_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?setenforce\s+(?:0|permissive)(?:\s|$)/i;
+const SELINUX_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?setenforce\s+(?:0|permissive)(?:\s|[;&|]|$)/i;
 
 // 10. AppArmor teardown / disable
-const APPARMOR_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:systemctl\s+(?:stop|disable)\s+apparmor|aa-teardown|aa-disable)(?:\s|$)/i;
+const APPARMOR_DISABLE_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:systemctl\s+(?:stop|disable)\s+apparmor|aa-teardown|aa-disable)(?:\s|[;&|]|$)/i;
 
 /**
  * Analyzes command line strings for security controls or firewall disablement attempts.
