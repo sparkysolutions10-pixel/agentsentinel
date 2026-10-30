@@ -33,9 +33,10 @@ const METADATA_HOST_PATTERNS: Array<{ provider: MetadataDetectionResult['provide
   // Kubernetes API / Etcd internal endpoints
   { provider: 'Kubernetes', pattern: /(?:^|:\/\/|@|\b)kubernetes\.default(?:\.svc)?(?:\.cluster\.local)?(?::\d+)?(?:\/|\b|$)/i, desc: 'Kubernetes in-cluster API service' },
 
-  // IP Obfuscations for 169.254.169.254 (2852039166 in decimal, 0xa9fea9fe in hex, 0251.0376.0251.0376 in octal)
+  // IP Obfuscations for 169.254.169.254 (2852039166 in decimal, 0xa9fea9fe in hex, dotted hex, 0251.0376.0251.0376 in octal)
   { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)2852039166(?::\d+)?(?:\/|\b|$)/i, desc: 'Decimal-encoded 169.254.169.254' },
-  { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)0x[aA]9[fF][eE][aA]9[fF][eE](?::\d+)?(?:\/|\b|$)/i, desc: 'Hex-encoded 0xa9fea9fe (169.254.169.254)' },
+  { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)0x[a-fA-F0-9]{8}(?::\d+)?(?:\/|\b|$)/i, desc: 'Hex-encoded 0xa9fea9fe (169.254.169.254)' },
+  { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)0x[a-fA-F0-9]{1,2}\.0x[a-fA-F0-9]{1,2}\.0x[a-fA-F0-9]{1,2}\.0x[a-fA-F0-9]{1,2}(?::\d+)?(?:\/|\b|$)/i, desc: 'Dotted Hex-encoded 169.254.169.254' },
   { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)0251\.0376\.0251\.0376(?::\d+)?(?:\/|\b|$)/i, desc: 'Octal-encoded 169.254.169.254' },
   { provider: 'AWS', pattern: /(?:^|:\/\/|@|\b)\[?::ffff:169\.254\.169\.254\]?(?::\d+)?(?:\/|\b|$)/i, desc: 'IPv4-mapped IPv6 169.254.169.254' },
 ];
@@ -72,13 +73,9 @@ export function detectCloudMetadataSSRF(input: string): MetadataDetectionResult 
 
 export class CloudMetadataBlocker {
   /**
-   * Deep scans all parameters and properties in ToolCallContext.
+   * Deep scans all parameters, command, arguments, and targets in ToolCallContext.
    */
   public evaluateContext(ctx: ToolCallContext): RuleViolation | null {
-    if (!ctx.params || typeof ctx.params !== 'object') {
-      return null;
-    }
-
     const checkValue = (val: unknown): RuleViolation | null => {
       if (typeof val === 'string') {
         const detection = detectCloudMetadataSSRF(val);
@@ -106,7 +103,29 @@ export class CloudMetadataBlocker {
       return null;
     };
 
-    return checkValue(ctx.params);
+    const rawCtx = ctx as Record<string, any>;
+
+    if (rawCtx.command) {
+      const res = checkValue(rawCtx.command);
+      if (res) return res;
+    }
+
+    if (rawCtx.target) {
+      const res = checkValue(rawCtx.target);
+      if (res) return res;
+    }
+
+    if (rawCtx.args) {
+      const res = checkValue(rawCtx.args);
+      if (res) return res;
+    }
+
+    if (ctx.params) {
+      const res = checkValue(ctx.params);
+      if (res) return res;
+    }
+
+    return null;
   }
 
   public createSentinelRule(): SentinelRule {
