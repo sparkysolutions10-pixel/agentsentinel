@@ -332,7 +332,7 @@ async function handleAuditFileCommand(options: CliOptions, out: (msg: string) =>
       id: `cli-audit-sh-${Date.now()}`,
       toolName: 'bash_exec',
       category: 'shell',
-      params: { command: content },
+      params: { command: content.split('\n').map((l) => l.trim()).filter((l) => l.length > 0 && !l.startsWith('#')).join(' ; ') || content },
       timestamp: Date.now(),
     };
   }

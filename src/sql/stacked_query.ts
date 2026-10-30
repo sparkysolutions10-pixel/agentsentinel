@@ -61,6 +61,9 @@ export function createStackedQueryGuardRule(options?: StackedQueryGuardOptions):
     priority: 960,
     enabled: true,
     evaluate: (ctx: ToolCallContext): RuleViolation | null => {
+      if (ctx.category && ctx.category !== 'sql' && ctx.category !== 'custom') {
+        return null;
+      }
       let sqlQuery: string | null = null;
       if (ctx.params) {
         for (const field of queryFields) {
