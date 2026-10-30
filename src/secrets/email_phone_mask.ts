@@ -38,7 +38,10 @@ export const EMAIL_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g
 
 // International and domestic phone number pattern (covers E.164, US/Canada, India, UK formats)
 export const PHONE_REGEX =
-  /(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}\b/g;
+  /(?:\+?\d{1,4}[-.\s]?)?(?:\(?\d{2,5}\)?[-.\s]?)?\d{3,5}[-.\s]?\d{3,5}\b/g;
+
+// IPv4 pattern to avoid false matches on IP addresses
+const IP_V4_REGEX = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
 
 /**
  * Masks an email address based on configured privacy level.
@@ -111,6 +114,14 @@ export function detectContactInfo(text: string, options: EmailPhoneMaskOptions =
 
   const matches: ContactMatch[] = [];
 
+  // Find all IP address ranges to avoid false positive phone matches
+  const ipRanges: Array<{ start: number; end: number }> = [];
+  IP_V4_REGEX.lastIndex = 0;
+  let ipMatch: RegExpExecArray | null;
+  while ((ipMatch = IP_V4_REGEX.exec(text)) !== null) {
+    ipRanges.push({ start: ipMatch.index, end: ipMatch.index + ipMatch[0].length });
+  }
+
   // 1. Detect emails
   if (checkEmail) {
     EMAIL_REGEX.lastIndex = 0;
@@ -135,19 +146,22 @@ export function detectContactInfo(text: string, options: EmailPhoneMaskOptions =
     while ((match = PHONE_REGEX.exec(text)) !== null) {
       const raw = match[0];
       const digitsOnly = raw.replace(/\D/g, '');
+      const start = match.index;
+      const end = start + raw.length;
 
-      // Avoid false positives: phone numbers have 7 to 15 digits
-      // Avoid matching if already part of an email domain (e.g. user@123.456.7890.com)
-      const isInsideEmail = matches.some((m) => m.type === 'Email' && match!.index >= m.startIndex && match!.index < m.endIndex);
+      // Avoid matching if inside an email address
+      const isInsideEmail = matches.some((m) => m.type === 'Email' && start >= m.startIndex && start < m.endIndex);
+      // Avoid matching if inside an IPv4 address
+      const isInsideIp = ipRanges.some((ip) => start >= ip.start && start < ip.end);
 
-      if (!isInsideEmail && digitsOnly.length >= 7 && digitsOnly.length <= 15) {
+      if (!isInsideEmail && !isInsideIp && digitsOnly.length >= 7 && digitsOnly.length <= 15) {
         const masked = customPhoneReplacement ?? maskPhone(raw, phoneFormat);
         matches.push({
           type: 'Phone',
           raw,
           masked,
-          startIndex: match.index,
-          endIndex: match.index + raw.length,
+          startIndex: start,
+          endIndex: end,
         });
       }
     }
