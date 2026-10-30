@@ -193,7 +193,7 @@ AgentSentinel is engineered for ultra-low latency with **zero runtime dependenci
 | **Throughput** | $> 2,000\text{ ops/sec}$ | **$\sim 8,000\text{ ops/sec}$** |
 | **Network Egress** | Zero | **$0\text{ bytes}$ (Air-Gapped Client-Side)** |
 
-Detailed benchmark methodology and percentiles are documented in [BENCHMARKS.md](BENCHMARKS.md). System architecture specifications are available in [ARCHITECTURE.md](ARCHITECTURE.md).
+Detailed benchmark methodology and percentiles are documented in [BENCHMARKS.md](BENCHMARKS.md). System architecture specifications are available in [ARCHITECTURE.md](ARCHITECTURE.md). For violation diagnostics and false-positive calibration, consult [TROUBLESHOOTING.md](TROUBLESHOOTING.md). Walkthrough examples are available for [Claude Desktop MCP](examples/claude_desktop_walkthrough.md) and [Cursor AI](examples/cursor_ai_walkthrough.md).
 
 ---
 
