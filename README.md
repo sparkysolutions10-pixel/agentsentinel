@@ -9,6 +9,7 @@
 [![Benchmarks: Sub-2ms](https://img.shields.io/badge/Latency-%3C0.13ms%20Mean-brightgreen)](BENCHMARKS.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 [![Good First Issues](https://img.shields.io/github/issues/sparkysolutions10-pixel/agentsentinel/good%20first%20issue?color=purple&label=good%20first%20issues)](https://github.com/sparkysolutions10-pixel/agentsentinel/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+[![Sponsor](https://img.shields.io/badge/💖_Sponsor-Multi--Rail_Funding-ff69b4?style=flat)](https://github.com/sparkysolutions10-pixel/agentsentinel#--sponsorship--multi-rail-backing)
 [![Security: OWASP Top 10](https://img.shields.io/badge/OWASP%20LLM-ASI01--ASI05%20Defense-red)](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 
 ---
@@ -194,6 +195,19 @@ AgentSentinel is engineered for ultra-low latency with **zero runtime dependenci
 | **Network Egress** | Zero | **$0\text{ bytes}$ (Air-Gapped Client-Side)** |
 
 Detailed benchmark methodology and percentiles are documented in [BENCHMARKS.md](BENCHMARKS.md). System architecture specifications are available in [ARCHITECTURE.md](ARCHITECTURE.md). For violation diagnostics and false-positive calibration, consult [TROUBLESHOOTING.md](TROUBLESHOOTING.md). Walkthrough examples are available for [Claude Desktop MCP](examples/claude_desktop_walkthrough.md) and [Cursor AI](examples/cursor_ai_walkthrough.md).
+
+---
+
+## 💖 Sponsorship & Multi-Rail Backing
+
+AgentSentinel is an independent open-source zero-trust security framework. You can financially sponsor ongoing security research, zero-telemetry defense rules, and Soroban tripwire tooling via multi-rail fiat or Web3 channels:
+
+| Rail | Destination / Explorer Link | Payment Type |
+|---|---|---|
+| **🇮🇳 Instant Fiat (UPI / Cards)** | [Pay via Razorpay Portal](https://rzp.io/rzp/YQIrvWJ) | 1-Click UPI (GPay, PhonePe, Paytm), RuPay, Cards |
+| **⭐ Stellar & Soroban (USDC / XLM)** | [`GABJXOQG2I47R3F6W6Y5ZPX6JNYZ7V2C247B256N63FUS7V3LOM7U67C`](https://stellar.expert/explorer/public/account/GABJXOQG2I47R3F6W6Y5ZPX6JNYZ7V2C247B256N63FUS7V3LOM7U67C) | USDC, XLM, Soroban Grants & Developer Tips |
+| **🌐 EVM (MegaETH / Base / Ethereum)** | [`0x40B7d9273092822341860F5610168861351e71eb`](https://etherscan.io/address/0x40B7d9273092822341860F5610168861351e71eb) | USDC, USDT, ETH on MegaETH / Base / Ethereum |
+| **❤️ GitHub Sponsors** | [github.com/sponsors/sparkysolutions10-pixel](https://github.com/sponsors/sparkysolutions10-pixel) | Official GitHub Sponsor Dashboard |
 
 ---
 
