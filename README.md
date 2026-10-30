@@ -13,6 +13,10 @@
 
 ---
 
+**Languages:** [English](README.md) | [हिन्दी (Hindi)](docs/i18n/README.hi.md) | [Español (Spanish)](docs/i18n/README.es.md)
+
+---
+
 ## ⚡ Overview
 
 As autonomous AI agents, coding assistants (Cursor, Devin, Claude Code), and **Model Context Protocol (MCP)** tools proliferate, agents gain direct execution access to terminal commands, relational databases, filesystems, and internal APIs.
