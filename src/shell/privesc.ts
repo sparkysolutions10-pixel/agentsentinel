@@ -43,7 +43,7 @@ const DOAS_REGEX = /(?:^|[;&|]\s*)doas\s+(?:-[a-zA-Z0-9-]+\s+)*(?:-u\s+([a-zA-Z0
 const PKEXEC_REGEX = /(?:^|[;&|]\s*)pkexec\s+(?:--user\s+([a-zA-Z0-9_-]+)\s+)?(.+?)(?=[;&|]|$)/i;
 
 // 5. SUID / SGID chmod modification: chmod (u\+s|\+s|[0-7]?[4-7][0-7]{3})
-const CHMOD_SUID_REGEX = /(?:^|[;&|]\s*)chmod\s+.*?(?:\+s|[ug]\+s|[4-7][0-7]{3})\s+([^\s;&|]+)/i;
+const CHMOD_SUID_REGEX = /(?:^|[;&|]\s*)(?:chmod|install)\s+.*?(?:\+s|[ugoa,+-]*\+s|-(?:m\s*)?[4-7][0-7]{3}|[4-7][0-7]{3})\s+([^\s;&|]+)/i;
 
 // 6. Linux capabilities: setcap (e.g. setcap cap_setuid+ep /path)
 const SETCAP_REGEX = /(?:^|[;&|]\s*)setcap\s+.*?(?:cap_setuid|cap_setgid|cap_sys_admin|cap_dac_override|\+ep)\s+([^\s;&|]+)/i;
