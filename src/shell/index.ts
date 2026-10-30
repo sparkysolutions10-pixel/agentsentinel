@@ -7,3 +7,4 @@ export * from './base64exec.js';
 export * from './curlpipe.js';
 export * from './privesc.js';
 export * from './shutdown.js';
+export * from './cron.js';
