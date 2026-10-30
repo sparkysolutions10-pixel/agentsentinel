@@ -27,6 +27,13 @@ export const DROP_DDL_REGEX =
   /\bDROP\s+(TABLE|DATABASE|SCHEMA|VIEW)\s+(?:IF\s+EXISTS\s+)?([`"'\[\]]?[a-zA-Z0-9_$]+[`"'\]]?(?:\.[`"'\[\]]?[a-zA-Z0-9_$]+[`"'\]]?)*)/i;
 
 /**
+ * Strips single-quoted string literals to prevent false positives when keywords appear inside text data.
+ */
+export function stripSingleQuotedLiterals(sql: string): string {
+  return sql.replace(/'(?:''|[^'])*'/g, "''");
+}
+
+/**
  * Detects if a SQL query string contains a destructive DROP statement.
  */
 export function detectDestructiveDdl(
@@ -36,7 +43,8 @@ export function detectDestructiveDdl(
   const statements = splitSqlStatements(sql);
 
   for (const stmt of statements) {
-    const match = stmt.match(DROP_DDL_REGEX);
+    const unquotedDataStmt = stripSingleQuotedLiterals(stmt);
+    const match = unquotedDataStmt.match(DROP_DDL_REGEX);
     if (match) {
       const objType = match[1].toUpperCase();
       const target = match[2].replace(/[`"'\[\]]/g, '');
