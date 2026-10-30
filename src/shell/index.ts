@@ -8,3 +8,4 @@ export * from './curlpipe.js';
 export * from './privesc.js';
 export * from './shutdown.js';
 export * from './cron.js';
+export * from './firewall.js';
