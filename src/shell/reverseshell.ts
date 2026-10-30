@@ -16,14 +16,18 @@ export interface ReverseShellDetectionResult {
 
 // Regex patterns for reverse shell signatures
 const BASH_DEV_TCP_REGEX = /(?:bash|sh|zsh)?\s*(?:-i)?\s*(?:>&|>\s*&\s*)\s*\/dev\/(?:tcp|udp)\/([a-zA-Z0-9_.-]+)\/([0-9]+)/i;
-const BASH_DEV_TCP_PIPE_REGEX = /exec\s+[0-9]*\s*<>\s*\/dev\/(?:tcp|udp)\/([a-zA-Z0-9_.-]+)\/([0-9]+)/i;
+const BASH_DEV_TCP_PIPE_REGEX = /(?:exec\s+[0-9]*\s*<>\s*\/dev\/(?:tcp|udp)\/([a-zA-Z0-9_.-]+)\/([0-9]+)|0<&\s*[0-9]+;\s*exec\s+[0-9]+<>\s*\/dev\/(?:tcp|udp)\/([a-zA-Z0-9_.-]+)\/([0-9]+))/i;
 const NETCAT_EXEC_SHELL_REGEX = /(?:^|\s)(?:nc|ncat|netcat)\s+.*?(?:-e|-c)\s+(?:\/bin\/(?:ba)?sh|cmd(?:\.exe)?|powershell(?:\.exe)?)/i;
-const NETCAT_FIFO_REVERSE_REGEX = /mkfifo\s+[^\s;]+.*?\|\s*(?:\/bin\/)?(?:ba)?sh\s+.*?(?:nc|ncat|netcat)\s+([a-zA-Z0-9_.-]+)\s+([0-9]+)/i;
+const NETCAT_FIFO_REVERSE_REGEX = /(?:mkfifo|mknod)\s+[^\s;]+.*?\|\s*(?:\/bin\/)?(?:ba)?sh\s+.*?(?:nc|ncat|netcat)\s+([a-zA-Z0-9_.-]+)\s+([0-9]+)/i;
 const PYTHON_SOCKET_REVERSE_REGEX = /python[23]?\s+.*?(?:import\s+socket.*?os\.dup2.*?\/bin\/(?:ba)?sh|socket\.socket.*?os\.dup2)/is;
 const PERL_SOCKET_REVERSE_REGEX = /perl\s+.*?(?:IO::Socket::INET.*?fdopen|Socket.*?connect.*?open\(STDIN)/is;
 const SOCAT_REVERSE_REGEX = /socat\s+.*?(?:tcp-connect|tcp):([a-zA-Z0-9_.-]+):([0-9]+).*?exec:['"]?(?:bash|sh|cmd)/i;
 const POWERSHELL_TCP_REVERSE_REGEX = /powershell.*?System\.Net\.Sockets\.TCPClient.*?GetStream.*?(?:Invoke-Expression|iex)/is;
 const PHP_SOCKET_REVERSE_REGEX = /php\s+.*?(?:fsockopen|pfsockopen).*?exec\s*\(\s*['"]\/(?:bin\/)?(?:ba)?sh/is;
+const RUBY_SOCKET_REVERSE_REGEX = /ruby\s+.*?(?:TCPSocket\.open|TCPSocket\.new).*?(?:exec|spawn).*?\/(?:bin\/)?(?:ba)?sh/is;
+const TELNET_FIFO_REVERSE_REGEX = /mknod\s+[^\s;]+\s+p\s*;\s*telnet\s+([a-zA-Z0-9_.-]+)\s+([0-9]+)\s*0<[^\s;]+\s*\|\s*\/(?:bin\/)?(?:ba)?sh/i;
+const NODE_REVERSE_SHELL_REGEX = /node(?:js)?\s+.*?(?:require\s*\(\s*['"](?:net|child_process)['"]\s*\)|net\.Socket).*?(?:require\s*\(\s*['"](?:net|child_process)['"]\s*\)|spawn|connect)/is;
+const AWK_SOCKET_REVERSE_REGEX = /awk\s+.*?\/inet\/tcp\/[0-9]+\/([a-zA-Z0-9_.-]+)\/([0-9]+)/is;
 
 /**
  * Normalizes shell script to unwrap encoding, sudo, and subshell escapes.
@@ -60,12 +64,14 @@ export function detectReverseShell(rawCommand: string): ReverseShellDetectionRes
   // 2. Bash file descriptor exec socket redirect
   const devTcpPipeMatch = normalized.match(BASH_DEV_TCP_PIPE_REGEX);
   if (devTcpPipeMatch) {
+    const host = devTcpPipeMatch[1] || devTcpPipeMatch[3];
+    const port = devTcpPipeMatch[2] || devTcpPipeMatch[4];
     return {
       isReverseShell: true,
-      reason: `Bash file descriptor socket redirection to /dev/tcp/${devTcpPipeMatch[1]}/${devTcpPipeMatch[2]}`,
+      reason: `Bash file descriptor socket redirection to /dev/tcp/${host}/${port}`,
       detectedPattern: devTcpPipeMatch[0],
-      targetHost: devTcpPipeMatch[1],
-      targetPort: parseInt(devTcpPipeMatch[2], 10),
+      targetHost: host,
+      targetPort: parseInt(port, 10),
     };
   }
 
@@ -140,6 +146,50 @@ export function detectReverseShell(rawCommand: string): ReverseShellDetectionRes
       isReverseShell: true,
       reason: 'PHP fsockopen interactive shell spawn payload',
       detectedPattern: phpMatch[0].slice(0, 80),
+    };
+  }
+
+  // 10. Ruby socket reverse shell
+  const rubyMatch = normalized.match(RUBY_SOCKET_REVERSE_REGEX);
+  if (rubyMatch) {
+    return {
+      isReverseShell: true,
+      reason: 'Ruby TCPSocket interactive shell spawn payload',
+      detectedPattern: rubyMatch[0].slice(0, 80),
+    };
+  }
+
+  // 11. Telnet named pipe reverse shell
+  const telnetMatch = normalized.match(TELNET_FIFO_REVERSE_REGEX);
+  if (telnetMatch) {
+    return {
+      isReverseShell: true,
+      reason: `Telnet FIFO pipe reverse shell to ${telnetMatch[1]}:${telnetMatch[2]}`,
+      detectedPattern: telnetMatch[0],
+      targetHost: telnetMatch[1],
+      targetPort: parseInt(telnetMatch[2], 10),
+    };
+  }
+
+  // 12. Node.js net.Socket reverse shell
+  const nodeMatch = normalized.match(NODE_REVERSE_SHELL_REGEX);
+  if (nodeMatch) {
+    return {
+      isReverseShell: true,
+      reason: 'Node.js net.Socket interactive child_process reverse shell',
+      detectedPattern: nodeMatch[0].slice(0, 80),
+    };
+  }
+
+  // 13. Awk /inet/tcp reverse shell
+  const awkMatch = normalized.match(AWK_SOCKET_REVERSE_REGEX);
+  if (awkMatch) {
+    return {
+      isReverseShell: true,
+      reason: `Awk /inet/tcp network socket reverse shell to ${awkMatch[1]}:${awkMatch[2]}`,
+      detectedPattern: awkMatch[0].slice(0, 80),
+      targetHost: awkMatch[1],
+      targetPort: parseInt(awkMatch[2], 10),
     };
   }
 
