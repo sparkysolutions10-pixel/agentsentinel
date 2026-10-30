@@ -73,7 +73,11 @@ export function inspectIndexDeletion(
 
   // 2. Check for deleteAll parameter in query / mutation tools
   const deleteAllVal = params.deleteAll ?? params.delete_all;
-  if (deleteAllVal === true || deleteAllVal === 'true') {
+  if (
+    deleteAllVal === true ||
+    deleteAllVal === 1 ||
+    (typeof deleteAllVal === 'string' && /^(?:true|1|all)$/i.test(deleteAllVal.trim()))
+  ) {
     return {
       isDestructiveDeletion: true,
       targetIndex: targetIndex ? String(targetIndex) : undefined,
