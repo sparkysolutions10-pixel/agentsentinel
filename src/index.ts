@@ -43,6 +43,7 @@ export * from './matcher.js';
 export * from './shell/index.js';
 export * from './sql/index.js';
 export * from './fs/index.js';
+export * from './secrets/index.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
