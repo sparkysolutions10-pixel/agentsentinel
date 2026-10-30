@@ -27,6 +27,7 @@ export interface AWSScrubResult {
 
 export interface ScrubAWSOptions {
   replacement?: string;
+  contextHint?: string;
 }
 
 export interface AWSKeyDetectorOptions {
@@ -76,7 +77,7 @@ export function maskAWSSecretKey(key: string): string {
 /**
  * Detects AWS credentials in a given text string.
  */
-export function detectAWSKeys(text: string): AWSKeyMatch[] {
+export function detectAWSKeys(text: string, contextHint?: string): AWSKeyMatch[] {
   if (!text || typeof text !== 'string') return [];
 
   const matches: AWSKeyMatch[] = [];
@@ -116,7 +117,24 @@ export function detectAWSKeys(text: string): AWSKeyMatch[] {
     }
   }
 
-  // 3. Detect AWS STS Session Tokens
+  // 3. If contextHint indicates a secret key (e.g. AWS_SECRET_ACCESS_KEY, secret_key, etc.)
+  if (contextHint && /(?:aws_secret|secret_access_key|secret_key|secretkey|SecretAccessKey)/i.test(contextHint)) {
+    AWS_SECRET_KEY_STANDALONE_REGEX.lastIndex = 0;
+    while ((match = AWS_SECRET_KEY_STANDALONE_REGEX.exec(text)) !== null) {
+      const rawKey = match[0];
+      if (!matches.some((m) => m.rawKey === rawKey)) {
+        matches.push({
+          keyType: 'SecretAccessKey',
+          rawKey,
+          redactedKey: maskAWSSecretKey(rawKey),
+          startIndex: match.index,
+          endIndex: match.index + rawKey.length,
+        });
+      }
+    }
+  }
+
+  // 4. Detect AWS STS Session Tokens
   AWS_SESSION_TOKEN_REGEX.lastIndex = 0;
   while ((match = AWS_SESSION_TOKEN_REGEX.exec(text)) !== null) {
     const fullMatch = match[0];
@@ -135,6 +153,20 @@ export function detectAWSKeys(text: string): AWSKeyMatch[] {
     }
   }
 
+  // 5. If contextHint indicates a session token (e.g. AWS_SESSION_TOKEN, session_token)
+  if (contextHint && /(?:session_token|security_token|SessionToken)/i.test(contextHint)) {
+    const rawToken = text.trim();
+    if (rawToken.length >= 80 && !matches.some((m) => m.rawKey === rawToken)) {
+      matches.push({
+        keyType: 'SessionToken',
+        rawKey: rawToken,
+        redactedKey: 'aws_tok_***' + rawToken.slice(-4),
+        startIndex: 0,
+        endIndex: rawToken.length,
+      });
+    }
+  }
+
   return matches;
 }
 
@@ -146,7 +178,7 @@ export function scrubAWSKeys(text: string, options?: ScrubAWSOptions): AWSScrubR
     return { hasMatches: false, scrubbedText: text || '', matches: [] };
   }
 
-  const matches = detectAWSKeys(text);
+  const matches = detectAWSKeys(text, options?.contextHint);
   if (matches.length === 0) {
     return { hasMatches: false, scrubbedText: text, matches: [] };
   }
@@ -181,7 +213,7 @@ export function scanContextForAWSKeys(ctx: ToolCallContext): AWSKeyMatch[] {
     if (obj === null || obj === undefined) return;
 
     if (typeof obj === 'string') {
-      const matches = detectAWSKeys(obj);
+      const matches = detectAWSKeys(obj, path);
       for (const m of matches) {
         found.push({
           ...m,
@@ -205,23 +237,23 @@ export function scanContextForAWSKeys(ctx: ToolCallContext): AWSKeyMatch[] {
  * Recursively redacts AWS credentials from parameters object.
  */
 export function redactAWSKeysInParams(params: Record<string, any>, options?: ScrubAWSOptions): Record<string, any> {
-  function mutateDeep(obj: unknown): unknown {
+  function mutateDeep(obj: unknown, path: string): unknown {
     if (typeof obj === 'string') {
-      const scrubbed = scrubAWSKeys(obj, options);
+      const scrubbed = scrubAWSKeys(obj, { ...options, contextHint: path });
       return scrubbed.scrubbedText;
     } else if (Array.isArray(obj)) {
-      return obj.map((item) => mutateDeep(item));
+      return obj.map((item, idx) => mutateDeep(item, `${path}[${idx}]`));
     } else if (obj !== null && typeof obj === 'object') {
       const res: Record<string, any> = {};
       for (const [k, v] of Object.entries(obj)) {
-        res[k] = mutateDeep(v);
+        res[k] = mutateDeep(v, path ? `${path}.${k}` : k);
       }
       return res;
     }
     return obj;
   }
 
-  return mutateDeep(params) as Record<string, any>;
+  return mutateDeep(params, '') as Record<string, any>;
 }
 
 /**
