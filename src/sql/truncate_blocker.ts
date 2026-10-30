@@ -23,8 +23,12 @@ export const DEFAULT_QUERY_FIELDS = [
   'queryText',
 ];
 
-export const TRUNCATE_REGEX =
-  /\bTRUNCATE(?:\s+TABLE)?(?:\s+ONLY)?\s+([`"'\[\]]?[a-zA-Z0-9_$.]+[`"'\]]?(?:\s*,\s*[`"'\[\]]?[a-zA-Z0-9_$.]+[`"'\]]?)*)/i;
+const TABLE_IDENT_PATTERN = '([`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?(?:\\.[`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?)*)';
+
+export const TRUNCATE_REGEX = new RegExp(
+  `\\bTRUNCATE(?:\\s+TABLE)?(?:\\s+ONLY)?\\s+(${TABLE_IDENT_PATTERN}(?:\\s*,\\s*${TABLE_IDENT_PATTERN})*)`,
+  'i'
+);
 
 /**
  * Detects if a SQL string attempts to TRUNCATE one or more tables.
