@@ -204,8 +204,8 @@ AgentSentinel is an independent open-source zero-trust security framework. You c
 
 | Rail | Destination / Explorer Link | Payment Type |
 |---|---|---|
-| **🇮🇳 Instant Fiat (UPI / Cards)** | [Pay via Razorpay Portal](https://rzp.io/rzp/YQIrvWJ) | 1-Click UPI (GPay, PhonePe, Paytm), RuPay, Cards |
-| **⭐ Stellar & Soroban (USDC / XLM)** | [`GABJXOQG2I47R3F6W6Y5ZPX6JNYZ7V2C247B256N63FUS7V3LOM7U67C`](https://stellar.expert/explorer/public/account/GABJXOQG2I47R3F6W6Y5ZPX6JNYZ7V2C247B256N63FUS7V3LOM7U67C) | USDC, XLM, Soroban Grants & Developer Tips |
+| **🇮🇳 Instant Fiat (UPI / Cards)** | [Pay via Razorpay Portal](https://razorpay.me/@sparkydigitalservices) | 1-Click UPI (GPay, PhonePe, Paytm), RuPay, Cards |
+| **⭐ Stellar & Soroban (USDC / XLM)** | [`GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT`](https://stellar.expert/explorer/public/account/GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT) | USDC, XLM, Soroban Grants & Developer Tips |
 | **🌐 EVM (MegaETH / Base / Ethereum)** | [`0x40B7d9273092822341860F5610168861351e71eb`](https://etherscan.io/address/0x40B7d9273092822341860F5610168861351e71eb) | USDC, USDT, ETH on MegaETH / Base / Ethereum |
 | **❤️ GitHub Sponsors** | [github.com/sponsors/sparkysolutions10-pixel](https://github.com/sponsors/sparkysolutions10-pixel) | Official GitHub Sponsor Dashboard |
 
