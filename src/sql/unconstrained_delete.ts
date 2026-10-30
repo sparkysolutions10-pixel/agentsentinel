@@ -24,7 +24,9 @@ export const TAUTOLOGY_REGEXES = [
   /\bWHERE\s+0\s*=\s*0\b/i,
   /\bWHERE\s+TRUE\b/i,
   /\bWHERE\s+1\b/i,
-  /\bWHERE\s+['"][a-zA-Z0-9_]+['"]\s*=\s*['"][a-zA-Z0-9_]+['"]\b/i,
+  /\bWHERE\s+['"]([a-zA-Z0-9_]*)['"]\s*=\s*['"]\1['"]/i,
+  /\bWHERE\s+""\s*=\s*""/i,
+  /\bWHERE\s+''\s*=\s*''/i,
   /\bWHERE\s+NULL\s+IS\s+NULL\b/i,
 ];
 
@@ -71,9 +73,9 @@ export function detectUnconstrainedDelete(
         };
       }
 
-      // 2. Check for tautological WHERE clause
+      // 2. Check for tautological WHERE clause on both original statement and unquoted
       for (const tRegex of TAUTOLOGY_REGEXES) {
-        if (tRegex.test(stmt)) {
+        if (tRegex.test(stmt) || tRegex.test(unquoted)) {
           return {
             isUnconstrained: true,
             targetTable,
