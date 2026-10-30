@@ -8,11 +8,20 @@
   "bin": {
     "agentsentinel": "dist/cli/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "ARCHITECTURE.md",
+    "BENCHMARKS.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "pack:dry-run": "npm pack --dry-run"
   },
   "keywords": [
     "ai-agents",
@@ -29,7 +38,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^22.7.4",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "^2.1.1",
     "typescript": "^5.6.2",
     "vitest": "^2.1.1"
   }
