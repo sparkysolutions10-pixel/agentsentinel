@@ -59,25 +59,22 @@ export const DEFAULT_ALLOWED_ENV_VARS = [
   'CI',
 ];
 
-// 1. Bare env command (or piped/redirected env)
-const BARE_ENV_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?env(?:\s*|\s*\|\s*.*|\s*>\s*.*|\s*2>&1)(?=[;&|]|$)/i;
-
-// 2. printenv (bare or with argument)
+// 1. printenv (bare or with argument)
 const PRINTENV_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?printenv(?:\s+([a-zA-Z0-9_]+))?(?:\s*|\s*\|\s*.*|\s*>\s*.*|\s*2>&1)(?=[;&|]|$)/i;
 
-// 3. export -p or bare export (without '=')
+// 2. export -p or bare export (without '=')
 const BARE_EXPORT_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?export(?:\s+-p)?(?:\s*|\s*\|\s*.*|\s*>\s*.*|\s*2>&1)(?=[;&|]|$)/i;
 
-// 4. bare set command (excluding set -e, set -x, set var=val)
+// 3. bare set command (excluding set -e, set -x, set var=val)
 const BARE_SET_REGEX = /(?:^|[;&|]\s*)set(?:\s*|\s*\|\s*.*|\s*>\s*.*)(?=[;&|]|$)/i;
 
-// 5. declare -p or declare -x
+// 4. declare -p or declare -x
 const DECLARE_DUMP_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?declare\s+-[px](?:\s*|\s*\|\s*.*|\s*>\s*.*)(?=[;&|]|$)/i;
 
-// 6. /proc/*/environ access
+// 5. /proc/*/environ access
 const PROC_ENVIRON_REGEX = /(?:cat|less|more|tail|head|strings|xxd|hexdump|od|awk|sed|grep|python|perl|node)\s+.*?(?:\/proc\/(?:self|[0-9]+)\/environ)/i;
 
-// 7. Windows / PowerShell env drive dump
+// 6. Windows / PowerShell env drive dump
 const PS_ENV_DUMP_REGEX = /(?:Get-ChildItem|gci|dir|ls)\s+.*?(?:env:|Env:\\)|\[(?:System\.)?Environment\]::GetEnvironmentVariables\s*\(\s*\)/i;
 
 /**
@@ -140,18 +137,31 @@ export function detectEnvLeak(
     };
   }
 
-  // 4. bare env (check that it is not scoped like env FOO=bar cmd or env PATH=... node)
-  const envMatch = rawCommand.match(BARE_ENV_REGEX);
+  // 4. env command inspection
+  const envMatch = rawCommand.match(/(?:^|[;&|]\s*)(?:sudo\s+)?env\b/i);
   if (envMatch) {
-    // Check if env has command execution arguments
-    const afterEnv = rawCommand.slice(rawCommand.indexOf(envMatch[0]) + envMatch[0].length).trim();
-    const isScopedExecution = /^[A-Za-z0-9_-]+=[^\s]+\s+\S+/.test(afterEnv) || /^-[i0u]\s+\S+/.test(afterEnv);
-    if (!isScopedExecution) {
+    const afterEnvRaw = rawCommand.slice(envMatch.index! + envMatch[0].length);
+    const sanitized = afterEnvRaw.replace(/2>&1/g, ' ');
+    const segment = sanitized.split(/[;&|]/)[0].trim();
+    const cleanSegment = segment.replace(/>>?\s*\S+|<+\s*\S+/g, '').trim();
+
+    if (!cleanSegment || cleanSegment === '-0') {
       return {
         isEnvDump: true,
         mechanism: 'env',
         reason: 'Full environment variable table dump intercepted via bare env',
-        detectedPattern: envMatch[0].trim(),
+        detectedPattern: rawCommand.trim(),
+      };
+    }
+
+    const tokens = cleanSegment.split(/\s+/).filter(Boolean);
+    const hasSubcommand = tokens.some(t => !t.includes('=') && !t.startsWith('-'));
+    if (!hasSubcommand) {
+      return {
+        isEnvDump: true,
+        mechanism: 'env',
+        reason: 'Full environment variable table dump intercepted via bare env',
+        detectedPattern: rawCommand.trim(),
       };
     }
   }
@@ -160,7 +170,6 @@ export function detectEnvLeak(
   const exportMatch = rawCommand.match(BARE_EXPORT_REGEX);
   if (exportMatch) {
     const afterExport = rawCommand.slice(rawCommand.indexOf(exportMatch[0]) + exportMatch[0].length).trim();
-    // If setting a variable (export KEY=value), permit it
     if (!afterExport.includes('=')) {
       return {
         isEnvDump: true,
