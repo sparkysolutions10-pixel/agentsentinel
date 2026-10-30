@@ -45,6 +45,7 @@ export interface SqlClassificationResult {
 
 /**
  * Strips line comments (-- ...) and block comments (/* ... *\/) while preserving strings.
+ * Also handles MySQL hash comments (# ...) and escaped quotes.
  */
 export function stripSqlComments(sql: string): string {
   if (!sql || typeof sql !== 'string') return '';
@@ -80,27 +81,44 @@ export function stripSqlComments(sql: string): string {
       continue;
     }
 
-    // Handle quote states
-    if (char === "'" && !inDoubleQuote && !inBacktick) {
-      inSingleQuote = !inSingleQuote;
+    // Handle inside single quotes
+    if (inSingleQuote) {
+      if (char === '\\' && i + 1 < len) {
+        result += char + nextChar;
+        i++;
+        continue;
+      }
+      if (char === "'" && nextChar === "'") {
+        result += "''";
+        i++;
+        continue;
+      }
+      if (char === "'") {
+        inSingleQuote = false;
+      }
       result += char;
       continue;
     }
 
-    if (char === '"' && !inSingleQuote && !inBacktick) {
-      inDoubleQuote = !inDoubleQuote;
+    // Handle inside double quotes
+    if (inDoubleQuote) {
+      if (char === '\\' && i + 1 < len) {
+        result += char + nextChar;
+        i++;
+        continue;
+      }
+      if (char === '"') {
+        inDoubleQuote = false;
+      }
       result += char;
       continue;
     }
 
-    if (char === '`' && !inSingleQuote && !inDoubleQuote) {
-      inBacktick = !inBacktick;
-      result += char;
-      continue;
-    }
-
-    // If inside a quoted string, preserve character
-    if (inSingleQuote || inDoubleQuote || inBacktick) {
+    // Handle inside backticks
+    if (inBacktick) {
+      if (char === '`') {
+        inBacktick = false;
+      }
       result += char;
       continue;
     }
@@ -112,9 +130,33 @@ export function stripSqlComments(sql: string): string {
       continue;
     }
 
+    if (char === '#') {
+      inLineComment = true;
+      continue;
+    }
+
     if (char === '/' && nextChar === '*') {
       inBlockComment = true;
       i++; // skip next '*'
+      continue;
+    }
+
+    // Quote starts
+    if (char === "'") {
+      inSingleQuote = true;
+      result += char;
+      continue;
+    }
+
+    if (char === '"') {
+      inDoubleQuote = true;
+      result += char;
+      continue;
+    }
+
+    if (char === '`') {
+      inBacktick = true;
+      result += char;
       continue;
     }
 
@@ -125,7 +167,7 @@ export function stripSqlComments(sql: string): string {
 }
 
 /**
- * Splits SQL into individual statements by semicolon delimiter, respecting quote boundaries.
+ * Splits SQL into individual statements by semicolon delimiter, respecting quote boundaries and escapes.
  */
 export function splitSqlStatements(sql: string): string[] {
   const stripped = stripSqlComments(sql);
@@ -139,16 +181,66 @@ export function splitSqlStatements(sql: string): string[] {
 
   for (let i = 0; i < stripped.length; i++) {
     const char = stripped[i];
+    const nextChar = i + 1 < stripped.length ? stripped[i + 1] : '';
 
-    if (char === "'" && !inDoubleQuote && !inBacktick) {
-      inSingleQuote = !inSingleQuote;
-    } else if (char === '"' && !inSingleQuote && !inBacktick) {
-      inDoubleQuote = !inDoubleQuote;
-    } else if (char === '`' && !inSingleQuote && !inDoubleQuote) {
-      inBacktick = !inBacktick;
+    if (inSingleQuote) {
+      if (char === '\\' && i + 1 < stripped.length) {
+        current += char + nextChar;
+        i++;
+        continue;
+      }
+      if (char === "'" && nextChar === "'") {
+        current += "''";
+        i++;
+        continue;
+      }
+      if (char === "'") {
+        inSingleQuote = false;
+      }
+      current += char;
+      continue;
     }
 
-    if (char === ';' && !inSingleQuote && !inDoubleQuote && !inBacktick) {
+    if (inDoubleQuote) {
+      if (char === '\\' && i + 1 < stripped.length) {
+        current += char + nextChar;
+        i++;
+        continue;
+      }
+      if (char === '"') {
+        inDoubleQuote = false;
+      }
+      current += char;
+      continue;
+    }
+
+    if (inBacktick) {
+      if (char === '`') {
+        inBacktick = false;
+      }
+      current += char;
+      continue;
+    }
+
+    if (char === "'") {
+      inSingleQuote = true;
+      current += char;
+      continue;
+    }
+
+    if (char === '"') {
+      inDoubleQuote = true;
+      current += char;
+      continue;
+    }
+
+    if (char === '`') {
+      inBacktick = true;
+      current += char;
+      continue;
+    }
+
+    if (char === ';') {
       const trimmed = current.trim();
       if (trimmed.length > 0) {
         statements.push(trimmed);
