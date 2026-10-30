@@ -171,24 +171,25 @@ export function splitSqlStatements(sql: string): string[] {
  * Extracts target table identifier from statement.
  */
 function extractTargetTable(cleanSql: string, command: SqlCommandType): string | undefined {
+  const tableIdent = '([`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?(?:\\.[`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?)*)';
   let regex: RegExp | null = null;
 
   if (command === 'SELECT') {
-    regex = /\bFROM\s+([`"']?[a-zA-Z0-9_$.]+[`"']?)/i;
+    regex = new RegExp(`\\bFROM\\s+${tableIdent}`, 'i');
   } else if (command === 'INSERT') {
-    regex = /\bINTO\s+([`"']?[a-zA-Z0-9_$.]+[`"']?)/i;
+    regex = new RegExp(`\\bINTO\\s+${tableIdent}`, 'i');
   } else if (command === 'UPDATE') {
-    regex = /\bUPDATE\s+([`"']?[a-zA-Z0-9_$.]+[`"']?)/i;
+    regex = new RegExp(`\\bUPDATE\\s+${tableIdent}`, 'i');
   } else if (command === 'DELETE') {
-    regex = /\bFROM\s+([`"']?[a-zA-Z0-9_$.]+[`"']?)/i;
+    regex = new RegExp(`\\bFROM\\s+${tableIdent}`, 'i');
   } else if (command === 'DROP' || command === 'TRUNCATE') {
-    regex = /\bTABLE\s+(?:IF\s+EXISTS\s+)?([`"']?[a-zA-Z0-9_$.]+[`"']?)/i;
+    regex = new RegExp(`\\bTABLE\\s+(?:IF\\s+EXISTS\\s+)?${tableIdent}`, 'i');
   }
 
   if (regex) {
     const match = cleanSql.match(regex);
     if (match && match[1]) {
-      return match[1].replace(/[`"']/g, '');
+      return match[1].replace(/[`"'\[\]]/g, '');
     }
   }
 
