@@ -1,0 +1,183 @@
+{
+  "version": "1.0",
+  "name": "Enterprise Zero-Trust Strict Security Policy Preset",
+  "description": "Hardened corporate zero-trust policy strictly prohibiting destructive operating system operations, unconstrained SQL operations, secret exfiltration, and cloud metadata SSRF.",
+  "rules": [
+    {
+      "id": "ent-strict-block-root-rm",
+      "name": "Block Recursive Root Deletion",
+      "category": "shell",
+      "priority": 1000,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command", "bash_exec"],
+        "patterns": ["*rm *-rf*/*", "*rm *-rf*~*", "*rm *-rf*.*", "*rmdir */*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Recursive filesystem deletion commands are strictly prohibited in enterprise environments."
+      }
+    },
+    {
+      "id": "ent-strict-block-disk-format",
+      "name": "Block Raw Disk Formatting and Device Overwrite",
+      "category": "shell",
+      "priority": 995,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command"],
+        "patterns": ["*mkfs*", "*dd *of=/dev/*", "*fdisk*", "*parted*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Direct disk device access and partition formatting commands are blocked."
+      }
+    },
+    {
+      "id": "ent-strict-block-reverse-shell",
+      "name": "Block Reverse Shell and Interactive C2 Sockets",
+      "category": "shell",
+      "priority": 990,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command"],
+        "patterns": ["*/dev/tcp/*", "*/dev/udp/*", "*nc *-e*", "*ncat *-e*", "*bash *-i*", "*exec *<>*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Interactive reverse shell connections and socket redirects are blocked by firewall."
+      }
+    },
+    {
+      "id": "ent-strict-block-fork-bomb",
+      "name": "Block Fork Bomb Denial of Service",
+      "category": "shell",
+      "priority": 985,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command"],
+        "patterns": ["*:(){ :|:& };:*", "*bomb()*", "*forkbomb*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Fork bomb denial-of-service process starvation patterns are strictly prohibited."
+      }
+    },
+    {
+      "id": "ent-strict-block-sql-destructive-ddl",
+      "name": "Block Destructive SQL Schema DDL",
+      "category": "sql",
+      "priority": 950,
+      "enabled": true,
+      "match": {
+        "tools": ["sql", "query_database", "run_sql", "postgres", "mysql", "database_query"],
+        "patterns": ["*DROP TABLE*", "*DROP DATABASE*", "*DROP SCHEMA*", "*ALTER TABLE * DROP*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Destructive DDL operations must be scheduled through audited CI/CD migration pipelines."
+      }
+    },
+    {
+      "id": "ent-strict-block-sql-truncate",
+      "name": "Block SQL Truncate Operations",
+      "category": "sql",
+      "priority": 940,
+      "enabled": true,
+      "match": {
+        "tools": ["sql", "query_database", "run_sql", "postgres", "mysql", "database_query"],
+        "patterns": ["*TRUNCATE TABLE*", "*TRUNCATE *"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Table truncation is prohibited to prevent irrecoverable data loss."
+      }
+    },
+    {
+      "id": "ent-strict-block-path-traversal",
+      "name": "Block Path Traversal Escapes",
+      "category": "fs",
+      "priority": 920,
+      "enabled": true,
+      "match": {
+        "tools": ["read_file", "write_file", "list_dir", "delete_file", "fs"],
+        "patterns": ["*../../*", "*..\\..\\*", "*%2e%2e%2f*", "*..%2f*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Directory traversal escapes outside allocated workspace boundary are blocked."
+      }
+    },
+    {
+      "id": "ent-strict-block-sensitive-files",
+      "name": "Block Access to Sensitive System Directories and Credentials",
+      "category": "fs",
+      "priority": 910,
+      "enabled": true,
+      "match": {
+        "tools": ["read_file", "write_file", "cat", "view_file", "fs"],
+        "patterns": ["*/etc/shadow*", "*/etc/passwd*", "*~/.ssh/*", "*id_rsa*", "*SAM*", "*SYSTEM*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Access to host OS credentials, password hashes, and private SSH keys is denied."
+      }
+    },
+    {
+      "id": "ent-strict-block-cloud-metadata-ssrf",
+      "name": "Block Cloud Metadata SSRF Endpoints",
+      "category": "network",
+      "priority": 900,
+      "enabled": true,
+      "match": {
+        "tools": ["http_request", "curl", "fetch_url", "wget", "http_client", "network"],
+        "patterns": ["*169.254.169.254*", "*metadata.google.internal*", "*instance-data*", "*fd00:ec2::254*", "*100.100.100.200*", "*168.63.129.16*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Access to cloud metadata services (IMDSv1/v2, GCP, Azure, Alibaba) is prohibited."
+      }
+    },
+    {
+      "id": "ent-strict-block-k8s-token-theft",
+      "name": "Block Kubernetes Service Account Secrets Introspection",
+      "category": "network",
+      "priority": 890,
+      "enabled": true,
+      "match": {
+        "tools": ["http_request", "curl", "fetch_url", "http_client", "network"],
+        "patterns": ["*kubernetes.default*", "*/var/run/secrets/kubernetes.io*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Kubernetes in-cluster service account credentials access is prohibited."
+      }
+    },
+    {
+      "id": "ent-strict-confirm-prod-migration",
+      "name": "Require Human Confirmation for Schema Alterations",
+      "category": "sql",
+      "priority": 850,
+      "enabled": true,
+      "match": {
+        "tools": ["sql", "query_database", "run_sql", "postgres", "mysql", "database_query"],
+        "patterns": ["*ALTER TABLE*"]
+      },
+      "action": {
+        "verdict": "CONFIRM",
+        "severity": "high",
+        "reason": "Schema alterations require interactive human administrator confirmation."
+      }
+    }
+  ]
+}
