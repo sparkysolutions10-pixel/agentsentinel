@@ -6,6 +6,8 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-0_Runtime-success)](package.json)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
+[![Good First Issues](https://img.shields.io/github/issues/sparkysolutions10-pixel/agentsentinel/good%20first%20issue?color=purple&label=good%20first%20issues)](https://github.com/sparkysolutions10-pixel/agentsentinel/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 [![Security: OWASP Top 10](https://img.shields.io/badge/OWASP%20LLM-ASI01--ASI05%20Defense-red)](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 
 ---
