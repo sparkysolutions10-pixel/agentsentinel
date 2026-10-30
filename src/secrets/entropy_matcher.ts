@@ -61,11 +61,11 @@ const SECRET_REGEX_PATTERNS: Array<{
     pattern: /\bBearer\s+([a-zA-Z0-9_\-\.]{24,})\b/gi,
     minEntropy: 3.5,
   },
-  // Key-value assignment (api_key="...", password="...", token="...")
+  // Key-value assignment (api_key="...", database_password="...", token="...")
   {
     name: 'Secret Assignment',
-    pattern: /(?:api[_-]?key|secret[_-]?key|auth[_-]?token|access[_-]?token|password|passwd|private[_-]?key)\s*[:=]\s*['"]([a-zA-Z0-9_\-+=/]{16,})['"]/gi,
-    minEntropy: 3.2,
+    pattern: /(?:[a-zA-Z0-9_]*(?:api[_-]?key|secret|token|password|passwd|private[_-]?key)[a-zA-Z0-9_]*)\s*[:=]\s*['"]([^'"\r\n]{8,})['"]/gi,
+    minEntropy: 3.0,
   },
   // High-entropy 32-character or 64-character hex tokens
   {
