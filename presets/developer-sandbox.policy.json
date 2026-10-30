@@ -1,0 +1,103 @@
+{
+  "version": "1.0",
+  "name": "Developer Sandbox Permissive Security Policy Preset",
+  "description": "Flexible and permissive policy preset designed for local developer environments, sandboxes, and prototyping. Hard-blocks catastrophic OS destruction while downgrading risky database resets to interactive human confirmation.",
+  "rules": [
+    {
+      "id": "dev-block-catastrophic-root-rm",
+      "name": "Block Catastrophic Root Deletion",
+      "category": "shell",
+      "priority": 1000,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command", "bash_exec"],
+        "patterns": ["*rm *-rf*/*", "*rm *-rf*~*", "*rm *-rf*.*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Catastrophic recursive root deletion is blocked even in developer sandboxes."
+      }
+    },
+    {
+      "id": "dev-block-raw-disk-overwrite",
+      "name": "Block Raw Disk Overwrite",
+      "category": "shell",
+      "priority": 990,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command"],
+        "patterns": ["*mkfs*", "*dd *of=/dev/*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "critical",
+        "reason": "Physical raw disk formatting and block device overwriting is prohibited."
+      }
+    },
+    {
+      "id": "dev-block-cloud-metadata-ssrf",
+      "name": "Block Cloud Metadata Service Endpoints",
+      "category": "network",
+      "priority": 950,
+      "enabled": true,
+      "match": {
+        "tools": ["http_request", "curl", "fetch_url", "http_client", "network"],
+        "patterns": ["*169.254.169.254*", "*metadata.google.internal*", "*fd00:ec2::254*"]
+      },
+      "action": {
+        "verdict": "BLOCK",
+        "severity": "high",
+        "reason": "Cloud metadata SSRF endpoints are blocked across all environments."
+      }
+    },
+    {
+      "id": "dev-confirm-sql-table-drops",
+      "name": "Prompt Confirmation on Local Table Drops",
+      "category": "sql",
+      "priority": 800,
+      "enabled": true,
+      "match": {
+        "tools": ["sql", "query_database", "run_sql", "postgres", "mysql", "database_query"],
+        "patterns": ["*DROP TABLE*", "*DROP DATABASE*"]
+      },
+      "action": {
+        "verdict": "CONFIRM",
+        "severity": "medium",
+        "reason": "Database schema drop detected. Please confirm if you intend to reset your local test table."
+      }
+    },
+    {
+      "id": "dev-confirm-sql-truncate",
+      "name": "Prompt Confirmation on Table Truncation",
+      "category": "sql",
+      "priority": 790,
+      "enabled": true,
+      "match": {
+        "tools": ["sql", "query_database", "run_sql", "postgres", "mysql", "database_query"],
+        "patterns": ["*TRUNCATE TABLE*", "*TRUNCATE *"]
+      },
+      "action": {
+        "verdict": "CONFIRM",
+        "severity": "medium",
+        "reason": "Table truncation detected. Please confirm if you wish to wipe local table rows."
+      }
+    },
+    {
+      "id": "dev-confirm-reverse-shell-testing",
+      "name": "Prompt Confirmation on Interactive Sockets",
+      "category": "shell",
+      "priority": 750,
+      "enabled": true,
+      "match": {
+        "tools": ["bash", "shell", "sh", "exec", "terminal", "run_command"],
+        "patterns": ["*/dev/tcp/*", "*/dev/udp/*", "*nc *-e*"]
+      },
+      "action": {
+        "verdict": "CONFIRM",
+        "severity": "high",
+        "reason": "Interactive socket redirect detected. Confirm if this is intended penetration testing."
+      }
+    }
+  ]
+}
