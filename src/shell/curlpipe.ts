@@ -16,8 +16,8 @@ export interface CurlPipeDetectionResult {
   detectedPattern?: string;
 }
 
-// 1. Classic pipeline: curl/wget/fetch/http [args] | [sudo] (bash|sh|zsh|dash|ksh|python|perl|ruby|node)
-const CURL_WGET_PIPE_REGEX = /(?:^|[;&|]\s*)(curl|wget|fetch|http)\s+([^|;&]+?)\s*\|\s*(?:sudo\s+)?(?:\/usr(?:\/local)?\/bin\/|\/bin\/)?(bash|sh|zsh|dash|ksh|python[23]?|perl|ruby|node)(?:\s+-[a-zA-Z0-9]+|\s+--[a-zA-Z0-9-]+|\s+-)?(?:\s|$)/i;
+// 1. Classic pipeline: [ENV=val ...] curl/wget/fetch/http [args] | [sudo] (bash|sh|zsh|dash|ksh|python|perl|ruby|node)
+const CURL_WGET_PIPE_REGEX = /(?:^|[;&|]\s*)(?:[A-Za-z_][A-Za-z0-9_]*=[^\s]+\s+)*(curl|wget|fetch|http)\s+([^|;&]+?)\s*\|\s*(?:sudo\s+)?(?:\/usr(?:\/local)?\/bin\/|\/bin\/)?(bash|sh|zsh|dash|ksh|python[23]?|perl|ruby|node)(?:\s+-[a-zA-Z0-9]+|\s+--[a-zA-Z0-9-]+|\s+-)?(?:\s|$)/i;
 
 // 2. Process substitution: (bash|sh|zsh) <((curl|wget|fetch) ...)
 const PROC_SUBSTITUTION_REGEX = /(?:^|[;&|]\s*)(?:sudo\s+)?(?:\/usr(?:\/local)?\/bin\/|\/bin\/)?(bash|sh|zsh|dash|ksh)\s+<\(\s*(curl|wget|fetch)\s+([^)]+)\)/i;
@@ -28,11 +28,14 @@ const EVAL_SUBEXEC_REGEX = /(?:^|[;&|]\s*)eval\s+["']?(?:\$\(\s*(curl|wget|fetch
 // 4. PowerShell web request piped to Invoke-Expression (iex / Invoke-Expression)
 const POWERSHELL_IEX_PIPE_REGEX = /(?:^|[;&|]\s*)(?:Invoke-RestMethod|irm|Invoke-WebRequest|iwr)\s+([^|;&]+?)\s*\|\s*(?:iex|Invoke-Expression)(?:\s|$)/i;
 
-// 5. PowerShell WebClient DownloadString evaluated: iex ((New-Object Net.WebClient).DownloadString(...))
-const POWERSHELL_WEBCLIENT_REGEX = /(?:iex|Invoke-Expression)\s*\(\s*(?:\(?New-Object\s+Net\.WebClient\)?)\.DownloadString\s*\(\s*["']([^"']+)["']\s*\)/i;
+// 5. PowerShell iex / Invoke-Expression with nested call: iex (iwr ...) or iex (irm ...)
+const POWERSHELL_IEX_PAREN_REGEX = /(?:^|[;&|]\s*)(?:iex|Invoke-Expression)\s*\(\s*(?:iwr|irm|Invoke-WebRequest|Invoke-RestMethod)\s+([^)]+)\)/i;
 
-// URL extractor helper
-const URL_REGEX = /(https?:\/\/[^\s"'<>|)]+)/i;
+// 6. PowerShell WebClient DownloadString evaluated: iex ((New-Object Net.WebClient).DownloadString(...))
+const POWERSHELL_WEBCLIENT_REGEX = /(?:^|[;&|]\s*)(?:iex|Invoke-Expression)\s*\(\s*(?:\(?New-Object\s+Net\.WebClient\)?)\.DownloadString\s*\(\s*["']([^"']+)["']\s*\)/i;
+
+// URL extractor helper (supports http, https, ftp, ftps)
+const URL_REGEX = /((?:https?|ftp|ftps):\/\/[^\s"'<>|)]+)/i;
 
 /**
  * Analyzes command line strings for dangerous remote script execution patterns.
@@ -117,7 +120,24 @@ export function detectCurlPipe(rawCommand: string): CurlPipeDetectionResult {
     };
   }
 
-  // 5. PowerShell WebClient DownloadString
+  // 5. PowerShell iex (iwr ...) or iex (irm ...)
+  const psParenMatch = rawCommand.match(POWERSHELL_IEX_PAREN_REGEX);
+  if (psParenMatch) {
+    const rawArgs = psParenMatch[1];
+    const urlMatch = rawArgs.match(URL_REGEX);
+    const url = urlMatch ? urlMatch[1] : undefined;
+
+    return {
+      isCurlPipe: true,
+      downloader: 'powershell',
+      targetShell: 'iex',
+      url,
+      reason: `PowerShell web download${url ? ` (${url})` : ''} executed inside Invoke-Expression (iex) parentheses`,
+      detectedPattern: psParenMatch[0].trim(),
+    };
+  }
+
+  // 6. PowerShell WebClient DownloadString
   const wcMatch = rawCommand.match(POWERSHELL_WEBCLIENT_REGEX);
   if (wcMatch) {
     const url = wcMatch[1];
