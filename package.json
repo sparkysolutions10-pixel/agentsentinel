@@ -10,6 +10,7 @@
   },
   "files": [
     "dist",
+    "presets",
     "README.md",
     "LICENSE",
     "ARCHITECTURE.md",
