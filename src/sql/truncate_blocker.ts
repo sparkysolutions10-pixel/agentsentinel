@@ -6,22 +6,13 @@
 
 import { SentinelRule, ToolCallContext, RuleViolation, Verdict } from '../types.js';
 import { splitSqlStatements, stripSqlComments } from './tokenizer.js';
-import { stripSingleQuotedLiterals } from './destructive_ddl.js';
+import { stripSingleQuotedLiterals, DEFAULT_SQL_QUERY_FIELDS } from './destructive_ddl.js';
 
 export interface TruncateBlockerOptions {
   allowWithConfirm?: boolean;
   queryFieldNames?: string[];
   tableWhitelist?: string[];
 }
-
-export const DEFAULT_QUERY_FIELDS = [
-  'query',
-  'sql',
-  'statement',
-  'stmt',
-  'command',
-  'queryText',
-];
 
 const TABLE_IDENT_PATTERN = '([`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?(?:\\.[`"\'\\[]?[a-zA-Z0-9_$]+[`"\'\\]]?)*)';
 
@@ -71,7 +62,7 @@ export function detectTruncateQuery(
  */
 export function createTruncateBlockerRule(options?: TruncateBlockerOptions): SentinelRule {
   const allowConfirm = options?.allowWithConfirm ?? false;
-  const queryFields = options?.queryFieldNames || DEFAULT_QUERY_FIELDS;
+  const queryFields = options?.queryFieldNames || DEFAULT_SQL_QUERY_FIELDS;
   const whitelist = options?.tableWhitelist || [];
 
   return {
