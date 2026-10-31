@@ -32,3 +32,5 @@ export * from './crc32_checksum.js';
 export * from './murmurhash3.js';
 
 export * from './hmac_signature_validator.js';
+
+export * from './sha256_digest_validator.js';
