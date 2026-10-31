@@ -14,3 +14,5 @@ export * from './semver_parser.js';
 export * from './cron_parser.js';
 
 export * from './duration_parser.js';
+
+export * from './byte_size_formatter.js';
