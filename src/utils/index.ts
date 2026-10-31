@@ -130,3 +130,5 @@ export * from './memo_type_validator.js';
 export * from './base_reserve_calculator.js';
 
 export * from './operation_type_classifier.js';
+
+export * from './signer_weight_sum_calculator.js';
