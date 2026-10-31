@@ -128,3 +128,5 @@ export * from './asset_code_validator.js';
 export * from './memo_type_validator.js';
 
 export * from './base_reserve_calculator.js';
+
+export * from './operation_type_classifier.js';
