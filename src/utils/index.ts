@@ -146,3 +146,5 @@ export * from './timebounds_validator.js';
 export * from './file_extension_allowlist.js';
 
 export * from './path_depth_calculator.js';
+
+export * from './symlink_loop_detector.js';
