@@ -11,3 +11,4 @@ export * from './stellar_sequence_checker.js';
 export * from './soroban_smart_wallet_interceptor.js';
 export * from './soroban_call_depth_limiter.js';
 export * from './soroban_reentrancy_guard.js';
+export * from './soroban_callback_detector.js';
