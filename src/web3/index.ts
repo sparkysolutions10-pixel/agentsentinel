@@ -37,3 +37,5 @@ export * from './soroban_rpc_failover.js';
 export * from './soroban_rpc_integrity.js';
 
 export * from './soroban_submission_jitter.js';
+
+export * from './stellar_network_boundary.js';
