@@ -174,3 +174,5 @@ export * from './sliding_window_log_rate_limiter.js';
 export * from './debounce_throttle_helper.js';
 
 export * from './priority_task_queue.js';
+
+export * from './circuit_breaker_state_tracker.js';
