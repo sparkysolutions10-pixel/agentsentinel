@@ -28,3 +28,5 @@ export * from './constant_time_equality.js';
 export * from './secure_random_token.js';
 
 export * from './crc32_checksum.js';
+
+export * from './murmurhash3.js';
