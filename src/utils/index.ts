@@ -142,3 +142,5 @@ export * from './trustline_limit_validator.js';
 export * from './account_flag_inspector.js';
 
 export * from './timebounds_validator.js';
+
+export * from './file_extension_allowlist.js';
