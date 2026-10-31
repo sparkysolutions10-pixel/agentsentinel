@@ -192,3 +192,5 @@ export * from './owasp_top10_mapper.js';
 export * from './anomaly_score_aggregator.js';
 
 export * from './incident_severity_matrix.js';
+
+export * from './csv_audit_log_formatter.js';
