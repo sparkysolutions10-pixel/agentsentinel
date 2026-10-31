@@ -119,3 +119,5 @@ export * from './rpc_batch_chunker.js';
 export * from './network_passphrase_guard.js';
 
 export * from './ofac_sanctions_filter.js';
+
+export * from './sep10_webauth_validator.js';
