@@ -147,3 +147,5 @@ export * from './agent_delegation_validator.js';
 export * from './fleet_heartbeat_monitor.js';
 
 export * from './rate_limit_rolling_bucket.js';
+
+export * from './instance_storage_tracker.js';
