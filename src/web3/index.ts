@@ -95,3 +95,5 @@ export * from './sequence_number_gap_detector.js';
 export * from './transaction_fee_bumping_guard.js';
 
 export * from './muxed_account_validator.js';
+
+export * from './subentry_count_limiter.js';
