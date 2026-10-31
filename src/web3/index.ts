@@ -49,3 +49,5 @@ export * from './soroban_wasm_import_detector.js';
 export * from './soroban_wasm_memory_guard.js';
 
 export * from './soroban_wasm_allowlist.js';
+
+export * from './stellar_path_strict_send.js';
