@@ -156,3 +156,5 @@ export * from './temp_file_name_generator.js';
 export * from './file_size_ceiling_guard.js';
 
 export * from './zip_slip_detector.js';
+
+export * from './executable_bit_inspector.js';
