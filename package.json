@@ -23,16 +23,17 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "pack:dry-run": "npm pack --dry-run"
+    "pack:dry-run": "npm pack --dry-run",
+    "demo": "node scripts/demo.cjs"
   },
   "keywords": [
     "ai-agents",
     "mcp",
     "model-context-protocol",
-    "security",
-    "firewall",
-    "runtime-defense",
-    "tool-calling",
+    "security-firewall",
+    "ast-interceptor",
+    "prompt-injection",
+    "zero-trust",
     "langchain",
     "vercel-ai"
   ],
@@ -49,8 +50,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^22.7.4",
-    "@vitest/coverage-v8": "^2.1.1",
+    "@vitest/coverage-v8": "^2.1.8",
     "typescript": "^5.6.2",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.8"
   }
 }

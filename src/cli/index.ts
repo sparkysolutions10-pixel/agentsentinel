@@ -17,7 +17,7 @@ const isCliExecution = Boolean(
   (scriptPath.endsWith('cli/index.js') ||
    scriptPath.endsWith('bin/agentsentinel') ||
    scriptPath.endsWith('bin/agentsentinel.js') ||
-   scriptPath.includes('agentsentinel')) &&
+   scriptPath.endsWith('/agentsentinel')) &&
   !process.env.VITEST &&
   process.env.NODE_ENV !== 'test'
 );

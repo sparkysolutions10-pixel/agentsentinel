@@ -3,7 +3,8 @@ dist/
 coverage/
 *.log
 .DS_Store
-scripts/
+scripts/*
+!scripts/demo.cjs
 temp_*
 
 *.tgz
