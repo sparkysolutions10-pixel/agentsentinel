@@ -6,3 +6,4 @@ export * from './soroban_storage_capacity.js';
 export * from './soroban_storage_classifier.js';
 export * from './soroban_auth_tree.js';
 export * from './stellar_strkey_validator.js';
+export * from './stellar_multisig_verifier.js';
