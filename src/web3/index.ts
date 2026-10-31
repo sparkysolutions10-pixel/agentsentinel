@@ -29,3 +29,5 @@ export * from './soroban_allowance_guard.js';
 export * from './soroban_decimal_precision.js';
 
 export * from './soroban_clawback_detector.js';
+
+export * from './soroban_horizon_rate_limiter.js';
