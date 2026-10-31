@@ -80,3 +80,5 @@ export * from './http_method_allowlist.js';
 export * from './tls_version_checker.js';
 
 export * from './content_type_guard.js';
+
+export * from './cors_origin_validator.js';
