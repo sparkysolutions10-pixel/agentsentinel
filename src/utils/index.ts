@@ -162,3 +162,5 @@ export * from './executable_bit_inspector.js';
 export * from './atomic_write_helper.js';
 
 export * from './directory_tree_walker.js';
+
+export * from './token_bucket_rate_limiter.js';
