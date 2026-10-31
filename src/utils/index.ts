@@ -134,3 +134,5 @@ export * from './operation_type_classifier.js';
 export * from './signer_weight_sum_calculator.js';
 
 export * from './claimable_balance_id_parser.js';
+
+export * from './liquidity_pool_id_calculator.js';
