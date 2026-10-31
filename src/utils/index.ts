@@ -78,3 +78,5 @@ export * from './user_agent_parser.js';
 export * from './http_method_allowlist.js';
 
 export * from './tls_version_checker.js';
+
+export * from './content_type_guard.js';
