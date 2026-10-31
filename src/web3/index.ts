@@ -97,3 +97,5 @@ export * from './transaction_fee_bumping_guard.js';
 export * from './muxed_account_validator.js';
 
 export * from './subentry_count_limiter.js';
+
+export * from './tool_fuzz_harness.js';
