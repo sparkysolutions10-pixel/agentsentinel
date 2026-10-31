@@ -34,3 +34,5 @@ export * from './murmurhash3.js';
 export * from './hmac_signature_validator.js';
 
 export * from './sha256_digest_validator.js';
+
+export * from './x509_fingerprint_extractor.js';
