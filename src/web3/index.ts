@@ -109,3 +109,5 @@ export * from './cyclic_tool_guard.js';
 export * from './concurrent_tool_lock.js';
 
 export * from './dns_rebinding_shield.js';
+
+export * from './tls_pinning_validator.js';
