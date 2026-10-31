@@ -36,7 +36,16 @@
     "langchain",
     "vercel-ai"
   ],
-  "author": "sparkysolutions10-pixel",
+  "author": {
+    "name": "Mukesh Biswas (sparkysolutions10-pixel)",
+    "orcid": "https://orcid.org/0009-0008-2818-6579"
+  },
+  "contributors": [
+    {
+      "name": "Mukesh Biswas",
+      "orcid": "https://orcid.org/0009-0008-2818-6579"
+    }
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^22.7.4",

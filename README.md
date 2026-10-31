@@ -13,6 +13,7 @@
 [![Security: OWASP Top 10](https://img.shields.io/badge/OWASP%20LLM-ASI01--ASI05%20Defense-red)](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 [![Quantitative Edition](https://img.shields.io/badge/Quantitative_&_HFT-Sub--500µs_Circuit_Breakers-0A84FF?logo=target&logoColor=white)](AGENTSENTINEL_QUANT_WHITE-PAPER.md)
 [![Global Institutional Playbook](https://img.shields.io/badge/Institutional_Playbook-Wall_St_%7C_London_%7C_Web3_%7C_APAC-gold)](PITCH_DECK_GLOBAL_QUANT_FUNDS.md)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2818--6579-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0009-0008-2818-6579)
 
 ---
 
@@ -248,6 +249,28 @@ AgentSentinel is an independent open-source zero-trust security framework. You c
 | **⭐ Stellar & Soroban (USDC / XLM)** | [`GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT`](https://stellar.expert/explorer/public/account/GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT) | USDC, XLM, Soroban Grants & Developer Tips |
 | **🌐 EVM (MegaETH / Base / Ethereum)** | [`0x40B7d9273092822341860F5610168861351e71eb`](https://etherscan.io/address/0x40B7d9273092822341860F5610168861351e71eb) | USDC, USDT, ETH on MegaETH / Base / Ethereum |
 | **❤️ GitHub Sponsors** | [github.com/sponsors/sparkysolutions10-pixel](https://github.com/sponsors/sparkysolutions10-pixel) | Official GitHub Sponsor Dashboard |
+
+---
+
+## 📚 Academic & Software Citation
+
+If you use AgentSentinel in your academic research, quantitative trading infrastructure, or security audit pipelines, please cite the software using the following metadata:
+
+```bibtex
+@software{biswas_agentsentinel_2026,
+  author       = {Mukesh Biswas},
+  title        = {AgentSentinel: Universal Zero-Trust Runtime Security Firewall & AST Policy Interceptor for AI Agents & Model Context Protocol (MCP)},
+  month        = oct,
+  year         = 2026,
+  publisher    = {GitHub},
+  version      = {v0.1.0},
+  url          = {https://github.com/sparkysolutions10-pixel/agentsentinel},
+  orcid        = {0009-0008-2818-6579},
+  note         = {Deterministic Sub-Millisecond AST Execution Firewall & Real-Time Circuit Breaker Architecture}
+}
+```
+
+ORCID Author Record: [https://orcid.org/0009-0008-2818-6579](https://orcid.org/0009-0008-2818-6579)
 
 ---
 
