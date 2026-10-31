@@ -89,3 +89,5 @@ export * from './bridge_finality_delay.js';
 export * from './bridge_emergency_circuit_breaker.js';
 
 export * from './ed25519_malleability_scrubber.js';
+
+export * from './sequence_number_gap_detector.js';
