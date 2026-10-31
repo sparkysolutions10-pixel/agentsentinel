@@ -51,3 +51,5 @@ export * from './soroban_wasm_memory_guard.js';
 export * from './soroban_wasm_allowlist.js';
 
 export * from './stellar_path_strict_send.js';
+
+export * from './stellar_path_strict_receive.js';
