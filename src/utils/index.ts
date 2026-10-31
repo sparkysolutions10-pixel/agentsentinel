@@ -44,3 +44,5 @@ export * from './salted_password_hasher.js';
 export * from './keccak256_validator.js';
 
 export * from './invisible_char_scrubber.js';
+
+export * from './system_prompt_leakage_detector.js';
