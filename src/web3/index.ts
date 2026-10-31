@@ -127,3 +127,5 @@ export * from './travel_rule_inspector.js';
 export * from './clawback_issuer_flag_guard.js';
 
 export * from './high_risk_domain_blocker.js';
+
+export * from './stroop_surge_multiplier.js';
