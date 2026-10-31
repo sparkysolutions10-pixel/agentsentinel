@@ -41,3 +41,5 @@ export * from './soroban_submission_jitter.js';
 export * from './stellar_network_boundary.js';
 
 export * from './soroban_wasm_header.js';
+
+export * from './soroban_wasm_loop_scanner.js';
