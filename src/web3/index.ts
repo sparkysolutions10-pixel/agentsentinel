@@ -111,3 +111,5 @@ export * from './concurrent_tool_lock.js';
 export * from './dns_rebinding_shield.js';
 
 export * from './tls_pinning_validator.js';
+
+export * from './http_backoff_interceptor.js';
