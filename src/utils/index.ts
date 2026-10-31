@@ -90,3 +90,5 @@ export * from './iso8601_validator.js';
 export * from './uuid_v4_validator.js';
 
 export * from './bounded_array_guard.js';
+
+export * from './object_depth_limiter.js';
