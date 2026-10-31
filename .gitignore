@@ -5,6 +5,6 @@ coverage/
 .DS_Store
 scripts/*
 !scripts/demo.cjs
-temp_*
+/temp_*
 
 *.tgz
