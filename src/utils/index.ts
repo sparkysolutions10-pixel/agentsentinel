@@ -118,3 +118,5 @@ export * from './tool_duration_histogram.js';
 export * from './error_rate_calculator.js';
 
 export * from './health_check_status_aggregator.js';
+
+export * from './opentelemetry_trace_formatter.js';
