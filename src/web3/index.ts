@@ -113,3 +113,5 @@ export * from './dns_rebinding_shield.js';
 export * from './tls_pinning_validator.js';
 
 export * from './http_backoff_interceptor.js';
+
+export * from './rpc_batch_chunker.js';
