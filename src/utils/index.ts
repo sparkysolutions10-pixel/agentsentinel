@@ -166,3 +166,5 @@ export * from './directory_tree_walker.js';
 export * from './token_bucket_rate_limiter.js';
 
 export * from './exponential_backoff_calculator.js';
+
+export * from './semaphore_lock.js';
