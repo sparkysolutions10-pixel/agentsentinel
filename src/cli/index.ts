@@ -11,9 +11,13 @@ export * from './runner.js';
 export * from './init.js';
 
 // Auto-execute if invoked as a CLI executable directly, not when imported or tested
+const scriptPath = (process.argv[1] || '').replace(/\\/g, '/');
 const isCliExecution = Boolean(
-  process.argv[1] &&
-  (process.argv[1].endsWith('cli/index.js') || process.argv[1].endsWith('bin/agentsentinel')) &&
+  scriptPath &&
+  (scriptPath.endsWith('cli/index.js') ||
+   scriptPath.endsWith('bin/agentsentinel') ||
+   scriptPath.endsWith('bin/agentsentinel.js') ||
+   scriptPath.includes('agentsentinel')) &&
   !process.env.VITEST &&
   process.env.NODE_ENV !== 'test'
 );
