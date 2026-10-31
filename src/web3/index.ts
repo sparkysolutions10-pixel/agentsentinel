@@ -79,3 +79,5 @@ export * from './langchain_stellar_interceptor.js';
 export * from './soroban_preset_loader.js';
 
 export * from './bridge_lock_proof.js';
+
+export * from './bridge_mint_invariant.js';
