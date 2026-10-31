@@ -148,3 +148,5 @@ export * from './file_extension_allowlist.js';
 export * from './path_depth_calculator.js';
 
 export * from './symlink_loop_detector.js';
+
+export * from './dotfile_access_blocker.js';
