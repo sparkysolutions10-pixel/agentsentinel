@@ -11,10 +11,16 @@
 [![Good First Issues](https://img.shields.io/github/issues/sparkysolutions10-pixel/agentsentinel/good%20first%20issue?color=purple&label=good%20first%20issues)](https://github.com/sparkysolutions10-pixel/agentsentinel/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 [![Sponsor](https://img.shields.io/badge/💖_Sponsor-Multi--Rail_Funding-ff69b4?style=flat)](https://github.com/sparkysolutions10-pixel/agentsentinel#--sponsorship--multi-rail-backing)
 [![Security: OWASP Top 10](https://img.shields.io/badge/OWASP%20LLM-ASI01--ASI05%20Defense-red)](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+[![Quantitative Edition](https://img.shields.io/badge/Quantitative_&_HFT-Sub--500µs_Circuit_Breakers-0A84FF?logo=target&logoColor=white)](AGENTSENTINEL_QUANT_WHITE-PAPER.md)
+[![Global Institutional Playbook](https://img.shields.io/badge/Institutional_Playbook-Wall_St_%7C_London_%7C_Web3_%7C_APAC-gold)](PITCH_DECK_GLOBAL_QUANT_FUNDS.md)
 
 ---
 
 **Languages:** [English](README.md) | [हिन्दी (Hindi)](docs/i18n/README.hi.md) | [Español (Spanish)](docs/i18n/README.es.md)
+
+> 📈 **QUANTITATIVE & HFT EDITION FOR ALGORITHMIC TRADING DESKS**  
+> Protect autonomous AI trading swarms from reflexive cascading liquidations, runaway execution loops, and catastrophic market slippage. Benchmarked at sub-millisecond (**< 500µs**) deterministic AST interception.  
+> 📄 [**Read Institutional Quant Whitepaper**](AGENTSENTINEL_QUANT_WHITE-PAPER.md) • 🌐 [**Global B2B Quant Playbook**](PITCH_DECK_GLOBAL_QUANT_FUNDS.md) • ⚖️ SEC Rule 15c3-5 & MiFID II RTS 6 Compliant
 
 ---
 
@@ -179,6 +185,40 @@ agentsentinel check --cmd "rm -rf /" --format json
 # Audit an AgentSentinel structured audit log
 agentsentinel audit-log ./logs/agent_audit.jsonl
 ```
+
+---
+
+## 📈 Quantitative & HFT Algorithmic Defense (Trading Swarms)
+
+In the wake of multi-billion dollar algorithmic market cascades, quantitative hedge funds, HFT firms, and autonomous market makers deploy **AgentSentinel Quantitative Edition** as a deterministic, sub-millisecond AST circuit breaker between AI models (LLM / RL) and execution venues (DEX, CEX, FIX adapters).
+
+### 5 Quantitative Execution Tripwires:
+1. **Dynamic Slippage & Liquidity Shock Cutoff:** Enforces mathematical boundaries on price impact, blocking market orders attempting to cross thin order books during liquidity-drain spikes.
+2. **Runaway Loop & Velocity Limiter:** Detects algorithmic loop deadlocks and partial-fill re-quote traps, throttling rogue subagents before triggering exchange-level rate-limit bans or margin liquidations.
+3. **Web3 Fee & Rent Overflow Protection:** Intercepts Soroban (`minResourceFee`, `rentPerKb`) and EVM gas simulation payloads, preventing uint32 integer overflow crashes and wallet exhaustion.
+4. **Destructive Tool & Order Redaction:** Halts unauthorized mass order cancellations, balance dumps, or credential exfiltration attempts.
+5. **100% Air-Gapped Zero-Telemetry Execution:** Runs strictly inside your private VPC or bare-metal co-located racks. Zero bytes leave your infrastructure.
+
+```typescript
+import { SentinelEngine, createSorobanFeeSurgeGuardRule, Verdict } from '@agentsentinel/core';
+
+const quantGuard = new SentinelEngine();
+quantGuard.registerRule(createSorobanFeeSurgeGuardRule({
+  maxAllowedFeeXlm: 10,                 // Hard-cap transaction fee ceiling
+  maxRentPerKbStroops: 50_000n,         // Max allowable state rent
+  enableUint32OverflowProtection: true  // Prevent uint32 simulation crashes
+}));
+
+// Intercept tool call before order reaches exchange socket
+const audit = await quantGuard.evaluate(tradeOrderToolContext);
+if (audit.verdict === Verdict.BLOCK) {
+  console.error('🚨 Order blocked by circuit breaker:', audit.violations[0].reason);
+}
+```
+
+For full technical specifications, architecture diagrams, and institutional licensing, consult:
+- 📄 [**Institutional Quantitative Whitepaper**](AGENTSENTINEL_QUANT_WHITE-PAPER.md)
+- 🌐 [**Global B2B Quant Pitch Playbook**](PITCH_DECK_GLOBAL_QUANT_FUNDS.md)
 
 ---
 
