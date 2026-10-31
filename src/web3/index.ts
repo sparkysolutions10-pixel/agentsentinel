@@ -27,3 +27,5 @@ export * from './soroban_zero_address_guard.js';
 export * from './soroban_allowance_guard.js';
 
 export * from './soroban_decimal_precision.js';
+
+export * from './soroban_clawback_detector.js';
