@@ -64,3 +64,5 @@ export * from './greeting_normalizer.js';
 export * from './token_length_estimator.js';
 
 export * from './ipv4_subnet_matcher.js';
+
+export * from './ipv6_canonicalizer.js';
