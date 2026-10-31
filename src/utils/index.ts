@@ -70,3 +70,5 @@ export * from './ipv6_canonicalizer.js';
 export * from './private_ip_detector.js';
 
 export * from './port_range_validator.js';
+
+export * from './url_query_param_sanitizer.js';
