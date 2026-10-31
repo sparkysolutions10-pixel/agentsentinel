@@ -114,3 +114,5 @@ export * from './rolling_throughput_meter.js';
 export * from './memory_usage_sampler.js';
 
 export * from './tool_duration_histogram.js';
+
+export * from './error_rate_calculator.js';
