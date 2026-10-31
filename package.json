@@ -1,5 +1,5 @@
 {
-  "name": "@agentsentinel/core",
+  "name": "@sparkysolutions/agentsentinel",
   "version": "0.1.0",
   "description": "Universal zero-trust runtime security firewall and AST policy interceptor for AI agents, MCP servers, and autonomous tool execution.",
   "main": "dist/index.js",
@@ -48,6 +48,14 @@
     }
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sparkysolutions10-pixel/agentsentinel.git"
+  },
+  "homepage": "https://github.com/sparkysolutions10-pixel/agentsentinel#readme",
+  "bugs": {
+    "url": "https://github.com/sparkysolutions10-pixel/agentsentinel/issues"
+  },
   "devDependencies": {
     "@types/node": "^22.7.4",
     "@vitest/coverage-v8": "^2.1.8",
