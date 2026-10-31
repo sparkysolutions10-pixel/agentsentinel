@@ -121,3 +121,5 @@ export * from './network_passphrase_guard.js';
 export * from './ofac_sanctions_filter.js';
 
 export * from './sep10_webauth_validator.js';
+
+export * from './travel_rule_inspector.js';
