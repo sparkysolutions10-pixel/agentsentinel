@@ -165,3 +165,5 @@ export * from './slack_incident_notifier.js';
 export * from './discord_incident_notifier.js';
 
 export * from './pagerduty_tripwire_bridge.js';
+
+export * from './syslog_formatter.js';
