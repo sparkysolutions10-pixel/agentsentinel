@@ -35,3 +35,5 @@ export * from './soroban_horizon_rate_limiter.js';
 export * from './soroban_rpc_failover.js';
 
 export * from './soroban_rpc_integrity.js';
+
+export * from './soroban_submission_jitter.js';
