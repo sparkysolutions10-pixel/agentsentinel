@@ -25,3 +25,5 @@ export * from './soroban_token_ceiling.js';
 export * from './soroban_zero_address_guard.js';
 
 export * from './soroban_allowance_guard.js';
+
+export * from './soroban_decimal_precision.js';
