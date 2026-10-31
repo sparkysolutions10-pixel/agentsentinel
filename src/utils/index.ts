@@ -96,3 +96,5 @@ export * from './object_depth_limiter.js';
 export * from './string_length_ceiling_guard.js';
 
 export * from './allowed_keys_validator.js';
+
+export * from './float_precision_clamp.js';
