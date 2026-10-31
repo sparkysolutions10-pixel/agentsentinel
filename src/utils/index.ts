@@ -160,3 +160,5 @@ export * from './zip_slip_detector.js';
 export * from './executable_bit_inspector.js';
 
 export * from './atomic_write_helper.js';
+
+export * from './directory_tree_walker.js';
