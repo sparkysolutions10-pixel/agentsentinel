@@ -55,3 +55,5 @@ export * from './stellar_path_strict_send.js';
 export * from './stellar_path_strict_receive.js';
 
 export * from './stellar_circular_arbitrage.js';
+
+export * from './stellar_intermediate_asset.js';
