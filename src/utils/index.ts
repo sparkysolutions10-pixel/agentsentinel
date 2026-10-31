@@ -140,3 +140,5 @@ export * from './liquidity_pool_id_calculator.js';
 export * from './trustline_limit_validator.js';
 
 export * from './account_flag_inspector.js';
+
+export * from './timebounds_validator.js';
