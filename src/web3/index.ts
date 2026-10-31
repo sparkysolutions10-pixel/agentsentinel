@@ -101,3 +101,5 @@ export * from './subentry_count_limiter.js';
 export * from './tool_fuzz_harness.js';
 
 export * from './unicode_payload_sanitizer.js';
+
+export * from './redos_attack_detector.js';
