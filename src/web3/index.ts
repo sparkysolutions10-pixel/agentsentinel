@@ -107,3 +107,5 @@ export * from './redos_attack_detector.js';
 export * from './cyclic_tool_guard.js';
 
 export * from './concurrent_tool_lock.js';
+
+export * from './dns_rebinding_shield.js';
