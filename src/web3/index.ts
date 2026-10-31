@@ -115,3 +115,5 @@ export * from './tls_pinning_validator.js';
 export * from './http_backoff_interceptor.js';
 
 export * from './rpc_batch_chunker.js';
+
+export * from './network_passphrase_guard.js';
