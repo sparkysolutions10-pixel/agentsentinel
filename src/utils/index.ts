@@ -74,3 +74,5 @@ export * from './port_range_validator.js';
 export * from './url_query_param_sanitizer.js';
 
 export * from './user_agent_parser.js';
+
+export * from './http_method_allowlist.js';
