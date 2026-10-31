@@ -25,6 +25,12 @@
 
 ---
 
+> [!TIP]
+> 🚀 **Deploying AI Agents or Quant Swarms in Production?**  
+> Protect your infrastructure against prompt injection, database purges, and runaway fund loss with zero-trust AST circuit breakers.  
+> 🔗 [**Book a 15-Minute Private Pilot / Demo**](mailto:sparkysolutions10@gmail.com?subject=AgentSentinel%20Enterprise%20Pilot%20Inquiry) • 💻 **Run Live Interactive Exploit Demo:** `npm run demo` • 💬 **Direct Channel:** sparkysolutions10@gmail.com
+---
+
 ## ⚡ Overview
 
 As autonomous AI agents, coding assistants (Cursor, Devin, Claude Code), and **Model Context Protocol (MCP)** tools proliferate, agents gain direct execution access to terminal commands, relational databases, filesystems, and internal APIs.
