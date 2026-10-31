@@ -38,3 +38,5 @@ export * from './sha256_digest_validator.js';
 export * from './x509_fingerprint_extractor.js';
 
 export * from './aes_gcm_encryptor.js';
+
+export * from './salted_password_hasher.js';
