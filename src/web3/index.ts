@@ -135,3 +135,5 @@ export * from './cpu_instruction_limiter.js';
 export * from './read_bytes_ceiling.js';
 
 export * from './write_bytes_ceiling.js';
+
+export * from './historical_gas_averager.js';
