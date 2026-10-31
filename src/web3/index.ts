@@ -63,3 +63,5 @@ export * from './stellar_path_hops_limiter.js';
 export * from './soroban_diagnostic_event.js';
 
 export * from './soroban_event_topic.js';
+
+export * from './soroban_event_rate.js';
