@@ -43,3 +43,5 @@ export * from './stellar_network_boundary.js';
 export * from './soroban_wasm_header.js';
 
 export * from './soroban_wasm_loop_scanner.js';
+
+export * from './soroban_wasm_import_detector.js';
