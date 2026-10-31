@@ -153,3 +153,5 @@ export * from './instance_storage_tracker.js';
 export * from './temporary_storage_pruner.js';
 
 export * from './storage_rent_rebate.js';
+
+export * from './dangling_reference_detector.js';
