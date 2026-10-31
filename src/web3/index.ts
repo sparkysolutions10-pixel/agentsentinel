@@ -17,3 +17,4 @@ export * from './soroban_rollback_monitor.js';
 export * from './soroban_slippage_enforcer.js';
 export * from './soroban_sandwich_detector.js';
 export * from './soroban_flash_loan_verifier.js';
+export * from './soroban_oracle_tripwire.js';
