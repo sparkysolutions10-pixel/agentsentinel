@@ -102,3 +102,5 @@ export * from './float_precision_clamp.js';
 export * from './regex_pattern_validator.js';
 
 export * from './boolean_flag_coercer.js';
+
+export * from './counter_metric_collector.js';
