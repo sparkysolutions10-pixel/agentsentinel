@@ -173,3 +173,5 @@ export * from './security_audit_exporter.js';
 export * from './web3_benchmark_suite.js';
 
 export * from './cli_audit_inspector.js';
+
+export * from './enterprise_compliance_report.js';
