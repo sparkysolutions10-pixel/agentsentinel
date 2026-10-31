@@ -139,3 +139,5 @@ export * from './write_bytes_ceiling.js';
 export * from './historical_gas_averager.js';
 
 export * from './tenant_session_guard.js';
+
+export * from './ephemeral_key_rotation.js';
