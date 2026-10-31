@@ -171,3 +171,5 @@ export * from './syslog_formatter.js';
 export * from './security_audit_exporter.js';
 
 export * from './web3_benchmark_suite.js';
+
+export * from './cli_audit_inspector.js';
