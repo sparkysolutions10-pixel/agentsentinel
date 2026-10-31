@@ -194,3 +194,5 @@ export * from './anomaly_score_aggregator.js';
 export * from './incident_severity_matrix.js';
 
 export * from './csv_audit_log_formatter.js';
+
+export * from './policy_diff_auditor.js';
