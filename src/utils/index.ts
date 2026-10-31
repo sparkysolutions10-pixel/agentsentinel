@@ -54,3 +54,5 @@ export * from './leetspeak_normalizer.js';
 export * from './ansi_escape_stripper.js';
 
 export * from './role_impersonation_filter.js';
+
+export * from './delimiter_hijack_detector.js';
