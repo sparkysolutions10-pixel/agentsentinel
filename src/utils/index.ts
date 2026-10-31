@@ -58,3 +58,5 @@ export * from './role_impersonation_filter.js';
 export * from './delimiter_hijack_detector.js';
 
 export * from './base64_instruction_sniffer.js';
+
+export * from './greeting_normalizer.js';
