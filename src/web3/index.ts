@@ -53,3 +53,5 @@ export * from './soroban_wasm_allowlist.js';
 export * from './stellar_path_strict_send.js';
 
 export * from './stellar_path_strict_receive.js';
+
+export * from './stellar_circular_arbitrage.js';
