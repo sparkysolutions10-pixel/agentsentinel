@@ -150,3 +150,5 @@ export * from './path_depth_calculator.js';
 export * from './symlink_loop_detector.js';
 
 export * from './dotfile_access_blocker.js';
+
+export * from './temp_file_name_generator.js';
