@@ -98,3 +98,5 @@ export * from './string_length_ceiling_guard.js';
 export * from './allowed_keys_validator.js';
 
 export * from './float_precision_clamp.js';
+
+export * from './regex_pattern_validator.js';
