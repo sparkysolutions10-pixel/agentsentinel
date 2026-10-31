@@ -71,3 +71,5 @@ export * from './soroban_audit_anchor.js';
 export * from './soroban_upgrade_watcher.js';
 
 export * from './soroban_sentinel_coordinator.js';
+
+export * from './stellar_mcp_wrapper.js';
