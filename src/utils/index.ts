@@ -170,3 +170,5 @@ export * from './exponential_backoff_calculator.js';
 export * from './semaphore_lock.js';
 
 export * from './sliding_window_log_rate_limiter.js';
+
+export * from './debounce_throttle_helper.js';
