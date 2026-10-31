@@ -19,3 +19,5 @@ export * from './soroban_sandwich_detector.js';
 export * from './soroban_flash_loan_verifier.js';
 export * from './soroban_oracle_tripwire.js';
 export * from './soroban_pool_drain_clamp.js';
+
+export * from './soroban_token_ceiling.js';
