@@ -81,3 +81,5 @@ export * from './soroban_preset_loader.js';
 export * from './bridge_lock_proof.js';
 
 export * from './bridge_mint_invariant.js';
+
+export * from './bridge_relayer_signatures.js';
