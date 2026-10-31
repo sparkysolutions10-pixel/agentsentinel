@@ -52,3 +52,5 @@ export * from './markdown_escape_sanitizer.js';
 export * from './leetspeak_normalizer.js';
 
 export * from './ansi_escape_stripper.js';
+
+export * from './role_impersonation_filter.js';
