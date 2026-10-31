@@ -91,3 +91,5 @@ export * from './bridge_emergency_circuit_breaker.js';
 export * from './ed25519_malleability_scrubber.js';
 
 export * from './sequence_number_gap_detector.js';
+
+export * from './transaction_fee_bumping_guard.js';
