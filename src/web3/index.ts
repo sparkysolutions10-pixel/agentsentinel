@@ -169,3 +169,5 @@ export * from './pagerduty_tripwire_bridge.js';
 export * from './syslog_formatter.js';
 
 export * from './security_audit_exporter.js';
+
+export * from './web3_benchmark_suite.js';
