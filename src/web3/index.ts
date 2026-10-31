@@ -45,3 +45,5 @@ export * from './soroban_wasm_header.js';
 export * from './soroban_wasm_loop_scanner.js';
 
 export * from './soroban_wasm_import_detector.js';
+
+export * from './soroban_wasm_memory_guard.js';
