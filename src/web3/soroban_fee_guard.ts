@@ -6,8 +6,8 @@
 
 import { SentinelRule, ToolCallContext, RuleViolation, Verdict, ToolCategory } from '../types.js';
 
-export const UINT32_MAX = 4_294_967_295n;
-export const STROOPS_PER_XLM = 10_000_000n;
+export const UINT32_MAX = 4_294_967_295n; // 2^32 - 1 (Maximum uint32 limit in stroops)
+export const STROOPS_PER_XLM = 10_000_000n; // 1 XLM = 10,000,000 Stroops
 export const DEFAULT_MAX_FEE_XLM = 10; // 10 XLM default max fee
 export const DEFAULT_MAX_FEE_STROOPS = BigInt(DEFAULT_MAX_FEE_XLM) * STROOPS_PER_XLM; // 100,000,000 stroops
 export const DEFAULT_MAX_RENT_PER_KB_STROOPS = 50_000n; // normal baseline is ~10,000 stroops/KB
@@ -15,11 +15,12 @@ export const DEFAULT_MAX_GROWTH_FACTOR = 1_000;
 
 export interface SorobanFeeGuardConfig {
   maxFeeXlm?: number;
+  maxAllowedFeeXlm?: number;
   maxFeeStroops?: bigint | number | string;
+  maxAllowedFeeStroops?: bigint | number | string;
   maxRentPerKbStroops?: bigint | number | string;
   maxGrowthFactor?: number;
   enableUint32OverflowProtection?: boolean;
-  enableCircuitBreaker?: boolean;
 }
 
 /**
@@ -33,42 +34,41 @@ export function parseStroops(val: unknown): bigint {
     return BigInt(Math.floor(val));
   }
   if (typeof val === 'string') {
-    const trimmed = val.trim();
-    if (!trimmed) return 0n;
-
-    // Check if explicitly denominated in XLM (e.g. "2400 XLM", "10.5xlm")
-    const xlmMatch = trimmed.match(/^([\d.]+)\s*xlm$/i);
+    const clean = val.trim();
+    if (!clean) return 0n;
+    
+    // Check if denominated in XLM e.g. "10 XLM", "2400XLM", "0.5 xlm"
+    const xlmMatch = clean.match(/^([\d.]+)\s*xlm$/i);
     if (xlmMatch) {
-      const num = parseFloat(xlmMatch[1]);
-      if (isNaN(num)) return 0n;
-      return BigInt(Math.floor(num * 10_000_000));
+      const numXlm = parseFloat(xlmMatch[1]);
+      if (isNaN(numXlm)) return 0n;
+      return BigInt(Math.round(numXlm * Number(STROOPS_PER_XLM)));
     }
 
-    // Clean numeric stroop string
-    const numOnly = trimmed.replace(/[^\d]/g, '');
-    if (numOnly) {
-      try {
-        return BigInt(numOnly);
-      } catch {
-        return 0n;
-      }
+    try {
+      // Direct stroop integer string
+      return BigInt(clean);
+    } catch {
+      return 0n;
     }
   }
   return 0n;
 }
 
 /**
- * Formats a BigInt stroops amount into human-readable XLM string.
+ * Formats a BigInt stroop amount into human-readable XLM string.
  */
 export function formatStroopsToXlm(stroops: bigint): string {
-  const integerPart = stroops / STROOPS_PER_XLM;
-  const fractionalPart = stroops % STROOPS_PER_XLM;
-  const fractionStr = fractionalPart.toString().padStart(7, '0').replace(/0+$/, '');
-  return fractionStr ? `${integerPart}.${fractionStr} XLM` : `${integerPart} XLM`;
+  const xlm = Number(stroops) / Number(STROOPS_PER_XLM);
+  // Avoid unnecessary decimal precision for whole numbers
+  if (Number.isInteger(xlm)) {
+    return `${xlm} XLM`;
+  }
+  return `${xlm.toFixed(4).replace(/\.?0+$/, '')} XLM`;
 }
 
 /**
- * Checks whether a given tool call context pertains to Stellar / Soroban transactions.
+ * Checks if a tool call context belongs to Soroban / Stellar execution.
  */
 export function isSorobanOrStellarContext(ctx: ToolCallContext): boolean {
   const name = ctx.toolName.toLowerCase();
@@ -78,19 +78,24 @@ export function isSorobanOrStellarContext(ctx: ToolCallContext): boolean {
     name.includes('invokehostfunction') ||
     name.includes('invokecontract') ||
     name.includes('preparetransaction') ||
-    name.includes('feebump')
+    name.includes('feebump') ||
+    name.includes('simulatetransaction')
   ) {
     return true;
   }
 
-  // Check params for Stellar / Soroban signature indicators
+  // Also inspect tool parameters for Soroban markers
   const p = ctx.params || {};
   return Boolean(
     p.sorobanData ||
+    p.minResourceFee !== undefined ||
+    p.min_resource_fee !== undefined ||
+    p.simulatedMinResourceFee !== undefined ||
     p.resourceFee !== undefined ||
     p.rentFee !== undefined ||
     p.rentPerKb !== undefined ||
     p.stroops !== undefined ||
+    p.simulatedFeeXlm !== undefined ||
     (p.baseFee !== undefined && p.networkPassphrase?.toLowerCase().includes('stellar'))
   );
 }
@@ -99,12 +104,15 @@ export function isSorobanOrStellarContext(ctx: ToolCallContext): boolean {
  * Creates the Soroban State Rent & Fee Surge Guard SentinelRule.
  */
 export function createSorobanFeeSurgeGuardRule(config: SorobanFeeGuardConfig = {}): SentinelRule {
-  const maxFeeXlm = config.maxFeeXlm ?? DEFAULT_MAX_FEE_XLM;
-  const maxFeeStroops = config.maxFeeStroops !== undefined ? parseStroops(config.maxFeeStroops) : BigInt(maxFeeXlm) * STROOPS_PER_XLM;
+  const maxFeeXlm = config.maxFeeXlm ?? config.maxAllowedFeeXlm ?? DEFAULT_MAX_FEE_XLM;
+  const maxFeeStroops = config.maxFeeStroops !== undefined
+    ? parseStroops(config.maxFeeStroops)
+    : (config.maxAllowedFeeStroops !== undefined
+      ? parseStroops(config.maxAllowedFeeStroops)
+      : BigInt(maxFeeXlm) * STROOPS_PER_XLM);
   const maxRentPerKb = config.maxRentPerKbStroops !== undefined ? parseStroops(config.maxRentPerKbStroops) : DEFAULT_MAX_RENT_PER_KB_STROOPS;
   const maxGrowthFactor = config.maxGrowthFactor ?? DEFAULT_MAX_GROWTH_FACTOR;
   const uint32Protection = config.enableUint32OverflowProtection ?? true;
-  const circuitBreaker = config.enableCircuitBreaker ?? true;
 
   return {
     id: 'soroban-fee-surge-guard',
@@ -112,57 +120,67 @@ export function createSorobanFeeSurgeGuardRule(config: SorobanFeeGuardConfig = {
     category: 'custom' as ToolCategory,
     priority: 950,
     enabled: true,
-
-    evaluate(ctx: ToolCallContext): RuleViolation | null {
+    evaluate: (ctx: ToolCallContext): RuleViolation | null => {
       if (!isSorobanOrStellarContext(ctx)) {
-        return null;
+        return null; // Not a Soroban/Stellar invocation
       }
 
       const params = ctx.params || {};
 
-      // 1. Extract State Rent indicators
-      const rentPerKb = parseStroops(params.rentPerKb ?? params.rent_per_kb ?? params.sorobanData?.rentPerKb);
-      const growthFactor = typeof params.growthFactor === 'number' ? params.growthFactor : (typeof params.growth_factor === 'number' ? params.growth_factor : 0);
-
-      if (circuitBreaker) {
-        if (rentPerKb > 0n && rentPerKb > maxRentPerKb) {
-          return {
-            ruleId: 'soroban-fee-surge-guard',
-            ruleName: 'Soroban State Rent & Fee Surge Defense Guard',
-            severity: 'critical',
-            verdict: Verdict.BLOCK,
-            reason: `Soroban state rent circuit breaker tripped: current storage rent of ${rentPerKb} stroops/KB exceeds safety threshold of ${maxRentPerKb} stroops/KB. Network state storage congested.`,
-            detectedPattern: `rentPerKb: ${rentPerKb}`,
-          };
-        }
-
-        if (growthFactor > 0 && growthFactor > maxGrowthFactor) {
-          return {
-            ruleId: 'soroban-fee-surge-guard',
-            ruleName: 'Soroban State Rent & Fee Surge Defense Guard',
-            severity: 'critical',
-            verdict: Verdict.BLOCK,
-            reason: `Soroban state rent circuit breaker tripped: exponential growth factor ${growthFactor} exceeds safety threshold ${maxGrowthFactor}.`,
-            detectedPattern: `growthFactor: ${growthFactor}`,
-          };
-        }
+      // 1. Check storage rent rate & archival spike
+      const rentPerKb = parseStroops(params.rentPerKb ?? params.rent_per_kb);
+      if (rentPerKb > maxRentPerKb) {
+        return {
+          ruleId: 'soroban-fee-surge-guard',
+          ruleName: 'Soroban State Rent & Fee Surge Defense Guard',
+          severity: 'critical',
+          verdict: Verdict.BLOCK,
+          reason: `Soroban state rent circuit breaker tripped: storage rent rate of ${rentPerKb} stroops/KB exceeds maximum safety threshold of ${maxRentPerKb} stroops/KB. Halting transaction to prevent excessive archival rent spend.`,
+          detectedPattern: `rentPerKb: ${rentPerKb} > ${maxRentPerKb}`,
+        };
       }
 
-      // 2. Extract and calculate Total Fee
+      // Check exponential growth factor
+      const growthFactor = Number(params.growthFactor ?? params.growth_factor ?? 1);
+      if (growthFactor > maxGrowthFactor) {
+        return {
+          ruleId: 'soroban-fee-surge-guard',
+          ruleName: 'Soroban State Rent & Fee Surge Defense Guard',
+          severity: 'critical',
+          verdict: Verdict.BLOCK,
+          reason: `Soroban state rent circuit breaker tripped: exponential growth factor ${growthFactor} exceeds safety threshold ${maxGrowthFactor}. Storage footprint spike detected.`,
+          detectedPattern: `growthFactor: ${growthFactor} > ${maxGrowthFactor}`,
+        };
+      }
+
+      // 2. Extract and calculate Total Fee (including Soroban RPC minResourceFee)
       const baseFee = parseStroops(params.baseFee ?? params.base_fee);
-      const resourceFee = parseStroops(params.resourceFee ?? params.resource_fee ?? params.sorobanData?.resourceFee);
+      const resourceFee = parseStroops(
+        params.minResourceFee ??
+        params.min_resource_fee ??
+        params.simulatedMinResourceFee ??
+        params.resourceFee ??
+        params.resource_fee ??
+        params.sorobanData?.resourceFee ??
+        params.sorobanData?.minResourceFee
+      );
       const rentFee = parseStroops(params.rentFee ?? params.rent_fee);
-      const explicitFee = parseStroops(params.fee ?? params.maxFee ?? params.max_fee ?? params.totalFee);
+      const explicitFee = parseStroops(
+        params.fee ??
+        params.maxFee ??
+        params.max_fee ??
+        params.totalFee ??
+        (params.simulatedFeeXlm !== undefined ? `${params.simulatedFeeXlm} XLM` : undefined)
+      );
       const feeBump = parseStroops(params.feeBump ?? params.fee_bump);
 
       let totalCalculatedFee = 0n;
       if (explicitFee > 0n) {
         totalCalculatedFee = explicitFee;
-      } else if (resourceFee > 0n || baseFee > 0n || rentFee > 0n) {
-        const ops = typeof params.operations === 'number' ? BigInt(params.operations) : 1n;
-        totalCalculatedFee = (baseFee * ops) + resourceFee + rentFee;
       } else if (feeBump > 0n) {
         totalCalculatedFee = feeBump;
+      } else {
+        totalCalculatedFee = baseFee + resourceFee + rentFee;
       }
 
       // 3. Uint32 Overflow Tripwire Check
@@ -192,5 +210,38 @@ export function createSorobanFeeSurgeGuardRule(config: SorobanFeeGuardConfig = {
       // Clean, compliant transaction
       return null;
     },
+  };
+}
+
+/**
+ * Convenience helper to simulate Soroban transactions and assert safety against Fee Surges.
+ */
+export async function simulateSorobanTransactionWithGuard(
+  simulationFn: () => Promise<{ minResourceFee?: string | number | bigint; fee?: string | number | bigint; resourceFee?: string | number | bigint }>,
+  config: SorobanFeeGuardConfig = {}
+): Promise<{ allowed: boolean; violation?: RuleViolation; feeStroops: bigint }> {
+  const guard = createSorobanFeeSurgeGuardRule(config);
+  const result = await simulationFn();
+
+  const ctx: ToolCallContext = {
+    id: `soroban-sim-${Date.now()}`,
+    toolName: 'soroban_simulateTransaction',
+    category: 'custom',
+    params: {
+      minResourceFee: result.minResourceFee,
+      resourceFee: result.resourceFee ?? result.minResourceFee,
+      fee: result.fee,
+    },
+    timestamp: Date.now(),
+  };
+
+  const violationResult = guard.evaluate(ctx);
+  const violation = violationResult instanceof Promise ? await violationResult : violationResult;
+  const totalStroops = parseStroops(result.fee ?? result.minResourceFee ?? result.resourceFee);
+
+  return {
+    allowed: violation === null,
+    violation: violation ?? undefined,
+    feeStroops: totalStroops,
   };
 }
