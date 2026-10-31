@@ -83,3 +83,5 @@ export * from './bridge_lock_proof.js';
 export * from './bridge_mint_invariant.js';
 
 export * from './bridge_relayer_signatures.js';
+
+export * from './bridge_finality_delay.js';
