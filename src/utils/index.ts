@@ -116,3 +116,5 @@ export * from './memory_usage_sampler.js';
 export * from './tool_duration_histogram.js';
 
 export * from './error_rate_calculator.js';
+
+export * from './health_check_status_aggregator.js';
