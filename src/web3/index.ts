@@ -161,3 +161,5 @@ export * from './storage_diff_auditor.js';
 export * from './webhook_alert_dispatcher.js';
 
 export * from './slack_incident_notifier.js';
+
+export * from './discord_incident_notifier.js';
