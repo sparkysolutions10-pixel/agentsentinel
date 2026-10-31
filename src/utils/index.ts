@@ -88,3 +88,5 @@ export * from './non_negative_integer_validator.js';
 export * from './iso8601_validator.js';
 
 export * from './uuid_v4_validator.js';
+
+export * from './bounded_array_guard.js';
