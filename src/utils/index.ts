@@ -178,3 +178,5 @@ export * from './priority_task_queue.js';
 export * from './circuit_breaker_state_tracker.js';
 
 export * from './async_retry_wrapper.js';
+
+export * from './deadlock_timeout_guard.js';
