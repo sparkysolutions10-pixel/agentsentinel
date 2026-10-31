@@ -51,6 +51,7 @@ export * from './benchmarks/index.js';
 export * from './rules/index.js';
 export * from './rag/index.js';
 export * from './web3/index.js';
+export * from './utils/index.js';
 
 export class SentinelEngine {
   public readonly registry: RuleRegistry = new RuleRegistry();
