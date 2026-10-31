@@ -60,3 +60,5 @@ export * from './delimiter_hijack_detector.js';
 export * from './base64_instruction_sniffer.js';
 
 export * from './greeting_normalizer.js';
+
+export * from './token_length_estimator.js';
