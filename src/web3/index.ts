@@ -75,3 +75,5 @@ export * from './soroban_sentinel_coordinator.js';
 export * from './stellar_mcp_wrapper.js';
 
 export * from './langchain_stellar_interceptor.js';
+
+export * from './soroban_preset_loader.js';
