@@ -62,3 +62,5 @@ export * from './base64_instruction_sniffer.js';
 export * from './greeting_normalizer.js';
 
 export * from './token_length_estimator.js';
+
+export * from './ipv4_subnet_matcher.js';
