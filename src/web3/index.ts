@@ -14,3 +14,4 @@ export * from './soroban_reentrancy_guard.js';
 export * from './soroban_callback_detector.js';
 export * from './soroban_contract_spoofing_guard.js';
 export * from './soroban_rollback_monitor.js';
+export * from './soroban_slippage_enforcer.js';
