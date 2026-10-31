@@ -103,3 +103,5 @@ export * from './tool_fuzz_harness.js';
 export * from './unicode_payload_sanitizer.js';
 
 export * from './redos_attack_detector.js';
+
+export * from './cyclic_tool_guard.js';
