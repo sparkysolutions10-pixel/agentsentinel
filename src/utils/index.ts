@@ -82,3 +82,5 @@ export * from './tls_version_checker.js';
 export * from './content_type_guard.js';
 
 export * from './cors_origin_validator.js';
+
+export * from './non_negative_integer_validator.js';
