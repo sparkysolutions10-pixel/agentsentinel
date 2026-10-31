@@ -145,3 +145,5 @@ export * from './ephemeral_key_rotation.js';
 export * from './agent_delegation_validator.js';
 
 export * from './fleet_heartbeat_monitor.js';
+
+export * from './rate_limit_rolling_bucket.js';
