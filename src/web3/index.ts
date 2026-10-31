@@ -163,3 +163,5 @@ export * from './webhook_alert_dispatcher.js';
 export * from './slack_incident_notifier.js';
 
 export * from './discord_incident_notifier.js';
+
+export * from './pagerduty_tripwire_bridge.js';
