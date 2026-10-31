@@ -30,3 +30,5 @@ export * from './secure_random_token.js';
 export * from './crc32_checksum.js';
 
 export * from './murmurhash3.js';
+
+export * from './hmac_signature_validator.js';
