@@ -16,3 +16,5 @@ export * from './cron_parser.js';
 export * from './duration_parser.js';
 
 export * from './byte_size_formatter.js';
+
+export * from './safe_json.js';
