@@ -152,3 +152,5 @@ export * from './symlink_loop_detector.js';
 export * from './dotfile_access_blocker.js';
 
 export * from './temp_file_name_generator.js';
+
+export * from './file_size_ceiling_guard.js';
