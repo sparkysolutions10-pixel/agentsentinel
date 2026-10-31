@@ -184,3 +184,5 @@ export * from './deadlock_timeout_guard.js';
 export * from './read_write_lock.js';
 
 export * from './sarif_report_formatter.js';
+
+export * from './mitre_attack_mapper.js';
