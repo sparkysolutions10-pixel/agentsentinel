@@ -124,3 +124,5 @@ export * from './opentelemetry_trace_formatter.js';
 export * from './system_load_averager.js';
 
 export * from './asset_code_validator.js';
+
+export * from './memo_type_validator.js';
