@@ -188,3 +188,5 @@ export * from './sarif_report_formatter.js';
 export * from './mitre_attack_mapper.js';
 
 export * from './owasp_top10_mapper.js';
+
+export * from './anomaly_score_aggregator.js';
