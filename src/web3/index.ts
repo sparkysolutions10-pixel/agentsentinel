@@ -67,3 +67,5 @@ export * from './soroban_event_topic.js';
 export * from './soroban_event_rate.js';
 
 export * from './soroban_audit_anchor.js';
+
+export * from './soroban_upgrade_watcher.js';
