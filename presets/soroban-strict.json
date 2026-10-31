@@ -1,0 +1,13 @@
+{
+  "name": "soroban-strict",
+  "version": "1.0.0",
+  "description": "Enterprise strict security preset for Soroban smart contracts & Stellar operations",
+  "rules": [
+    "soroban-footprint-guard",
+    "soroban-auth-tree",
+    "soroban-reentrancy-guard",
+    "soroban-slippage-enforcer",
+    "soroban-token-transfer-ceiling",
+    "soroban-zero-address-interceptor"
+  ]
+}
