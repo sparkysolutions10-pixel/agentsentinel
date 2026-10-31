@@ -133,3 +133,5 @@ export * from './stroop_surge_multiplier.js';
 export * from './cpu_instruction_limiter.js';
 
 export * from './read_bytes_ceiling.js';
+
+export * from './write_bytes_ceiling.js';
