@@ -20,3 +20,5 @@ export * from './byte_size_formatter.js';
 export * from './safe_json.js';
 
 export * from './csv_sanitizer.js';
+
+export * from './case_insensitive_header_map.js';
