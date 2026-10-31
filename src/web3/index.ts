@@ -33,3 +33,5 @@ export * from './soroban_clawback_detector.js';
 export * from './soroban_horizon_rate_limiter.js';
 
 export * from './soroban_rpc_failover.js';
+
+export * from './soroban_rpc_integrity.js';
