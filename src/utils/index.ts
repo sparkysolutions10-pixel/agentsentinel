@@ -324,3 +324,5 @@ export * from './syslog_severity_mapper.js';
 export * from './health_score_calculator.js';
 
 export * from './soroban_auth_mode_classifier.js';
+
+export * from './stellar_strkey_decoder.js';
