@@ -47,3 +47,4 @@ export * from './image_payload_ceiling_guard.js';
 export * from './audio_spectrogram_validator.js';
 export * from './cross_modal_contrast_analyzer.js';
 export * from './unified_rag_pipeline.js';
+export * from './rag_audit_logger.js';
