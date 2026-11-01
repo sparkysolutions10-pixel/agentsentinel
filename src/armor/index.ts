@@ -12,3 +12,4 @@ export * from './invisible_unicode_stripper.js';
 export * from './bidi_spoofing_detector.js';
 export * from './leetspeak_normalizer.js';
 export * from './math_symbols_folder.js';
+export * from './system_prompt_canary.js';
