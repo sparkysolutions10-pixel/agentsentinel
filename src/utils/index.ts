@@ -338,3 +338,5 @@ export * from './soroban_val_type_classifier.js';
 export * from './stellar_muxed_account_parser.js';
 
 export * from './soroban_ttl_extension_guard.js';
+
+export * from './soroban_fee_budget_guard.js';
