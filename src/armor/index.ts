@@ -42,3 +42,4 @@ export * from './translation_chain_detector.js';
 export * from './phonetic_transcription_parser.js';
 export * from './emoji_cipher_decoder.js';
 export * from './code_switching_analyzer.js';
+export * from './reasoning_recursion_killer.js';
