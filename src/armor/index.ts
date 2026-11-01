@@ -44,3 +44,4 @@ export * from './emoji_cipher_decoder.js';
 export * from './code_switching_analyzer.js';
 export * from './reasoning_recursion_killer.js';
 export * from './semantic_paradox_filter.js';
+export * from './token_repetition_clamp.js';
