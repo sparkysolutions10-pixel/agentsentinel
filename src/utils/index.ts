@@ -304,3 +304,5 @@ export * from './execution_time_tracker.js';
 export * from './promise_timeout_wrapper.js';
 
 export * from './logfmt_formatter.js';
+
+export * from './percentile_calculator.js';
