@@ -320,3 +320,5 @@ export * from './alert_deduplicator.js';
 export * from './memory_trend_tracker.js';
 
 export * from './syslog_severity_mapper.js';
+
+export * from './health_score_calculator.js';
