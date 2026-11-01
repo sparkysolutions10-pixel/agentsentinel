@@ -392,3 +392,5 @@ export * from './dependency_injection_container.js';
 export * from './configuration_merger.js';
 
 export * from './health_check_probe_server.js';
+
+export * from './plugin_lifecycle_manager.js';
