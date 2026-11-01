@@ -368,3 +368,5 @@ export * from './data_retention_policy_evaluator.js';
 export * from './gdpr_right_to_be_forgotten_handler.js';
 
 export * from './compliance_framework_mapper.js';
+
+export * from './tenant_rate_tier_enforcer.js';
