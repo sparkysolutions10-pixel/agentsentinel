@@ -206,3 +206,5 @@ export * from './master_enterprise_utils_loader.js';
 export * from './email_domain_validator.js';
 
 export * from './semver_range_matcher.js';
+
+export * from './json_path_extractor.js';
