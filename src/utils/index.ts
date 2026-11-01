@@ -224,3 +224,5 @@ export * from './jwt_claims_extractor.js';
 export * from './sql_identifier_validator.js';
 
 export * from './pbkdf2_key_deriver.js';
+
+export * from './totp_validator.js';
