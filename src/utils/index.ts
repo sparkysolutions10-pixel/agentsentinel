@@ -216,3 +216,5 @@ export * from './unicode_homoglyph_detector.js';
 export * from './base64url_encoder.js';
 
 export * from './html_tag_sanitizer.js';
+
+export * from './hex_color_validator.js';
