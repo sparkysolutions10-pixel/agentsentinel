@@ -40,3 +40,4 @@ export * from './decompression_bomb_guard.js';
 export * from './document_chunk_clamp.js';
 export * from './chunk_pii_redactor.js';
 export * from './hidden_prompt_header_scanner.js';
+export * from './document_deduplicator.js';
