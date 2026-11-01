@@ -296,3 +296,5 @@ export * from './jitter_backoff_calculator.js';
 export * from './worker_pool_limiter.js';
 
 export * from './abort_controller_timeout.js';
+
+export * from './sliding_window_counter.js';
