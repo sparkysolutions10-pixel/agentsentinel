@@ -25,3 +25,4 @@ export * from './steganographic_bitstream_decoder.js';
 export * from './dan_jailbreak_matcher.js';
 export * from './hypothetical_framing_detector.js';
 export * from './grandparent_jailbreak_classifier.js';
+export * from './evil_twin_detector.js';
