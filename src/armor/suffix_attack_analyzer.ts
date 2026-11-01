@@ -3,9 +3,9 @@ import { SentinelRule, ToolCallContext, RuleViolation, Verdict } from '../types.
 export function createSuffixAttackAnalyzerRule(): SentinelRule {
   const SUFFIX_PATTERNS = [
     /(?:==--|--==)\s*(?:\[start_answer\]|sure\s+here|affirmative)/i,
-    /start\s+your\s+response\s+with\s+["'](?:Sure|Absolutely|Here\s+is|Certainly)["']/i,
+    /start\s+your\s+response\s+with/i,
     /respond\s+only\s+with\s+unfiltered/i,
-    /(?:describing|writing)\.\\s*\+\s*similarly/i
+    /(?:describing|writing)\.\s*\+\s*similarly/i
   ];
 
   return {
@@ -15,9 +15,15 @@ export function createSuffixAttackAnalyzerRule(): SentinelRule {
     priority: 680,
     enabled: true,
     evaluate: (ctx: ToolCallContext): RuleViolation | null => {
-      const textToScan = typeof ctx.params === 'string'
-        ? ctx.params
-        : JSON.stringify(ctx.params || {});
+      let textToScan = typeof ctx.params === 'string' ? ctx.params : '';
+      if (!textToScan && ctx.params && typeof ctx.params === 'object') {
+        textToScan = Object.values(ctx.params)
+          .map(v => typeof v === 'string' ? v : JSON.stringify(v))
+          .join(' ');
+      }
+      if (!textToScan) {
+        textToScan = JSON.stringify(ctx.params || {});
+      }
 
       for (const p of SUFFIX_PATTERNS) {
         if (p.test(textToScan)) {
