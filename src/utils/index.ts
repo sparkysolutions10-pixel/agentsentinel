@@ -306,3 +306,5 @@ export * from './promise_timeout_wrapper.js';
 export * from './logfmt_formatter.js';
 
 export * from './percentile_calculator.js';
+
+export * from './structured_log_redactor.js';
