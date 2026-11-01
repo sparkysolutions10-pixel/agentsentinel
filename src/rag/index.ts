@@ -49,3 +49,4 @@ export * from './cross_modal_contrast_analyzer.js';
 export * from './unified_rag_pipeline.js';
 export * from './rag_audit_logger.js';
 export * from './vector_circuit_breaker.js';
+export * from './zero_trust_vector_policy.js';
