@@ -312,3 +312,5 @@ export * from './structured_log_redactor.js';
 export * from './heartbeat_monitor.js';
 
 export * from './tool_invocation_stats_aggregator.js';
+
+export * from './csv_metrics_exporter.js';
