@@ -19,3 +19,4 @@ export * from './qdrant_distance_checker.js';
 export * from './qdrant_grpc_limiter.js';
 export * from './milvus_partition_enforcer.js';
 export * from './milvus_lifecycle_guard.js';
+export * from './milvus_index_controller.js';
