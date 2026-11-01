@@ -37,3 +37,4 @@ export * from './degenerate_vector_filter.js';
 export * from './vector_norm_bounds_checker.js';
 export * from './vector_canary_generator.js';
 export * from './decompression_bomb_guard.js';
+export * from './document_chunk_clamp.js';
