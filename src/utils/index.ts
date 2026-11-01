@@ -360,3 +360,5 @@ export * from './symlink_target_inspector.js';
 export * from './wasm_magic_byte_validator.js';
 
 export * from './temporary_file_cleaner.js';
+
+export * from './chmod_permission_guard.js';
