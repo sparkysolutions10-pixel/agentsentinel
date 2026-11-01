@@ -34,3 +34,4 @@ export * from './pgvector_index_guard.js';
 export * from './semantic_anomaly_tripwire.js';
 export * from './adversarial_cluster_detector.js';
 export * from './degenerate_vector_filter.js';
+export * from './vector_norm_bounds_checker.js';
