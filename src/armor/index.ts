@@ -28,3 +28,4 @@ export * from './grandparent_jailbreak_classifier.js';
 export * from './evil_twin_detector.js';
 export * from './developer_mode_detector.js';
 export * from './few_shot_jailbreak_detector.js';
+export * from './many_shot_overflow_guard.js';
