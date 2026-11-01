@@ -244,3 +244,5 @@ export * from './bip39_mnemonic_validator.js';
 export * from './entropy_calculator.js';
 
 export * from './url_host_canonicalizer.js';
+
+export * from './http_bearer_token_extractor.js';
