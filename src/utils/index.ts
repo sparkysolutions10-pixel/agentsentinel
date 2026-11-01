@@ -250,3 +250,5 @@ export * from './http_bearer_token_extractor.js';
 export * from './http_status_classifier.js';
 
 export * from './content_length_enforcer.js';
+
+export * from './safe_redirect_validator.js';
