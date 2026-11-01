@@ -40,22 +40,27 @@ export function createMultilayerUnwrapperRule(): SentinelRule {
     priority: 790,
     enabled: true,
     evaluate: (ctx: ToolCallContext): RuleViolation | null => {
-      const rawText = typeof ctx.params === 'string'
-        ? ctx.params
-        : JSON.stringify(ctx.params || {});
+      let textToScan = typeof ctx.params === 'string' ? ctx.params : '';
+      if (!textToScan && ctx.params && typeof ctx.params === 'object') {
+        textToScan = Object.values(ctx.params)
+          .map(v => typeof v === 'string' ? v : JSON.stringify(v))
+          .join(' ');
+      }
 
-      const unwrapped = unwrapMultiLayer(rawText).toLowerCase();
-
-      for (const w of BLOCKED_WORDS) {
-        if (unwrapped.includes(w) && !rawText.toLowerCase().includes(w)) {
-          return {
-            ruleId: 'armor-multilayer-unwrapper',
-            ruleName: 'Nested Multi-Layer Encoding Unwrapper',
-            severity: 'critical',
-            verdict: Verdict.BLOCK,
-            reason: `Nested multi-pass encoded attack payload discovered: "${w}".`,
-            detectedPattern: `multilayer-${w}`
-          };
+      const candidates = [textToScan, ...textToScan.split(/[\s"'{}:,]+/)].filter(t => t.length >= 4);
+      for (const cand of candidates) {
+        const unwrapped = unwrapMultiLayer(cand).toLowerCase();
+        for (const w of BLOCKED_WORDS) {
+          if (unwrapped.includes(w) && !textToScan.toLowerCase().includes(w)) {
+            return {
+              ruleId: 'armor-multilayer-unwrapper',
+              ruleName: 'Nested Multi-Layer Encoding Unwrapper',
+              severity: 'critical',
+              verdict: Verdict.BLOCK,
+              reason: `Nested multi-pass encoded attack payload discovered: "${w}".`,
+              detectedPattern: `multilayer-${w}`
+            };
+          }
         }
       }
 
