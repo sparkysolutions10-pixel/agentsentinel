@@ -334,3 +334,5 @@ export * from './stellar_network_passphrase_detector.js';
 export * from './soroban_symbol_validator.js';
 
 export * from './soroban_val_type_classifier.js';
+
+export * from './stellar_muxed_account_parser.js';
