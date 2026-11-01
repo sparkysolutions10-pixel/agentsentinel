@@ -10,3 +10,4 @@ export * from './pinecone_index_protector.js';
 export * from './qdrant_deletion_guard.js';
 export * from './chroma_interceptor.js';
 export * from './chroma_sql_guard.js';
+export * from './chroma_lifecycle.js';
