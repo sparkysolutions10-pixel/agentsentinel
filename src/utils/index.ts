@@ -356,3 +356,5 @@ export * from './safe_file_reader.js';
 export * from './directory_listing_filter.js';
 
 export * from './symlink_target_inspector.js';
+
+export * from './wasm_magic_byte_validator.js';
