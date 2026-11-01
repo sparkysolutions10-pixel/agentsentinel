@@ -286,3 +286,5 @@ export * from './prompt_sanitizer_pipeline.js';
 export * from './leaky_bucket_rate_limiter.js';
 
 export * from './async_barrier.js';
+
+export * from './countdown_latch.js';
