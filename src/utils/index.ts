@@ -374,3 +374,5 @@ export * from './tenant_rate_tier_enforcer.js';
 export * from './geo_ip_country_allowlist.js';
 
 export * from './audit_record_checksum_generator.js';
+
+export * from './role_based_access_evaluator.js';
