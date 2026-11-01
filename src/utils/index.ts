@@ -254,3 +254,5 @@ export * from './content_length_enforcer.js';
 export * from './safe_redirect_validator.js';
 
 export * from './dns_rebinding_guard.js';
+
+export * from './basic_auth_header_parser.js';
