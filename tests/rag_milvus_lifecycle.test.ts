@@ -1,34 +1,43 @@
 import { describe, it, expect } from 'vitest';
-import { SentinelEngine } from '../src/index.js';
 import { createMilvusLifecycleGuardRule } from '../src/rag/milvus_lifecycle_guard.js';
-import { Verdict, ToolCallContext } from '../src/types.js';
+import { Verdict } from '../src/types.js';
 
-describe('Milvus Lifecycle Guard (#317 & #318)', () => {
-  const engine = new SentinelEngine();
-  engine.registerRule(createMilvusLifecycleGuardRule());
+describe('MilvusLifecycleGuard', () => {
+  const rule = createMilvusLifecycleGuardRule();
 
-  it('blocks drop partition attempts', async () => {
-    const dropCtx: ToolCallContext = {
-      id: 'milvus_drop_1',
-      toolName: 'milvus_drop_partition',
-      params: { partition: 'tenant_alpha' },
-      timestamp: Date.now()
-    };
-    const res = await engine.evaluate(dropCtx);
-    expect(res.allowed).toBe(false);
-    expect(res.verdict).toBe(Verdict.BLOCK);
-    expect(res.violations[0].reason).toContain('Destructive drop partition');
+  it('blocks drop_collection call on milvus client', () => {
+    const violation = rule.evaluate({
+      toolName: 'milvus_query',
+      params: { client: 'milvus', method: 'drop_collection' }
+    });
+    expect(violation).not.toBeNull();
+    expect(violation?.verdict).toBe(Verdict.BLOCK);
+    expect(violation?.severity).toBe('critical');
   });
 
-  it('allows safe query operations', async () => {
-    const safeCtx: ToolCallContext = {
-      id: 'milvus_safe_1',
+  it('blocks release_collection call on milvus client', () => {
+    const violation = rule.evaluate({
       toolName: 'milvus_query',
-      params: { collection: 'docs' },
-      timestamp: Date.now()
-    };
-    const res = await engine.evaluate(safeCtx);
-    expect(res.allowed).toBe(true);
-    expect(res.verdict).toBe(Verdict.ALLOW);
+      params: { client: 'milvus', method: 'release_collection' }
+    });
+    expect(violation).not.toBeNull();
+    expect(violation?.verdict).toBe(Verdict.BLOCK);
+  });
+
+  it('blocks releaseCollection variant toolName', () => {
+    const violation = rule.evaluate({
+      toolName: 'milvus_releasecollection',
+      params: {}
+    });
+    expect(violation).not.toBeNull();
+    expect(violation?.verdict).toBe(Verdict.BLOCK);
+  });
+
+  it('allows benign search queries on milvus', () => {
+    const violation = rule.evaluate({
+      toolName: 'milvus_search',
+      params: { client: 'milvus', method: 'search', collection: 'docs' }
+    });
+    expect(violation).toBeNull();
   });
 });
