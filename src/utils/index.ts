@@ -220,3 +220,5 @@ export * from './html_tag_sanitizer.js';
 export * from './hex_color_validator.js';
 
 export * from './jwt_claims_extractor.js';
+
+export * from './sql_identifier_validator.js';
