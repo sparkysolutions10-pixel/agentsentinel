@@ -31,3 +31,4 @@ export * from './few_shot_jailbreak_detector.js';
 export * from './many_shot_overflow_guard.js';
 export * from './suffix_attack_analyzer.js';
 export * from './rot13_caesar_detector.js';
+export * from './recursive_prompt_loop_detector.js';
