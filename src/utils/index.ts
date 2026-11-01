@@ -380,3 +380,5 @@ export * from './role_based_access_evaluator.js';
 export * from './cost_center_tag_validator.js';
 
 export * from './session_inactivity_timeout_guard.js';
+
+export * from './enterprise_license_validator.js';
