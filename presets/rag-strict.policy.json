@@ -1,0 +1,31 @@
+{
+  "name": "rag-strict",
+  "version": "1.0.0",
+  "description": "Strict Zero-Trust Vector Database and RAG Security Policy Bundle",
+  "rules": [
+    "rag-milvus-lifecycle-guard",
+    "rag-pgvector-probe-limiter",
+    "rag-pgvector-rls-injector",
+    "rag-pgvector-operator-filter",
+    "rag-pgvector-index-guard",
+    "rag-semantic-anomaly-tripwire",
+    "rag-adversarial-cluster-detector",
+    "rag-degenerate-vector-filter",
+    "rag-vector-norm-bounds-checker",
+    "rag-vector-canary-honeypot",
+    "rag-decompression-bomb-guard",
+    "rag-document-chunk-clamp",
+    "rag-chunk-pii-redactor",
+    "rag-hidden-prompt-header-scanner",
+    "rag-document-deduplicator",
+    "rag-clip-alignment-verifier",
+    "rag-exif-metadata-scrubber",
+    "rag-image-payload-ceiling-guard",
+    "rag-audio-spectrogram-validator",
+    "rag-cross-modal-contrast-analyzer",
+    "rag-unified-pipeline-orchestrator",
+    "rag-audit-event-logger",
+    "rag-vector-circuit-breaker",
+    "rag-zero-trust-vector-policy"
+  ]
+}
