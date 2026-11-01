@@ -212,3 +212,5 @@ export * from './json_path_extractor.js';
 export * from './wildcard_pattern_matcher.js';
 
 export * from './unicode_homoglyph_detector.js';
+
+export * from './base64url_encoder.js';
