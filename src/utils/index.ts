@@ -352,3 +352,5 @@ export * from './file_extension_validator.js';
 export * from './file_name_sanitizer.js';
 
 export * from './safe_file_reader.js';
+
+export * from './directory_listing_filter.js';
