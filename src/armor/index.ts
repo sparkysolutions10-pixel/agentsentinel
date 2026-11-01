@@ -14,3 +14,4 @@ export * from './leetspeak_normalizer.js';
 export * from './math_symbols_folder.js';
 export * from './system_prompt_canary.js';
 export * from './repeat_instructions_scanner.js';
+export * from './prompt_similarity_leak_analyzer.js';
