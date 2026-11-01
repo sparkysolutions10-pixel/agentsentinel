@@ -252,3 +252,5 @@ export * from './http_status_classifier.js';
 export * from './content_length_enforcer.js';
 
 export * from './safe_redirect_validator.js';
+
+export * from './dns_rebinding_guard.js';
