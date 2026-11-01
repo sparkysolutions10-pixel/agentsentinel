@@ -230,3 +230,5 @@ export * from './totp_validator.js';
 export * from './base32_encoder.js';
 
 export * from './hkdf_key_expander.js';
+
+export * from './masked_secret_formatter.js';
