@@ -17,9 +17,13 @@ export function createMilvusLifecycleGuardRule(): SentinelRule {
         tool.includes('drop_partition') ||
         tool.includes('truncate') ||
         tool.includes('drop_collection') ||
+        tool.includes('release_collection') ||
+        tool.includes('releasecollection') ||
         method === 'drop_partition' ||
         method === 'truncate' ||
-        method === 'drop_collection';
+        method === 'drop_collection' ||
+        method === 'release_collection' ||
+        method === 'releasecollection';
 
       if (isDestructive) {
         return {
