@@ -288,3 +288,5 @@ export * from './leaky_bucket_rate_limiter.js';
 export * from './async_barrier.js';
 
 export * from './countdown_latch.js';
+
+export * from './debounce_leading_trailing.js';
