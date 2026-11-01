@@ -46,3 +46,4 @@ export * from './reasoning_recursion_killer.js';
 export * from './semantic_paradox_filter.js';
 export * from './token_repetition_clamp.js';
 export * from './redos_payload_detector.js';
+export * from './filler_token_summarizer.js';
