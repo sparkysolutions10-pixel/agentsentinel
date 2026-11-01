@@ -300,3 +300,5 @@ export * from './abort_controller_timeout.js';
 export * from './sliding_window_counter.js';
 
 export * from './execution_time_tracker.js';
+
+export * from './promise_timeout_wrapper.js';
