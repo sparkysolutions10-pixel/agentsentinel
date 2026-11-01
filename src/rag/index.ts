@@ -28,3 +28,4 @@ export * from './weaviate_batch_quarantine.js';
 export * from './weaviate_backup_guard.js';
 export * from './pgvector_param_enforcer.js';
 export * from './pgvector_probe_limiter.js';
+export * from './pgvector_rls_injector.js';
