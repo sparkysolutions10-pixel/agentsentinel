@@ -32,3 +32,4 @@ export * from './pgvector_rls_injector.js';
 export * from './pgvector_operator_filter.js';
 export * from './pgvector_index_guard.js';
 export * from './semantic_anomaly_tripwire.js';
+export * from './adversarial_cluster_detector.js';
