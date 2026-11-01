@@ -27,6 +27,18 @@ export function createGrammarSchemaGuardRule(config?: GrammarSchemaConfig): Sent
         return null;
       }
 
+      const rawJson = JSON.stringify(ctx.params);
+      if (rawJson.includes('"__proto__"')) {
+        return {
+          ruleId: 'armor-grammar-schema-guard',
+          ruleName: 'Grammar-Based JSON Schema Prompt Injector Defense',
+          severity: 'critical',
+          verdict: Verdict.BLOCK,
+          reason: 'JSON schema deviation: disallowed payload property injected: "__proto__".',
+          detectedPattern: '__proto__'
+        };
+      }
+
       const keys = Object.keys(ctx.params);
       if (keys.length > maxProps) {
         return {
@@ -39,7 +51,8 @@ export function createGrammarSchemaGuardRule(config?: GrammarSchemaConfig): Sent
         };
       }
 
-      for (const key of keys) {
+      const allPropNames = Object.getOwnPropertyNames(ctx.params);
+      for (const key of allPropNames) {
         if (disallowed.includes(key.toLowerCase())) {
           return {
             ruleId: 'armor-grammar-schema-guard',
