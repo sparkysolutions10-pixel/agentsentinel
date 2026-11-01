@@ -308,3 +308,5 @@ export * from './logfmt_formatter.js';
 export * from './percentile_calculator.js';
 
 export * from './structured_log_redactor.js';
+
+export * from './heartbeat_monitor.js';
