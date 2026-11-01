@@ -218,3 +218,5 @@ export * from './base64url_encoder.js';
 export * from './html_tag_sanitizer.js';
 
 export * from './hex_color_validator.js';
+
+export * from './jwt_claims_extractor.js';
