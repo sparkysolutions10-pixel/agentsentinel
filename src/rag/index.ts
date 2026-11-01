@@ -7,3 +7,4 @@ export * from './vector_dimension_guard.js';
 export * from './namespace_isolation.js';
 export * from './metadata_sanitizer.js';
 export * from './pinecone_index_protector.js';
+export * from './weaviate_hybrid_validator.js';
