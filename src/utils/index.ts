@@ -390,3 +390,5 @@ export * from './event_bus_broadcaster.js';
 export * from './dependency_injection_container.js';
 
 export * from './configuration_merger.js';
+
+export * from './health_check_probe_server.js';
