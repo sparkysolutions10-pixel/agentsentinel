@@ -24,3 +24,4 @@ export * from './url_encoded_prompt_scanner.js';
 export * from './steganographic_bitstream_decoder.js';
 export * from './dan_jailbreak_matcher.js';
 export * from './hypothetical_framing_detector.js';
+export * from './grandparent_jailbreak_classifier.js';
