@@ -14,6 +14,7 @@
 [![Quantitative Edition](https://img.shields.io/badge/Quantitative_&_HFT-Sub--500µs_Circuit_Breakers-0A84FF?logo=target&logoColor=white)](AGENTSENTINEL_QUANT_WHITE-PAPER.md)
 [![Global Institutional Playbook](https://img.shields.io/badge/Institutional_Playbook-Wall_St_%7C_London_%7C_Web3_%7C_APAC-gold)](PITCH_DECK_GLOBAL_QUANT_FUNDS.md)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2818--6579-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0009-0008-2818-6579)
+[![Product Hunt](https://img.shields.io/badge/Product_Hunt-Scheduled_Launch-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/products/agentsentinel/agentsentinel/prelaunch)
 
 ---
 
