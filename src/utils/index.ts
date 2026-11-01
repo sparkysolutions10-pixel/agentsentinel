@@ -266,3 +266,5 @@ export * from './subdomain_extractor.js';
 export * from './instruction_override_detector.js';
 
 export * from './prompt_leak_probe_detector.js';
+
+export * from './zero_width_space_scrubber.js';
