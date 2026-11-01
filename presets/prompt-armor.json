@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "name": "PromptArmor Protection Presets",
+  "presets": {
+    "strict": {
+      "rules": [
+        "armor-ast-prompt-tokenizer",
+        "armor-syntax-tree-depth-validator",
+        "armor-grammar-schema-guard",
+        "armor-markdown-ast-sanitizer",
+        "armor-homoglyph-canonicalizer",
+        "armor-invisible-unicode-stripper",
+        "armor-bidi-spoofing-detector",
+        "armor-leetspeak-normalizer",
+        "armor-system-prompt-canary",
+        "armor-dan-jailbreak-matcher"
+      ],
+      "action": "BLOCK"
+    },
+    "balanced": {
+      "rules": [
+        "armor-ast-prompt-tokenizer",
+        "armor-dan-jailbreak-matcher",
+        "armor-encoded-wrapper-detector"
+      ],
+      "action": "BLOCK"
+    }
+  }
+}
