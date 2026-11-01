@@ -290,3 +290,5 @@ export * from './async_barrier.js';
 export * from './countdown_latch.js';
 
 export * from './debounce_leading_trailing.js';
+
+export * from './jitter_backoff_calculator.js';
