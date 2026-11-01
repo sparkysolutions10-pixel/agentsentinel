@@ -42,3 +42,4 @@ export * from './chunk_pii_redactor.js';
 export * from './hidden_prompt_header_scanner.js';
 export * from './document_deduplicator.js';
 export * from './clip_alignment_verifier.js';
+export * from './exif_metadata_scrubber.js';
