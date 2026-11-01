@@ -310,3 +310,5 @@ export * from './percentile_calculator.js';
 export * from './structured_log_redactor.js';
 
 export * from './heartbeat_monitor.js';
+
+export * from './tool_invocation_stats_aggregator.js';
