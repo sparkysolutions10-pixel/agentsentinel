@@ -394,3 +394,5 @@ export * from './configuration_merger.js';
 export * from './health_check_probe_server.js';
 
 export * from './plugin_lifecycle_manager.js';
+
+export * from './safe_async_generator.js';
