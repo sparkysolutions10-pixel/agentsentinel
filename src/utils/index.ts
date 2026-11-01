@@ -318,3 +318,5 @@ export * from './csv_metrics_exporter.js';
 export * from './alert_deduplicator.js';
 
 export * from './memory_trend_tracker.js';
+
+export * from './syslog_severity_mapper.js';
