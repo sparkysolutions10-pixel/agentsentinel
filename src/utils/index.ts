@@ -274,3 +274,5 @@ export * from './system_role_spoof_guard.js';
 export * from './jailbreak_affirmation_filter.js';
 
 export * from './multi_language_instruction_sniffer.js';
+
+export * from './character_repetition_guard.js';
