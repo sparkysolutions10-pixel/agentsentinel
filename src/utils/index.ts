@@ -398,3 +398,5 @@ export * from './plugin_lifecycle_manager.js';
 export * from './safe_async_generator.js';
 
 export * from './runtime_environment_detector.js';
+
+export * from './sentinel_version_banner.js';
