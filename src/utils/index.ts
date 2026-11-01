@@ -362,3 +362,5 @@ export * from './wasm_magic_byte_validator.js';
 export * from './temporary_file_cleaner.js';
 
 export * from './chmod_permission_guard.js';
+
+export * from './data_retention_policy_evaluator.js';
