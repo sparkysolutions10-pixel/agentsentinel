@@ -26,3 +26,4 @@ export * from './weaviate_hybrid_validator.js';
 export * from './weaviate_schema_protector.js';
 export * from './weaviate_batch_quarantine.js';
 export * from './weaviate_backup_guard.js';
+export * from './pgvector_param_enforcer.js';
