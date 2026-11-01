@@ -260,3 +260,5 @@ export * from './basic_auth_header_parser.js';
 export * from './retry_after_parser.js';
 
 export * from './cookie_header_parser.js';
+
+export * from './subdomain_extractor.js';
