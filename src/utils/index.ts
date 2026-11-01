@@ -372,3 +372,5 @@ export * from './compliance_framework_mapper.js';
 export * from './tenant_rate_tier_enforcer.js';
 
 export * from './geo_ip_country_allowlist.js';
+
+export * from './audit_record_checksum_generator.js';
