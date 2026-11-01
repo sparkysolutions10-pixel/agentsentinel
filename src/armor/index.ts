@@ -48,3 +48,4 @@ export * from './token_repetition_clamp.js';
 export * from './redos_payload_detector.js';
 export * from './filler_token_summarizer.js';
 export * from './unified_prompt_armor.js';
+export * from './prompt_armor_benchmark.js';
