@@ -17,3 +17,4 @@ export * from './repeat_instructions_scanner.js';
 export * from './prompt_similarity_leak_analyzer.js';
 export * from './multilingual_extraction_guard.js';
 export * from './markdown_dump_quarantine.js';
+export * from './encoded_wrapper_detector.js';
