@@ -39,3 +39,4 @@ export * from './academic_research_guard.js';
 export * from './script_dialogue_filter.js';
 export * from './low_resource_language_scanner.js';
 export * from './translation_chain_detector.js';
+export * from './phonetic_transcription_parser.js';
