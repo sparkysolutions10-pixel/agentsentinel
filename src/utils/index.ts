@@ -240,3 +240,5 @@ export * from './sha512_checksum_calculator.js';
 export * from './scrypt_hasher.js';
 
 export * from './bip39_mnemonic_validator.js';
+
+export * from './entropy_calculator.js';
