@@ -262,3 +262,5 @@ export * from './retry_after_parser.js';
 export * from './cookie_header_parser.js';
 
 export * from './subdomain_extractor.js';
+
+export * from './instruction_override_detector.js';
