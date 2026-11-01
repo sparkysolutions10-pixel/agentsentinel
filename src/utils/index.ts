@@ -344,3 +344,5 @@ export * from './soroban_fee_budget_guard.js';
 export * from './soroban_event_signature_hasher.js';
 
 export * from './mime_type_resolver.js';
+
+export * from './path_traversal_preventer.js';
