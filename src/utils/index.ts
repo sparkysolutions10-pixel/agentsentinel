@@ -370,3 +370,5 @@ export * from './gdpr_right_to_be_forgotten_handler.js';
 export * from './compliance_framework_mapper.js';
 
 export * from './tenant_rate_tier_enforcer.js';
+
+export * from './geo_ip_country_allowlist.js';
