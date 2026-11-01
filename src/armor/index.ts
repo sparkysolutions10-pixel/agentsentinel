@@ -34,3 +34,4 @@ export * from './rot13_caesar_detector.js';
 export * from './recursive_prompt_loop_detector.js';
 export * from './novel_scenario_blocker.js';
 export * from './reverse_psychology_detector.js';
+export * from './authority_override_scanner.js';
