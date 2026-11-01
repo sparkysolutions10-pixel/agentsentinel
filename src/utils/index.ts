@@ -316,3 +316,5 @@ export * from './tool_invocation_stats_aggregator.js';
 export * from './csv_metrics_exporter.js';
 
 export * from './alert_deduplicator.js';
+
+export * from './memory_trend_tracker.js';
