@@ -208,3 +208,5 @@ export * from './email_domain_validator.js';
 export * from './semver_range_matcher.js';
 
 export * from './json_path_extractor.js';
+
+export * from './wildcard_pattern_matcher.js';
