@@ -282,3 +282,5 @@ export * from './recursive_bracket_depth_guard.js';
 export * from './entropy_obfuscation_scrubber.js';
 
 export * from './prompt_sanitizer_pipeline.js';
+
+export * from './leaky_bucket_rate_limiter.js';
