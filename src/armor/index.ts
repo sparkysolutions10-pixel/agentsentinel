@@ -21,3 +21,4 @@ export * from './encoded_wrapper_detector.js';
 export * from './multilayer_unwrapper.js';
 export * from './unicode_escape_analyzer.js';
 export * from './url_encoded_prompt_scanner.js';
+export * from './steganographic_bitstream_decoder.js';
