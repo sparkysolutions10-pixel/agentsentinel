@@ -278,3 +278,5 @@ export * from './multi_language_instruction_sniffer.js';
 export * from './character_repetition_guard.js';
 
 export * from './recursive_bracket_depth_guard.js';
+
+export * from './entropy_obfuscation_scrubber.js';
