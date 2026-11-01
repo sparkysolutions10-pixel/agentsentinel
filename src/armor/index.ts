@@ -40,3 +40,4 @@ export * from './script_dialogue_filter.js';
 export * from './low_resource_language_scanner.js';
 export * from './translation_chain_detector.js';
 export * from './phonetic_transcription_parser.js';
+export * from './emoji_cipher_decoder.js';
