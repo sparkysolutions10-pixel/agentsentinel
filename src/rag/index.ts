@@ -31,3 +31,4 @@ export * from './pgvector_probe_limiter.js';
 export * from './pgvector_rls_injector.js';
 export * from './pgvector_operator_filter.js';
 export * from './pgvector_index_guard.js';
+export * from './semantic_anomaly_tripwire.js';
