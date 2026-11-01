@@ -19,3 +19,4 @@ export * from './multilingual_extraction_guard.js';
 export * from './markdown_dump_quarantine.js';
 export * from './encoded_wrapper_detector.js';
 export * from './multilayer_unwrapper.js';
+export * from './unicode_escape_analyzer.js';
