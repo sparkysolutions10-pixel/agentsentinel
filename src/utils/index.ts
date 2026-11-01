@@ -298,3 +298,5 @@ export * from './worker_pool_limiter.js';
 export * from './abort_controller_timeout.js';
 
 export * from './sliding_window_counter.js';
+
+export * from './execution_time_tracker.js';
