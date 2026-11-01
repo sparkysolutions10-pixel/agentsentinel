@@ -314,3 +314,5 @@ export * from './heartbeat_monitor.js';
 export * from './tool_invocation_stats_aggregator.js';
 
 export * from './csv_metrics_exporter.js';
+
+export * from './alert_deduplicator.js';
