@@ -22,3 +22,4 @@ export * from './multilayer_unwrapper.js';
 export * from './unicode_escape_analyzer.js';
 export * from './url_encoded_prompt_scanner.js';
 export * from './steganographic_bitstream_decoder.js';
+export * from './dan_jailbreak_matcher.js';
