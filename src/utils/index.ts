@@ -328,3 +328,5 @@ export * from './soroban_auth_mode_classifier.js';
 export * from './stellar_strkey_decoder.js';
 
 export * from './soroban_ledger_sequence_guard.js';
+
+export * from './stellar_network_passphrase_detector.js';
