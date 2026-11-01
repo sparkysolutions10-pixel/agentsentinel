@@ -22,3 +22,4 @@ export * from './milvus_lifecycle_guard.js';
 export * from './milvus_index_controller.js';
 export * from './milvus_rbac_interceptor.js';
 export * from './weaviate_graphql_limiter.js';
+export * from './weaviate_hybrid_validator.js';
