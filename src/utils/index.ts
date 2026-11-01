@@ -302,3 +302,5 @@ export * from './sliding_window_counter.js';
 export * from './execution_time_tracker.js';
 
 export * from './promise_timeout_wrapper.js';
+
+export * from './logfmt_formatter.js';
