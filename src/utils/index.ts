@@ -352,3 +352,53 @@ export * from './file_extension_validator.js';
 export * from './file_name_sanitizer.js';
 
 export * from './safe_file_reader.js';
+
+export * from './directory_listing_filter.js';
+
+export * from './symlink_target_inspector.js';
+
+export * from './wasm_magic_byte_validator.js';
+
+export * from './temporary_file_cleaner.js';
+
+export * from './chmod_permission_guard.js';
+
+export * from './data_retention_policy_evaluator.js';
+
+export * from './gdpr_right_to_be_forgotten_handler.js';
+
+export * from './compliance_framework_mapper.js';
+
+export * from './tenant_rate_tier_enforcer.js';
+
+export * from './geo_ip_country_allowlist.js';
+
+export * from './audit_record_checksum_generator.js';
+
+export * from './role_based_access_evaluator.js';
+
+export * from './cost_center_tag_validator.js';
+
+export * from './session_inactivity_timeout_guard.js';
+
+export * from './enterprise_license_validator.js';
+
+export * from './graceful_shutdown_coordinator.js';
+
+export * from './event_bus_broadcaster.js';
+
+export * from './dependency_injection_container.js';
+
+export * from './configuration_merger.js';
+
+export * from './health_check_probe_server.js';
+
+export * from './plugin_lifecycle_manager.js';
+
+export * from './safe_async_generator.js';
+
+export * from './runtime_environment_detector.js';
+
+export * from './sentinel_version_banner.js';
+
+export * from './master_omni_loader.js';
