@@ -236,3 +236,5 @@ export * from './masked_secret_formatter.js';
 export * from './timing_safe_buffer_comparator.js';
 
 export * from './sha512_checksum_calculator.js';
+
+export * from './scrypt_hasher.js';
