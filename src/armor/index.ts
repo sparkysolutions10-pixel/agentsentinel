@@ -36,3 +36,4 @@ export * from './novel_scenario_blocker.js';
 export * from './reverse_psychology_detector.js';
 export * from './authority_override_scanner.js';
 export * from './academic_research_guard.js';
+export * from './script_dialogue_filter.js';
