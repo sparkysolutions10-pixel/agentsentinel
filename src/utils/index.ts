@@ -388,3 +388,5 @@ export * from './graceful_shutdown_coordinator.js';
 export * from './event_bus_broadcaster.js';
 
 export * from './dependency_injection_container.js';
+
+export * from './configuration_merger.js';
