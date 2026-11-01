@@ -270,3 +270,5 @@ export * from './prompt_leak_probe_detector.js';
 export * from './zero_width_space_scrubber.js';
 
 export * from './system_role_spoof_guard.js';
+
+export * from './jailbreak_affirmation_filter.js';
