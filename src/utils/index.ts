@@ -294,3 +294,5 @@ export * from './debounce_leading_trailing.js';
 export * from './jitter_backoff_calculator.js';
 
 export * from './worker_pool_limiter.js';
+
+export * from './abort_controller_timeout.js';
