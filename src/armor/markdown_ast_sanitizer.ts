@@ -2,8 +2,7 @@ import { SentinelRule, ToolCallContext, RuleViolation, Verdict } from '../types.
 
 export function createMarkdownAstSanitizerRule(): SentinelRule {
   const EXFIL_IMAGE_REGEX = /!\[[^\]]*\]\((https?:\/\/[^)\s]+(?:exfil|token|track|collect|leak|log)[^)\s]*)\)/i;
-  const DATA_URI_IMAGE_REGEX = /!\[[^\]]*\]\(data:image\/[^;]+;base64,[^)\s]+\)/i;
-  const ZERO_PIXEL_IMAGE_REGEX = /<img[^>]+(?:width=['"]?[01]['"]?|height=['"]?[01]['"]?)[^>]*>/i;
+  const ZERO_PIXEL_IMAGE_REGEX = /<img[^>]+(?:width|height)[\s=\\"']*0/i;
 
   return {
     id: 'armor-markdown-ast-sanitizer',
@@ -12,10 +11,12 @@ export function createMarkdownAstSanitizerRule(): SentinelRule {
     priority: 920,
     enabled: true,
     evaluate: (ctx: ToolCallContext): RuleViolation | null => {
-      const textToScan = [
-        ctx.toolName,
-        typeof ctx.params === 'string' ? ctx.params : JSON.stringify(ctx.params || {})
-      ].join(' ');
+      let textToScan = ctx.toolName;
+      if (typeof ctx.params === 'string') {
+        textToScan += ' ' + ctx.params;
+      } else if (ctx.params && typeof ctx.params === 'object') {
+        textToScan += ' ' + Object.values(ctx.params).map(v => typeof v === 'string' ? v : JSON.stringify(v)).join(' ') + ' ' + JSON.stringify(ctx.params);
+      }
 
       if (EXFIL_IMAGE_REGEX.test(textToScan)) {
         return {
