@@ -234,3 +234,5 @@ export * from './hkdf_key_expander.js';
 export * from './masked_secret_formatter.js';
 
 export * from './timing_safe_buffer_comparator.js';
+
+export * from './sha512_checksum_calculator.js';
