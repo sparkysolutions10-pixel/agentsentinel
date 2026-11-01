@@ -17,3 +17,4 @@ export * from './qdrant_filter_validator.js';
 export * from './qdrant_snapshot_guard.js';
 export * from './qdrant_distance_checker.js';
 export * from './qdrant_grpc_limiter.js';
+export * from './milvus_partition_enforcer.js';
