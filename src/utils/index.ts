@@ -204,3 +204,5 @@ export * from './agent_security_health_badge_generator.js';
 export * from './master_enterprise_utils_loader.js';
 
 export * from './email_domain_validator.js';
+
+export * from './semver_range_matcher.js';
