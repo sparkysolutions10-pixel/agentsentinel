@@ -30,3 +30,4 @@ export * from './pgvector_param_enforcer.js';
 export * from './pgvector_probe_limiter.js';
 export * from './pgvector_rls_injector.js';
 export * from './pgvector_operator_filter.js';
+export * from './pgvector_index_guard.js';
