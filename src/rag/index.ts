@@ -11,3 +11,4 @@ export * from './qdrant_deletion_guard.js';
 export * from './chroma_interceptor.js';
 export * from './chroma_sql_guard.js';
 export * from './chroma_lifecycle.js';
+export * from './chroma_batch_limiter.js';
