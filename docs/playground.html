@@ -160,6 +160,7 @@
     grid-template-columns: 380px 1fr;
     gap: 24px;
     margin-bottom: 32px;
+    align-items: start;
   }
 
   /* Left Panel: Attack Injections */
@@ -289,6 +290,8 @@
     display: flex;
     flex-direction: column;
     min-height: 480px;
+    position: sticky;
+    top: 24px;
   }
   .terminal-bar {
     background: #0f172a;
@@ -645,19 +648,95 @@
       const input = document.getElementById('customInput').value.trim();
       if (!input) return;
 
-      const isDestructive = /(rm\s+-rf|drop|dd\s+if|curl.*\|.*bash|shutdown|mkfs|:\(\)\{|eip-?7702|sweeper|delegate)/i.test(input);
-      
-      const customPayload = {
-        agent: "User Autonomous Agent CLI",
-        cmd: input,
-        isThreat: isDestructive,
-        threatName: isDestructive ? "THREAT DETECTED: Destructive Command Pattern Intercepted" : "INSPECTION PASSED: Command Invariants Verified",
-        latency: (0.7 + Math.random() * 0.4).toFixed(2) + " ms",
-        astNode: `AST_Node [raw: "${input.substring(0, 30)}..."]`,
-        rule: isDestructive ? "RULE_CUSTOM_DESTRUCTIVE_PATTERN_INTERCEPT" : "RULE_PERMIT_SAFE_EXECUTION",
-        action: isDestructive ? "EXECUTION BLOCKED — Halted in-memory before OS execution." : "EXECUTION ALLOWED — Safe tool invocation verified."
-      };
-      renderSimulation(customPayload);
+      const isPipeRev = /(curl.*\|.*(ba)?sh|wget.*\|.*(ba)?sh|nc\s+-e|bash\s+-i|python.*socket|php\s+-r)/i.test(input);
+      const isSqlDrop = /(drop\s+table|delete\s+from|truncate\s+table|alter\s+table.*drop)/i.test(input);
+      const isDiskWipe = /(dd\s+if=|mkfs|fdisk|format\s+[a-z]:|rm\s+-rf\s+[/~*])/i.test(input);
+      const isSecretExfil = /(cat.*(\.\.|\/etc\/|\.env|id_rsa|credentials)|printenv|export.*KEY)/i.test(input);
+      const isWeb3Drain = /(eip-?7702|sweeper|delegate_to|drain_hot_wallet|broadcast_batch.*AUTH)/i.test(input);
+      const isGenericDestructive = /(rm\s+-r|shutdown|reboot|:\(\)\{)/i.test(input);
+
+      let payload;
+      if (isPipeRev) {
+        payload = {
+          agent: "User Custom Input (Reverse Shell / Pipe)",
+          cmd: input,
+          isThreat: true,
+          threatName: "CRITICAL: Unverified Network Shell Pipe / Socket Spawn",
+          latency: (0.65 + Math.random() * 0.25).toFixed(2) + " ms",
+          astNode: `BinaryPipeExpression [source: NetworkURL, target: ${input.substring(0, 25)}...]`,
+          rule: "RULE_NO_UNVERIFIED_NETWORK_SHELL_PIPES",
+          action: "EXECUTION BLOCKED — Process fork canceled before OS spawn."
+        };
+      } else if (isSqlDrop) {
+        payload = {
+          agent: "User Custom Input (Database Command)",
+          cmd: input,
+          isThreat: true,
+          threatName: "HIGH RISK: Unconstrained Destructive DDL / DML Purge",
+          latency: (0.90 + Math.random() * 0.3).toFixed(2) + " ms",
+          astNode: `SQL_AST_Statement [type: DESTRUCTIVE_MUTATION, query: "${input.substring(0, 30)}..."]`,
+          rule: "RULE_SQL_STRICT_DDL_PROTECTION",
+          action: "EXECUTION BLOCKED — Destructive DDL command quarantined."
+        };
+      } else if (isDiskWipe) {
+        payload = {
+          agent: "User Custom Input (Raw Hardware / Root Wipe)",
+          cmd: input,
+          isThreat: true,
+          threatName: "FATAL THREAT: Raw Hardware / Root Filesystem Mutation",
+          latency: (0.62 + Math.random() * 0.2).toFixed(2) + " ms",
+          astNode: `HardwareStorageMutation [mode: DIRECT_WRITE, target: "${input.substring(0, 30)}..."]`,
+          rule: "RULE_HARDWARE_PROTECTION_ISOLATION",
+          action: "EXECUTION BLOCKED — Kernel hardware device access prohibited."
+        };
+      } else if (isSecretExfil) {
+        payload = {
+          agent: "User Custom Input (Secret Exfiltration Probe)",
+          cmd: input,
+          isThreat: true,
+          threatName: "PII & SECRET LEAK: Workspace Jail Boundary Violation",
+          latency: (0.74 + Math.random() * 0.2).toFixed(2) + " ms",
+          astNode: `CanonicalPathEscape [access: PROTECTED_CREDENTIALS, target: "${input.substring(0, 30)}..."]`,
+          rule: "RULE_STRICT_WORKSPACE_JAIL",
+          action: "EXECUTION BLOCKED — Path traversal outside root sandbox prevented."
+        };
+      } else if (isWeb3Drain) {
+        payload = {
+          agent: "User Custom Input (Web3 / EIP-7702 Relayer)",
+          cmd: input,
+          isThreat: true,
+          threatName: "CRITICAL THREAT: Unauthorized Account Delegation / Asset Drain",
+          latency: (0.78 + Math.random() * 0.15).toFixed(2) + " ms",
+          astNode: `AccountDelegationAST [operation: SWEEP_DRAIN, payload: "${input.substring(0, 30)}..."]`,
+          rule: "RULE_STRICT_NO_UNVERIFIED_EIP7702_DELEGATION",
+          action: "EXECUTION BLOCKED — Target contract lacks governance lock. Delegation canceled in RAM."
+        };
+      } else if (isGenericDestructive) {
+        payload = {
+          agent: "User Custom Input (Destructive Pattern)",
+          cmd: input,
+          isThreat: true,
+          threatName: "THREAT DETECTED: Destructive Command Pattern Intercepted",
+          latency: (0.80 + Math.random() * 0.2).toFixed(2) + " ms",
+          astNode: `AST_Node [raw: "${input.substring(0, 30)}..."]`,
+          rule: "RULE_CUSTOM_DESTRUCTIVE_PATTERN_INTERCEPT",
+          action: "EXECUTION BLOCKED — Halted in-memory before OS execution."
+        };
+      } else {
+        payload = {
+          agent: "User Custom Input (Safe Engineering Tool)",
+          cmd: input,
+          isThreat: false,
+          threatName: "SAFE EXECUTION: Verified Safe Command / Tool Invariants Passed",
+          latency: (0.45 + Math.random() * 0.2).toFixed(2) + " ms",
+          astNode: `CommandChain [executable: ${input.split(' ')[0]}, invariants: VALID]`,
+          rule: "RULE_PERMIT_SAFE_WORKSPACE_COMMANDS",
+          action: "EXECUTION ALLOWED — 0.0% False Positive. Passed to Host OS."
+        };
+      }
+
+      document.querySelectorAll('.attack-btn').forEach(b => b.classList.remove('active'));
+      renderSimulation(payload);
     }
 
     function renderSimulation(payload) {
