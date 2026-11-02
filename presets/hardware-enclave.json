@@ -1,0 +1,28 @@
+{
+  "name": "hardware-enclave-preset",
+  "version": "1.0.0",
+  "description": "Zero-trust hardware enclave and post-quantum cryptographic enforcement policies",
+  "profiles": {
+    "military-grade": {
+      "requireHardwareAttestation": true,
+      "postQuantumOnly": true,
+      "mlockKeyMemory": true,
+      "constantTimeStrict": true,
+      "maxSessionMessages": 1000,
+      "maxSessionDurationSec": 3600
+    },
+    "confidential-cloud": {
+      "requireHardwareAttestation": true,
+      "allowedAttestationProviders": ["aws-nitro", "gcp-sev-snp", "azure-snp"],
+      "postQuantumOnly": false,
+      "mlockKeyMemory": true,
+      "constantTimeStrict": true
+    },
+    "software-fallback": {
+      "requireHardwareAttestation": false,
+      "postQuantumOnly": false,
+      "mlockKeyMemory": false,
+      "constantTimeStrict": true
+    }
+  }
+}
