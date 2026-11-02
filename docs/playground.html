@@ -496,6 +496,14 @@
           <div class="attack-cmd">cat ../../../etc/shadow && cat .env</div>
         </button>
 
+        <button class="attack-btn" onclick="runAttack('eip_7702', this)">
+          <div class="attack-btn-top">
+            <span class="attack-btn-title">EIP-7702 Rogue Delegation (Binance Vector)</span>
+            <span class="attack-btn-tag tag-red">$6.3B Vector</span>
+          </div>
+          <div class="attack-cmd">broadcast_batch(EIP7702_AUTH, sweeper=0x4f82..., nonces=50)</div>
+        </button>
+
         <button class="attack-btn" onclick="runAttack('legit', this)">
           <div class="attack-btn-top">
             <span class="attack-btn-title">Legitimate Engineering Tool</span>
@@ -603,6 +611,16 @@
         rule: "RULE_STRICT_WORKSPACE_JAIL",
         action: "EXECUTION BLOCKED — Path traversal outside root sandbox prevented."
       },
+      eip_7702: {
+        agent: "Compromised DevOps Hot-Wallet Relayer (Oct 2026 Binance Vector)",
+        cmd: "broadcast_batch(EIP7702_AUTHORIZATION, sweeper=0x4f828a...c91e, nonces=50)",
+        isThreat: true,
+        threatName: "CRITICAL THREAT: Unauthorized EIP-7702 Account Delegation to Sweeper Contract",
+        latency: "0.78 ms",
+        astNode: "AccountDelegationAST [authority: 0x8894e0... (Binance HotWallet14), delegate: 0x4f828a..., op: SWEEP_DRAIN]",
+        rule: "RULE_STRICT_NO_UNVERIFIED_EIP7702_DELEGATION",
+        action: "EXECUTION BLOCKED — Target contract bytecode lacks verified governance time-lock. Delegation canceled in RAM before mempool broadcast."
+      },
       legit: {
         agent: "Coding Agent Tool Execution",
         cmd: "git status && npm run test",
@@ -627,7 +645,7 @@
       const input = document.getElementById('customInput').value.trim();
       if (!input) return;
 
-      const isDestructive = /(rm\s+-rf|drop|dd\s+if|curl.*\|.*bash|shutdown|mkfs|:\(\)\{)/i.test(input);
+      const isDestructive = /(rm\s+-rf|drop|dd\s+if|curl.*\|.*bash|shutdown|mkfs|:\(\)\{|eip-?7702|sweeper|delegate)/i.test(input);
       
       const customPayload = {
         agent: "User Autonomous Agent CLI",
