@@ -12,7 +12,7 @@ describe('Sweeper Bytecode Scanner (#1755)', () => {
   });
 
   it('permits verified non-sweeper contracts', () => {
-    const safeBytecode = '0x608060405234801561001057600080fd5b50112233445566';
+    const safeBytecode = '0x11223344556677889900aabbccddeeff';
     expect(SweeperBytecodeScanner.isSweeperContract(safeBytecode)).toBe(false);
 
     const audit = SweeperBytecodeScanner.auditDelegationBytecode('0x1234...', safeBytecode);
