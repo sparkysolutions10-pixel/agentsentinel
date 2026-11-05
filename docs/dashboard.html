@@ -873,6 +873,29 @@
 
       <!-- VIEW 2: API KEY & CLOUD MCP SETUP -->
       <div id="view-apikeys" class="dashboard-view">
+        <!-- PRO UPGRADE BANNER (Dynamic for Free Tier) -->
+        <div id="freeTierUpgradeBanner" class="panel-box" style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border: 1px solid #7dd3fc; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 40px; height: 40px; border-radius: 10px; background: #0284c7; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div>
+                <div style="font-weight: 700; font-size: 14px; color: #0f172a; margin-bottom: 2px;">
+                  Upgrade to Pro to Unlock 1,000,000 Actions &amp; 90% Token Reduction
+                </div>
+                <div style="font-size: 12px; color: #475569;">
+                  You are currently on the Free Community Tier (500 actions/mo cap). Pro tier unlocks Atomic Rollback, SmartProxy, and unlimited priority bandwidth.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <a href="index.html#pricing" class="btn-action-primary" style="background: #0284c7; text-decoration: none; font-size: 12px; padding: 8px 18px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(2, 132, 199, 0.2);">
+                Upgrade to Pro (₹2,499 / $29) ➔
+              </a>
+            </div>
+          </div>
+        </div>
         <!-- CARD 1: SOVEREIGN CREDENTIALS & MCP GATEWAY -->
         <div class="panel-box">
           <div class="panel-header">
@@ -905,10 +928,10 @@
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">2. Personal API Secret Key</span>
-              <span class="badge-status badge-passed" style="font-size: 10px;">ACTIVE PRO (1M Actions/Mo)</span>
+              <span class="badge-status" id="apiKeyTierBadge" style="font-size: 10px; background: rgba(100, 116, 139, 0.15); color: #475569; border: 1px solid rgba(100, 116, 139, 0.3);">FREE TIER (500 Calls Cap)</span>
             </div>
             <div class="api-key-container">
-              <div class="api-key-code" id="liveApiKeyText">sk_live_sec_7894f28a01cb99e46a788b</div>
+              <div class="api-key-code" id="liveApiKeyText">sk_free_starter_7894f28a01cb99e4</div>
               <div style="display: flex; gap: 8px;">
                 <button onclick="rollApiKey()" class="btn-action-outline" style="font-size: 11px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -920,7 +943,7 @@
                 </button>
               </div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted);">
+            <div style="font-size: 12px; color: var(--text-muted);" id="apiKeyHelpText">
               Sovereign bearer token for private agent swarms and quota tracking. Keep this key secure.
             </div>
           </div>
@@ -929,18 +952,21 @@
           <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
               <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
-                📦 Bundled Inside This Gateway (All 12 Enterprise MCP Tools Active)
+                📦 Bundled Inside This Gateway (12 Enterprise MCP Tools)
               </span>
-              <span style="font-size: 11px; background: rgba(2, 132, 199, 0.1); color: #0284c7; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
-                All 51+ Invariants Loaded
+              <span style="font-size: 11px; background: rgba(2, 132, 199, 0.1); color: #0284c7; padding: 2px 8px; border-radius: 4px; font-weight: 600;" id="mcpInvariantsStatusBadge">
+                51+ Rules Loaded
               </span>
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
               <!-- Pillar 1: AST Firewalls -->
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a; margin-bottom: 4px;">
-                  <span style="color: #ef4444;">🛡️</span> 4 AST Security Firewalls
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a;">
+                    <span style="color: #ef4444;">🛡️</span> 4 AST Firewalls
+                  </div>
+                  <span class="badge-status badge-passed" style="font-size: 9px; padding: 1px 6px;">FREE ACTIVE</span>
                 </div>
                 <div style="font-size: 11px; color: #475569; font-family: 'JetBrains Mono', monospace; line-height: 1.5;">
                   • sentinel_audit_command<br>
@@ -952,8 +978,11 @@
 
               <!-- Pillar 2: Blackbox Flight Recorder -->
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a; margin-bottom: 4px;">
-                  <span style="color: #0284c7;">✈️</span> 3 Merkle Flight Recorders
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a;">
+                    <span style="color: #0284c7;">✈️</span> 3 Merkle Recorders
+                  </div>
+                  <span class="badge-status badge-passed" style="font-size: 9px; padding: 1px 6px;">FREE ACTIVE</span>
                 </div>
                 <div style="font-size: 11px; color: #475569; font-family: 'JetBrains Mono', monospace; line-height: 1.5;">
                   • sentinel_blackbox_record<br>
@@ -964,8 +993,11 @@
 
               <!-- Pillar 3: Atomic Rollback -->
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a; margin-bottom: 4px;">
-                  <span style="color: #10b981;">🔄</span> 3 Atomic Rollback Engines
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a;">
+                    <span style="color: #10b981;">🔄</span> 3 Rollback Engines
+                  </div>
+                  <span class="badge-status" id="pillarRollbackBadge" style="background: rgba(245, 158, 11, 0.1); color: #d97706; font-size: 9px; padding: 1px 6px; border: 1px solid rgba(245, 158, 11, 0.3);">🔒 PRO ONLY</span>
                 </div>
                 <div style="font-size: 11px; color: #475569; font-family: 'JetBrains Mono', monospace; line-height: 1.5;">
                   • sentinel_checkpoint_begin<br>
@@ -976,8 +1008,11 @@
 
               <!-- Pillar 4: SmartProxy 90% Saver -->
               <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
-                <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a; margin-bottom: 4px;">
-                  <span style="color: #8b5cf6;">⚡</span> 2 SmartProxy Token Savers
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                  <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #0f172a;">
+                    <span style="color: #8b5cf6;">⚡</span> 2 SmartProxy Savers
+                  </div>
+                  <span class="badge-status" id="pillarProxyBadge" style="background: rgba(245, 158, 11, 0.1); color: #d97706; font-size: 9px; padding: 1px 6px; border: 1px solid rgba(245, 158, 11, 0.3);">🔒 PRO ONLY</span>
                 </div>
                 <div style="font-size: 11px; color: #475569; font-family: 'JetBrains Mono', monospace; line-height: 1.5;">
                   • sentinel_proxy_route (90% Saver)<br>
@@ -1304,9 +1339,18 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
 
     function rollApiKey() {
       const randomHex = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
-      const newKey = 'sentinel_live_sec_' + randomHex;
+      const stored = localStorage.getItem('agentsentinel_user');
+      let isPro = false;
+      try {
+        if (stored && (JSON.parse(stored).plan === 'pro' || JSON.parse(stored).plan === 'enterprise')) {
+          isPro = true;
+        }
+      } catch (e) {}
+
+      const prefix = isPro ? 'sk_live_sec_' : 'sk_free_starter_';
+      const newKey = prefix + randomHex;
       document.getElementById('liveApiKeyText').textContent = newKey;
-      alert('New Live Production API Key rolled successfully: ' + newKey);
+      alert((isPro ? 'New Live Pro API Key' : 'New Free Starter API Key') + ' rolled successfully:\n' + newKey);
     }
 
     let injectionCount = 0;
@@ -1410,24 +1454,92 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
         if (emailEl) emailEl.textContent = email;
         if (avatarEl) avatarEl.textContent = email.charAt(0).toUpperCase();
 
-        if (plan === 'pro') {
+        if (plan === 'pro' || plan === 'enterprise') {
+          // PRO OR ENTERPRISE TIER
           if (planPill) {
-            planPill.textContent = 'PRO ACTIVE (1,000,000 Actions)';
+            planPill.textContent = plan === 'enterprise' ? 'ENTERPRISE ACTIVE (10M Actions)' : 'PRO ACTIVE (1,000,000 Actions)';
             planPill.style.color = '#0284c7';
           }
-          if (quotaBar) quotaBar.style.width = '1.4%';
-          if (quotaRatio) quotaRatio.textContent = '14,280 / 1,000,000 Used';
-        } else if (plan === 'enterprise') {
-          if (planPill) {
-            planPill.textContent = 'ENTERPRISE (10,000,000 Actions)';
-            planPill.style.color = '#7c3aed';
+          if (quotaBar) quotaBar.style.width = plan === 'enterprise' ? '0.14%' : '1.4%';
+          if (quotaRatio) quotaRatio.textContent = plan === 'enterprise' ? '14,280 / 10,000,000 Used' : '14,280 / 1,000,000 Used';
+
+          // Pro Key & Badge
+          const keyEl = document.getElementById('liveApiKeyText');
+          if (keyEl) keyEl.textContent = 'sk_live_sec_7894f28a01cb99e46a788b';
+
+          const badgeEl = document.getElementById('apiKeyTierBadge');
+          if (badgeEl) {
+            badgeEl.className = 'badge-status badge-passed';
+            badgeEl.style.background = 'rgba(16, 185, 129, 0.1)';
+            badgeEl.style.color = '#059669';
+            badgeEl.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            badgeEl.textContent = plan === 'enterprise' ? 'ACTIVE ENTERPRISE (10M/Mo)' : 'ACTIVE PRO (1M Actions/Mo)';
           }
-          if (quotaBar) quotaBar.style.width = '0.14%';
-          if (quotaRatio) quotaRatio.textContent = '14,280 / 10,000,000 Used';
+
+          // Hide Upgrade Banner for Paying Customers
+          const banner = document.getElementById('freeTierUpgradeBanner');
+          if (banner) banner.style.display = 'none';
+
+          // Unlock Pro Tools
+          const rollbackBadge = document.getElementById('pillarRollbackBadge');
+          if (rollbackBadge) {
+            rollbackBadge.className = 'badge-status badge-passed';
+            rollbackBadge.textContent = 'PRO ACTIVE';
+            rollbackBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+            rollbackBadge.style.color = '#059669';
+            rollbackBadge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+          }
+          const proxyBadge = document.getElementById('pillarProxyBadge');
+          if (proxyBadge) {
+            proxyBadge.className = 'badge-status badge-passed';
+            proxyBadge.textContent = 'PRO ACTIVE';
+            proxyBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+            proxyBadge.style.color = '#059669';
+            proxyBadge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+          }
         } else {
-          if (planPill) planPill.textContent = 'FREE TIER (500 Actions)';
+          // FREE COMMUNITY TIER
+          if (planPill) {
+            planPill.textContent = 'FREE TIER (500 Actions)';
+            planPill.style.color = '#64748b';
+          }
           if (quotaBar) quotaBar.style.width = '2.8%';
           if (quotaRatio) quotaRatio.textContent = '14 / 500 Used';
+
+          // Free Key & Badge
+          const keyEl = document.getElementById('liveApiKeyText');
+          if (keyEl) keyEl.textContent = 'sk_free_starter_7894f28a01cb99e4';
+
+          const badgeEl = document.getElementById('apiKeyTierBadge');
+          if (badgeEl) {
+            badgeEl.className = 'badge-status';
+            badgeEl.style.background = 'rgba(100, 116, 139, 0.15)';
+            badgeEl.style.color = '#475569';
+            badgeEl.style.border = '1px solid rgba(100, 116, 139, 0.3)';
+            badgeEl.textContent = 'FREE TIER (500 Calls Cap)';
+          }
+
+          // Show Upgrade Banner
+          const banner = document.getElementById('freeTierUpgradeBanner');
+          if (banner) banner.style.display = 'block';
+
+          // Lock Pro Tools
+          const rollbackBadge = document.getElementById('pillarRollbackBadge');
+          if (rollbackBadge) {
+            rollbackBadge.className = 'badge-status';
+            rollbackBadge.textContent = '🔒 PRO ONLY';
+            rollbackBadge.style.background = 'rgba(245, 158, 11, 0.1)';
+            rollbackBadge.style.color = '#d97706';
+            rollbackBadge.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+          }
+          const proxyBadge = document.getElementById('pillarProxyBadge');
+          if (proxyBadge) {
+            proxyBadge.className = 'badge-status';
+            proxyBadge.textContent = '🔒 PRO ONLY';
+            proxyBadge.style.background = 'rgba(245, 158, 11, 0.1)';
+            proxyBadge.style.color = '#d97706';
+            proxyBadge.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+          }
         }
       } catch (e) {
         console.warn('Session load failed:', e);
