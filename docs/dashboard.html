@@ -7,24 +7,24 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b101b'><rect width='24' height='24' rx='5' fill='%230b101b'/><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' stroke='%2338bdf8' stroke-width='2' fill='none'/></svg>">
 <style>
   :root {
-    --bg-page: #07090e;
-    --surface-white: #0c101a;
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(56, 189, 248, 0.3);
-    --text-primary: #ffffff;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --brand-blue: #38bdf8;
-    --brand-blue-subtle: rgba(56, 189, 248, 0.1);
-    --brand-blue-hover: #0284c7;
-    --danger-red: #f87171;
-    --danger-bg: rgba(239, 68, 68, 0.15);
-    --danger-border: rgba(239, 68, 68, 0.3);
-    --success-green: #34d399;
-    --success-bg: rgba(16, 185, 129, 0.15);
-    --warning-amber: #fbbf24;
-    --warning-bg: rgba(245, 158, 11, 0.15);
-    --obsidian-dark: #07090e;
+    --bg-page: #f8fafc;
+    --surface-white: #ffffff;
+    --border-subtle: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --brand-blue: #2563eb;
+    --brand-blue-subtle: #eff6ff;
+    --brand-blue-hover: #1d4ed8;
+    --danger-red: #ef4444;
+    --danger-bg: #fef2f2;
+    --danger-border: #fecaca;
+    --success-green: #10b981;
+    --success-bg: #ecfdf5;
+    --warning-amber: #f59e0b;
+    --warning-bg: #fffbeb;
+    --obsidian-dark: #0b101b;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
@@ -523,29 +523,6 @@
     background: var(--surface-white);
   }
   footer a { color: var(--brand-blue); text-decoration: none; }
-
-  /* Dark Luxury Theme Overrides */
-  body { background: #07090e !important; color: #f8fafc !important; }
-  header { background: rgba(12, 16, 26, 0.9) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-  .subnav { background: rgba(12, 16, 26, 0.7) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-  .card, .stat-card { background: rgba(15, 23, 42, 0.7) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important; }
-  .card:hover, .stat-card:hover { border-color: rgba(56, 189, 248, 0.3) !important; }
-  table th { background: rgba(15, 23, 42, 0.9) !important; color: #94a3b8 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-  table td { border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; color: #e2e8f0 !important; }
-  table tr:hover td { background: rgba(30, 41, 59, 0.4) !important; }
-  .api-key-box { background: #05070c !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; }
-  .key-value { color: #38bdf8 !important; }
-  .btn-outline { border-color: rgba(255, 255, 255, 0.15) !important; color: #f8fafc !important; background: transparent !important; }
-  .btn-outline:hover { border-color: #38bdf8 !important; color: #38bdf8 !important; background: rgba(56, 189, 248, 0.08) !important; }
-  .btn-primary, .btn-upgrade { background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%) !important; color: #07090e !important; font-weight: 700 !important; border: none !important; }
-  .btn-primary:hover, .btn-upgrade:hover { opacity: 0.95; transform: translateY(-1px); }
-  input[type="text"], input[type="search"], input[type="email"] { background: #05070c !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; color: #ffffff !important; }
-  .nav-tab { color: #94a3b8 !important; }
-  .nav-tab.active { color: #38bdf8 !important; border-bottom-color: #38bdf8 !important; }
-  .nav-tab:hover { color: #ffffff !important; }
-  .user-badge { background: rgba(15, 23, 42, 0.8) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
-  .modal-box { background: #0c101a !important; border: 1px solid rgba(56, 189, 248, 0.3) !important; color: #ffffff !important; }
-
 </style>
 </head>
 <body>
@@ -582,10 +559,7 @@
       ⭐ GitHub (2,366 Tests)
     </a>
     <button class="btn-nav btn-upgrade" onclick="openCheckoutModal('pro')">
-      ⚡ Upgrade to Pro
-    </button>
-    <button class="btn-nav btn-outline" onclick="logoutSession()" style="font-size: 11px; padding: 6px 10px;">
-      Log Out
+      ⚡ Upgrade to Pro ($)
     </button>
   </div>
 </header>
@@ -1307,47 +1281,6 @@ export default {
   if (savedEmail) {
     document.getElementById('user-email-label').textContent = savedEmail;
   }
-</script>
-<script>
-  // Session Hook & Logout Handler
-  function initDashboardSession() {
-    try {
-      const rawUser = localStorage.getItem('agentsentinel_user');
-      if (rawUser) {
-        const user = JSON.parse(rawUser);
-        if (user && user.email) {
-          const emailEl = document.getElementById('user-email-label');
-          if (emailEl) emailEl.textContent = user.email;
-          const planBadges = document.querySelectorAll('#user-profile-badge .brand-badge');
-          if (planBadges.length > 0) {
-            if (user.plan === 'pro') {
-              planBadges[0].textContent = 'Pro Engineer (1M Actions)';
-              planBadges[0].style.background = 'rgba(56, 189, 248, 0.15)';
-              planBadges[0].style.color = '#38bdf8';
-              planBadges[0].style.borderColor = 'rgba(56, 189, 248, 0.4)';
-            } else if (user.plan === 'enterprise') {
-              planBadges[0].textContent = 'Enterprise (10M Actions)';
-              planBadges[0].style.background = 'rgba(168, 85, 247, 0.15)';
-              planBadges[0].style.color = '#c084fc';
-              planBadges[0].style.borderColor = 'rgba(168, 85, 247, 0.4)';
-            } else {
-              planBadges[0].textContent = 'Free Tier (500 Actions)';
-            }
-          }
-        }
-      }
-    } catch(e) {
-      console.warn('Dashboard session load error:', e);
-    }
-  }
-
-  function logoutSession() {
-    localStorage.removeItem('agentsentinel_user');
-    localStorage.removeItem('sentinel_user_email');
-    window.location.href = 'index.html';
-  }
-
-  initDashboardSession();
 </script>
 </body>
 </html>

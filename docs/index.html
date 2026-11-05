@@ -2701,6 +2701,7 @@ pause
       loggedInAt: Date.now()
     };
     localStorage.setItem('agentsentinel_user', JSON.stringify(user));
+    localStorage.setItem('sentinel_user_email', email);
     closeAuthModal();
     checkUserSession();
     
