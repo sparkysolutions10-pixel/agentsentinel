@@ -1,0 +1,20 @@
+[
+  {
+    "key": "sk_demo_pixel_2026",
+    "email": "demo@sparkysolutions.in",
+    "plan": "pro",
+    "createdAt": "2026-11-06T00:00:00.000Z",
+    "quotaLimit": 1000000,
+    "quotaUsed": 0,
+    "status": "active"
+  },
+  {
+    "key": "sk_free_guest_community",
+    "email": "guest@community.agentsentinel.dev",
+    "plan": "free",
+    "createdAt": "2026-11-06T00:00:00.000Z",
+    "quotaLimit": 500,
+    "quotaUsed": 0,
+    "status": "active"
+  }
+]

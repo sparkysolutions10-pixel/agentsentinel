@@ -17,6 +17,7 @@ ENV PORT=3000
 COPY package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY docs ./docs
+COPY data ./data
 
 EXPOSE 3000
 

@@ -1,11 +1,11 @@
 /**
-/**
  * AgentSentinel Remote MCP SSE Server
  *
  * Implements the official Model Context Protocol (MCP) Remote Server specification
  * over Server-Sent Events (SSE) and HTTP POST. Enables zero-install cloud hosting
  * on Cloudflare Workers, Railway, Render, Fly.io, or VPS, allowing users to connect
- * Claude Desktop or Cursor directly via a secure cloud URL with instant auto-unlock.
+ * Claude Desktop, Cursor IDE, Windsurf, or Devin directly via a secure cloud URL
+ * with instant auto-unlock and keyless zero-friction freemium access.
  *
  * @license MIT
  * @author Sparky Solutions (Mukesh Biswas)
@@ -55,23 +55,71 @@ export class AgentSentinelRemoteSseServer {
   private readonly apiKeys: Map<string, ApiKeyAccount> = new Map();
   private totalRequestsServed: number = 0;
   private startTime: number = Date.now();
+  private readonly persistencePath: string = path.resolve(process.cwd(), 'data', 'api_keys.json');
 
   // 🛡️ Global Server-Wide Free Tier Circuit Breaker (Zero Out-of-Pocket Liability Protection)
   private globalDailyFreeRequestsCount: number = 0;
   private lastDailyResetTimestamp: number = Date.now();
-  private readonly GLOBAL_DAILY_FREE_CAP: number = 10_000;
+  private readonly GLOBAL_DAILY_FREE_CAP: number = 25_000;
 
   constructor() {
-    // Seed default starter key for instant zero-friction developer testing
+    // 1. Seed default starter key for instant zero-friction developer testing
     this.apiKeys.set('sk_demo_pixel_2026', {
       key: 'sk_demo_pixel_2026',
       email: 'demo@sparkysolutions.in',
       plan: 'pro',
       createdAt: new Date().toISOString(),
-      quotaLimit: 100000,
+      quotaLimit: 1_000_000,
       quotaUsed: 0,
       status: 'active',
     });
+
+    // 2. Seed keyless community guest account for instant connection
+    this.apiKeys.set('sk_free_guest_community', {
+      key: 'sk_free_guest_community',
+      email: 'guest@community.agentsentinel.dev',
+      plan: 'free',
+      createdAt: new Date().toISOString(),
+      quotaLimit: 500,
+      quotaUsed: 0,
+      status: 'active',
+    });
+
+    // 3. Load persistent customer keys from disk (preserves Pro upgrades across restarts)
+    this.loadPersistedKeys();
+  }
+
+  /**
+   * Loads persisted API keys from disk.
+   */
+  private loadPersistedKeys(): void {
+    try {
+      if (fs.existsSync(this.persistencePath)) {
+        const raw = fs.readFileSync(this.persistencePath, 'utf8');
+        const list: ApiKeyAccount[] = JSON.parse(raw);
+        for (const item of list) {
+          this.apiKeys.set(item.key, item);
+        }
+      }
+    } catch (err) {
+      console.error('[AgentSentinel] Error loading persisted API keys:', err);
+    }
+  }
+
+  /**
+   * Persists active customer keys to disk.
+   */
+  private savePersistedKeys(): void {
+    try {
+      const dir = path.dirname(this.persistencePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      const list = Array.from(this.apiKeys.values());
+      fs.writeFileSync(this.persistencePath, JSON.stringify(list, null, 2), 'utf8');
+    } catch (err) {
+      console.error('[AgentSentinel] Error saving persisted API keys:', err);
+    }
   }
 
   /**
@@ -140,6 +188,7 @@ export class AgentSentinelRemoteSseServer {
     };
 
     this.apiKeys.set(key, account);
+    this.savePersistedKeys();
     return account;
   }
 
@@ -158,6 +207,7 @@ export class AgentSentinelRemoteSseServer {
     existing.status = 'active';
     existing.subscriptionStatus = 'active';
     existing.expiresAt = Date.now() + durationDays * 24 * 60 * 60 * 1000;
+    this.savePersistedKeys();
     return existing;
   }
 
@@ -178,6 +228,7 @@ export class AgentSentinelRemoteSseServer {
         account.status = 'active';
         account.subscriptionStatus = 'active';
         account.expiresAt = Date.now() + durationDays * 24 * 60 * 60 * 1000;
+        this.savePersistedKeys();
         return account;
       }
     }
@@ -202,22 +253,38 @@ export class AgentSentinelRemoteSseServer {
       status: 'active',
     };
     this.apiKeys.set(key, newAccount);
+    this.savePersistedKeys();
     return newAccount;
   }
 
   /**
    * Validates an API key, subscription expiration, and quota limits.
+   * Implements Zero-Friction Freemium Law: If token is omitted, auto-routes to Free Guest Tier!
    */
-  public validateApiKey(token: string): { valid: boolean; account?: ApiKeyAccount; error?: string } {
-    if (!token) {
-      return { valid: false, error: 'Missing API key. Provide Authorization: Bearer <key> or ?token=<key>' };
+  public validateApiKey(token?: string): { valid: boolean; account?: ApiKeyAccount; error?: string } {
+    // 1-Click Freemium Rule: Missing token routes to instant Community Free Tier
+    if (!token || token.trim() === '') {
+      let guest = this.apiKeys.get('sk_free_guest_community');
+      if (!guest) {
+        guest = {
+          key: 'sk_free_guest_community',
+          email: 'guest@community.agentsentinel.dev',
+          plan: 'free',
+          createdAt: new Date().toISOString(),
+          quotaLimit: 500,
+          quotaUsed: 0,
+          status: 'active',
+        };
+        this.apiKeys.set('sk_free_guest_community', guest);
+      }
+      return { valid: true, account: guest };
     }
 
     const cleanToken = token.replace(/^Bearer\s+/i, '').trim();
     const account = this.apiKeys.get(cleanToken);
 
     if (!account) {
-      return { valid: false, error: 'Invalid API key. Generate a free key at https://agentsentinel.dev' };
+      return { valid: false, error: 'Invalid API key. Generate a free key at https://sparkysolutions10-pixel.github.io/agentsentinel/' };
     }
 
     // 🛡️ Subscription Expiry Enforcement: Block expired keys when 30-day billing cycle ends
@@ -239,7 +306,7 @@ export class AgentSentinelRemoteSseServer {
     if (account.quotaUsed >= account.quotaLimit) {
       return {
         valid: false,
-        error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://agentsentinel.dev`,
+        error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://sparkysolutions10-pixel.github.io/agentsentinel/`,
       };
     }
 
@@ -253,12 +320,35 @@ export class AgentSentinelRemoteSseServer {
       if (this.globalDailyFreeRequestsCount >= this.GLOBAL_DAILY_FREE_CAP) {
         return {
           valid: false,
-          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://agentsentinel.dev for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
+          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://sparkysolutions10-pixel.github.io/agentsentinel/ for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
         };
       }
     }
 
     return { valid: true, account };
+  }
+
+  /**
+   * Helper to determine MIME type by file extension.
+   */
+  private getMimeType(filePath: string): string {
+    const ext = path.extname(filePath).toLowerCase();
+    switch (ext) {
+      case '.html': return 'text/html; charset=utf-8';
+      case '.css': return 'text/css; charset=utf-8';
+      case '.js': return 'application/javascript; charset=utf-8';
+      case '.json': return 'application/json; charset=utf-8';
+      case '.svg': return 'image/svg+xml';
+      case '.png': return 'image/png';
+      case '.jpg':
+      case '.jpeg': return 'image/jpeg';
+      case '.ico': return 'image/x-icon';
+      case '.zip': return 'application/zip';
+      case '.ps1':
+      case '.bat':
+      case '.txt': return 'text/plain; charset=utf-8';
+      default: return 'application/octet-stream';
+    }
   }
 
   /**
@@ -305,40 +395,18 @@ export class AgentSentinelRemoteSseServer {
       }
     }
 
-    // Static 1-Click Chrome Extension Download
-    if (pathname === '/agentsentinel_pro_extension.zip') {
-      const zipPath = path.join(docsDir, 'agentsentinel_pro_extension.zip');
-      if (fs.existsSync(zipPath)) {
-        const zipData = fs.readFileSync(zipPath);
-        res.writeHead(200, {
-          'Content-Type': 'application/zip',
-          'Content-Disposition': 'attachment; filename="agentsentinel_pro_extension.zip"',
-          'Content-Length': zipData.length,
-        });
-        res.end(zipData);
-        return;
-      }
-    }
-
-    // Static Dashboard & Connector Scripts
-    if (pathname === '/dashboard.html') {
-      const dashPath = path.join(docsDir, 'dashboard.html');
-      if (fs.existsSync(dashPath)) {
-        const html = fs.readFileSync(dashPath, 'utf-8');
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(html);
-        return;
-      }
-    }
-
-    if (pathname === '/connect.ps1' || pathname === '/Connect-AgentSentinel.bat') {
-      const filePath = path.join(docsDir, pathname.slice(1));
-      if (fs.existsSync(filePath)) {
-        const content = fs.readFileSync(filePath);
-        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end(content);
-        return;
-      }
+    // Static Asset Delivery from docs directory (HTML, CSS, JS, SVG, ZIP, PS1, BAT)
+    const relativeAssetPath = pathname.replace(/^\/+/, '');
+    const candidatePath = path.resolve(docsDir, relativeAssetPath);
+    if (candidatePath.startsWith(docsDir) && fs.existsSync(candidatePath) && fs.statSync(candidatePath).isFile()) {
+      const mime = this.getMimeType(candidatePath);
+      const data = fs.readFileSync(candidatePath);
+      res.writeHead(200, {
+        'Content-Type': mime,
+        'Content-Length': data.length,
+      });
+      res.end(data);
+      return;
     }
 
     // 2. Health & Server Info
@@ -348,14 +416,14 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 2. Metrics API
+    // 3. Metrics API
     if (pathname === '/api/metrics' && req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(this.getMetrics(), null, 2));
       return;
     }
 
-    // 3. API Key Generation Route (Self-Serve Free Key)
+    // 4. API Key Generation Route (Self-Serve Free Key)
     if (pathname === '/api/keys/generate' && req.method === 'POST') {
       try {
         const body = await this.readJsonBody(req);
@@ -370,7 +438,7 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 4. API Key Upgrade Route (Pro 1-Click Auto-Unlock)
+    // 5. API Key Upgrade Route (Pro 1-Click Auto-Unlock)
     if (pathname === '/api/keys/upgrade' && req.method === 'POST') {
       try {
         const body = await this.readJsonBody(req);
@@ -385,7 +453,7 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 5. Automated Payment Webhook: Razorpay (Instant Auto-Unlock)
+    // 6. Automated Payment Webhook: Razorpay (Instant Auto-Unlock)
     if (pathname === '/api/webhooks/razorpay' && req.method === 'POST') {
       try {
         const body = (await this.readJsonBody(req)) as Record<string, any>;
@@ -417,7 +485,7 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 6. Automated Payment Webhook: PayPal (Instant Auto-Unlock)
+    // 7. Automated Payment Webhook: PayPal (Instant Auto-Unlock)
     if (pathname === '/api/webhooks/paypal' && req.method === 'POST') {
       try {
         const body = await this.readJsonBody(req);
@@ -448,7 +516,7 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 7. Instant Unlock Status Check (/api/auth/status)
+    // 8. Instant Unlock Status Check (/api/auth/status)
     if (pathname === '/api/auth/status' && req.method === 'GET') {
       const email = parsedUrl.searchParams.get('email');
       const token = parsedUrl.searchParams.get('token');
@@ -497,13 +565,13 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
-    // 5. SSE Handshake Route (/sse)
+    // 9. SSE Handshake Route (/sse)
     if (pathname === '/sse' && req.method === 'GET') {
       this.handleSseConnection(req, res, parsedUrl);
       return;
     }
 
-    // 6. JSON-RPC Client Messages Route (/messages)
+    // 10. JSON-RPC Client Messages Route (/messages)
     if (pathname === '/messages' && req.method === 'POST') {
       this.handleClientMessage(req, res, parsedUrl);
       return;
@@ -526,6 +594,7 @@ export class AgentSentinelRemoteSseServer {
     const queryToken = url.searchParams.get('token');
     const token = authHeader || queryToken || '';
 
+    // Zero-friction: if token is empty, validateApiKey will assign community free guest account
     const validation = this.validateApiKey(token);
     if (!validation.valid) {
       const statusCode = validation.error?.includes('quota') ? 402 : 401;
@@ -690,9 +759,19 @@ export class AgentSentinelRemoteSseServer {
       version: '0.1.0',
       status: 'HEALTHY_ONLINE',
       protocol: 'Model Context Protocol (JSON-RPC 2.0 over SSE)',
-      docs: 'https://agentsentinel-production.up.railway.app/',
+      brand: 'AgentSentinel by Sparky Solutions',
+      docs: 'https://sparkysolutions10-pixel.github.io/agentsentinel/',
+      toolsCount: 12,
+      capabilities: [
+        'Zero-Trust Runtime AST Firewall (51+ Invariants)',
+        'Cryptographic SHA-256 Merkle Flight Recorder',
+        'ACID Atomic Rollback Engine',
+        'SmartProxy 90% Token Reduction Gateway',
+        'Instant 1-Click Auto-Unlock Freemium',
+      ],
       endpoints: {
         website: '/',
+        dashboard: '/dashboard.html',
         sse: '/sse',
         messages: '/messages',
         generateKey: '/api/keys/generate',
@@ -701,7 +780,6 @@ export class AgentSentinelRemoteSseServer {
         webhookPaypal: '/api/webhooks/paypal',
         authStatus: '/api/auth/status',
         metrics: '/api/metrics',
-        extension: '/agentsentinel_pro_extension.zip',
       },
       activeSessions: this.sessions.size,
       uptimeSeconds: Math.floor((Date.now() - this.startTime) / 1000),
