@@ -155,4 +155,82 @@ describe('AgentSentinelRemoteSseServer', () => {
     const data = await sseResponse.json();
     expect(data.error).toContain('Subscription expired');
   });
+
+  it('should auto-unlock Pro tier upon receiving Razorpay webhook', async () => {
+    const webhookPayload = {
+      event: 'payment.captured',
+      payload: {
+        payment: {
+          entity: {
+            id: 'pay_test_rzp_12345',
+            amount: 249900, // ₹2,499.00 in paise
+            currency: 'INR',
+            status: 'captured',
+            email: 'razorpay_buyer@domain.com',
+          }
+        }
+      }
+    };
+
+    const res = await fetch(`${baseUrl}/api/webhooks/razorpay`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(webhookPayload),
+    });
+
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.success).toBe(true);
+    expect(data.gateway).toBe('razorpay');
+    expect(data.plan).toBe('pro');
+    expect(data.unlocked).toBe(true);
+    expect(data.key).toMatch(/^sk_live_/);
+
+    // Verify account status via /api/auth/status
+    const statusRes = await fetch(`${baseUrl}/api/auth/status?email=razorpay_buyer@domain.com`);
+    expect(statusRes.status).toBe(200);
+    const statusData = await statusRes.json();
+    expect(statusData.active).toBe(true);
+    expect(statusData.plan).toBe('pro');
+    expect(statusData.quotaLimit).toBe(1_000_000);
+  });
+
+  it('should auto-unlock Enterprise tier upon receiving PayPal webhook for $199', async () => {
+    const paypalPayload = {
+      event_type: 'PAYMENT.CAPTURE.COMPLETED',
+      resource: {
+        id: 'CAPTURE-PP-998877',
+        amount: {
+          value: '199.00',
+          currency_code: 'USD'
+        },
+        payer: {
+          email_address: 'enterprise_buyer@paypal.com'
+        }
+      }
+    };
+
+    const res = await fetch(`${baseUrl}/api/webhooks/paypal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(paypalPayload),
+    });
+
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.success).toBe(true);
+    expect(data.gateway).toBe('paypal');
+    expect(data.plan).toBe('enterprise');
+    expect(data.unlocked).toBe(true);
+    expect(data.quotaLimit).toBe(10_000_000);
+    expect(data.key).toMatch(/^sk_ent_/);
+
+    // Verify account status via /api/auth/status
+    const statusRes = await fetch(`${baseUrl}/api/auth/status?email=enterprise_buyer@paypal.com`);
+    expect(statusRes.status).toBe(200);
+    const statusData = await statusRes.json();
+    expect(statusData.active).toBe(true);
+    expect(statusData.plan).toBe('enterprise');
+    expect(statusData.quotaLimit).toBe(10_000_000);
+  });
 });

@@ -162,6 +162,50 @@ export class AgentSentinelRemoteSseServer {
   }
 
   /**
+   * Automatically provisions or upgrades an account by email (used by Payment Webhooks).
+   */
+  public upgradeAccountByEmail(
+    email: string,
+    plan: 'pro' | 'enterprise' = 'pro',
+    durationDays: number = 30
+  ): ApiKeyAccount {
+    const cleanEmail = email.toLowerCase().trim();
+    // Search existing account
+    for (const account of this.apiKeys.values()) {
+      if (account.email.toLowerCase() === cleanEmail) {
+        account.plan = plan;
+        account.quotaLimit = plan === 'enterprise' ? 10_000_000 : 1_000_000;
+        account.status = 'active';
+        account.subscriptionStatus = 'active';
+        account.expiresAt = Date.now() + durationDays * 24 * 60 * 60 * 1000;
+        return account;
+      }
+    }
+
+    // Provision new account if not exists
+    const prefix = plan === 'enterprise' ? 'sk_ent_' : 'sk_live_';
+    const randomHex = createHash('sha256')
+      .update(`${cleanEmail}_${Date.now()}_${Math.random()}`)
+      .digest('hex')
+      .slice(0, 24);
+    const key = `${prefix}${randomHex}`;
+
+    const newAccount: ApiKeyAccount = {
+      key,
+      email: cleanEmail,
+      plan,
+      createdAt: new Date().toISOString(),
+      expiresAt: Date.now() + durationDays * 24 * 60 * 60 * 1000,
+      subscriptionStatus: 'active',
+      quotaLimit: plan === 'enterprise' ? 10_000_000 : 1_000_000,
+      quotaUsed: 0,
+      status: 'active',
+    };
+    this.apiKeys.set(key, newAccount);
+    return newAccount;
+  }
+
+  /**
    * Validates an API key, subscription expiration, and quota limits.
    */
   public validateApiKey(token: string): { valid: boolean; account?: ApiKeyAccount; error?: string } {
@@ -338,6 +382,118 @@ export class AgentSentinelRemoteSseServer {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
       }
+      return;
+    }
+
+    // 5. Automated Payment Webhook: Razorpay (Instant Auto-Unlock)
+    if (pathname === '/api/webhooks/razorpay' && req.method === 'POST') {
+      try {
+        const body = (await this.readJsonBody(req)) as Record<string, any>;
+        const event = String(body.event || 'payment.captured');
+        const payloadObj = (body.payload || {}) as Record<string, any>;
+        const payment = (payloadObj.payment?.entity || payloadObj.order?.entity || body) as Record<string, any>;
+        const email = String(payment.email || body.email || 'customer@razorpay.com');
+        const amountPaise = Number(payment.amount || 0);
+
+        // >= 10000 INR (1,000,000 paise) qualifies as Enterprise Tier
+        const plan = amountPaise >= 1000000 ? 'enterprise' : 'pro';
+        const account = this.upgradeAccountByEmail(email, plan);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          gateway: 'razorpay',
+          event,
+          email: account.email,
+          plan: account.plan,
+          quotaLimit: account.quotaLimit,
+          key: account.key,
+          unlocked: true,
+        }, null, 2));
+      } catch (err: unknown) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+      }
+      return;
+    }
+
+    // 6. Automated Payment Webhook: PayPal (Instant Auto-Unlock)
+    if (pathname === '/api/webhooks/paypal' && req.method === 'POST') {
+      try {
+        const body = await this.readJsonBody(req);
+        const eventType = String(body.event_type || 'PAYMENT.CAPTURE.COMPLETED');
+        const resource = (body.resource || {}) as Record<string, any>;
+        const email = String(resource.payer?.email_address || body.email || 'customer@paypal.com');
+        const amountUsd = parseFloat(resource.amount?.value || '0');
+
+        // >= $150 qualifies as Enterprise Tier
+        const plan = amountUsd >= 150 ? 'enterprise' : 'pro';
+        const account = this.upgradeAccountByEmail(email, plan);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          gateway: 'paypal',
+          event: eventType,
+          email: account.email,
+          plan: account.plan,
+          quotaLimit: account.quotaLimit,
+          key: account.key,
+          unlocked: true,
+        }, null, 2));
+      } catch (err: unknown) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+      }
+      return;
+    }
+
+    // 7. Instant Unlock Status Check (/api/auth/status)
+    if (pathname === '/api/auth/status' && req.method === 'GET') {
+      const email = parsedUrl.searchParams.get('email');
+      const token = parsedUrl.searchParams.get('token');
+
+      if (email) {
+        const cleanEmail = email.toLowerCase().trim();
+        let matched: ApiKeyAccount | undefined;
+        for (const acc of this.apiKeys.values()) {
+          if (acc.email.toLowerCase() === cleanEmail) {
+            matched = acc;
+            break;
+          }
+        }
+        if (matched && matched.subscriptionStatus === 'active') {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            active: true,
+            plan: matched.plan,
+            quotaLimit: matched.quotaLimit,
+            quotaUsed: matched.quotaUsed,
+            expiresAt: matched.expiresAt,
+            key: matched.key,
+          }));
+          return;
+        }
+      }
+
+      if (token) {
+        const validation = this.validateApiKey(token);
+        if (validation.valid && validation.account) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            active: true,
+            plan: validation.account.plan,
+            quotaLimit: validation.account.quotaLimit,
+            quotaUsed: validation.account.quotaUsed,
+            expiresAt: validation.account.expiresAt,
+            key: validation.account.key,
+          }));
+          return;
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ active: false, plan: 'free' }));
       return;
     }
 
@@ -541,6 +697,9 @@ export class AgentSentinelRemoteSseServer {
         messages: '/messages',
         generateKey: '/api/keys/generate',
         upgradeKey: '/api/keys/upgrade',
+        webhookRazorpay: '/api/webhooks/razorpay',
+        webhookPaypal: '/api/webhooks/paypal',
+        authStatus: '/api/auth/status',
         metrics: '/api/metrics',
         extension: '/agentsentinel_pro_extension.zip',
       },
