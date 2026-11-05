@@ -3,7 +3,7 @@ import * as path from 'path';
 import { CliOptions, CliAuditReport, CLI_EXIT_CODES } from './types.js';
 import { handleInitCommand } from './init.js';
 import { parseCliArgs } from './parser.js';
-import { AgentSentinelMCPServer } from '../mcp/mcp_server.js';
+import { AgentSentinelMCPServer, AgentSentinelRemoteSseServer } from '../mcp/index.js';
 import { SentinelEngine } from '../index.js';
 import { ToolCallContext, Verdict, RuleViolation } from '../types.js';
 import { validatePolicyConfig, compileDeclarativeRule } from '../policy.js';
@@ -170,6 +170,7 @@ Usage:
   agentsentinel audit <file> [options]         Audit a script, SQL query, or payload file
   agentsentinel check --cmd "<command>"        Audit an inline command or query
   agentsentinel eval --tool <name> --params    Audit a structured tool call JSON
+  agentsentinel serve [--port 3000]            Start hosted Cloud MCP server over HTTP/SSE (Railway/Docker)
   agentsentinel mcp                            Start native MCP server over stdio (Claude Desktop / Cursor)
   agentsentinel audit-log <log.jsonl>          Audit and verify an AgentSentinel audit log
   agentsentinel init [path]                    Scaffold a new agentsentinel.policy.json
@@ -187,10 +188,33 @@ Options:
 
 
 async function handleMcpServerCommand(
-  _options: CliOptions,
-  _out: (msg: string) => void,
+  options: CliOptions,
+  out: (msg: string) => void,
   _err: (msg: string) => void
 ): Promise<number> {
+  const isHttpServe = Boolean(options.command === 'serve' || options.port || process.env.PORT);
+
+  if (isHttpServe) {
+    const port = options.port || (process.env.PORT ? parseInt(process.env.PORT, 10) : 3000);
+    const host = options.host || '0.0.0.0';
+    const sseServer = new AgentSentinelRemoteSseServer();
+    const info = await sseServer.start(port, host);
+    out(`[AgentSentinel Cloud] 🚀 Hosted Remote MCP SSE Server running at http://${info.host}:${info.port}`);
+    out(`[AgentSentinel Cloud] 🔗 SSE Connection Endpoint: http://${info.host}:${info.port}/sse`);
+    out(`[AgentSentinel Cloud] 🔑 Starter Demo Key: sk_demo_pixel_2026`);
+    out(`[AgentSentinel Cloud] 📊 Health API: http://${info.host}:${info.port}/health`);
+
+    return new Promise<number>((resolve) => {
+      const shutdown = async () => {
+        out('\n[AgentSentinel Cloud] Shutting down remote server...');
+        await sseServer.stop();
+        resolve(CLI_EXIT_CODES.SUCCESS);
+      };
+      process.on('SIGINT', shutdown);
+      process.on('SIGTERM', shutdown);
+    });
+  }
+
   const server = new AgentSentinelMCPServer();
   server.startStdioServer();
   return new Promise<number>((resolve) => {

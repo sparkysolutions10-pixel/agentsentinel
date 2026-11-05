@@ -60,6 +60,10 @@ export function parseCliArgs(argv: string[]): CliOptions {
       }
     } else if (arg === '--force') {
       options.force = true;
+    } else if (arg === '--port') {
+      options.port = parseInt(args[++i], 10);
+    } else if (arg === '--host') {
+      options.host = args[++i];
     } else if (arg === '--mcp') {
       options.command = 'mcp';
     } else if (!arg.startsWith('-') && !options.file) {

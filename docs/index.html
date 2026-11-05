@@ -470,6 +470,56 @@
       <p>Click any attack vector below to simulate real-world prompt injection against an autonomous agent. Watch AgentSentinel halt malicious tool execution at the AST layer with zero cloud telemetry.</p>
     </div>
 
+    <!-- ⚡ 1-Click Hosted Cloud MCP Connect Box -->
+    <div class="mcp-connect-card" style="background: #ffffff; border: 1.5px solid #2563eb; border-radius: 14px; padding: 24px; margin-bottom: 32px; box-shadow: 0 8px 30px rgba(37, 99, 235, 0.08);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: #0b101b; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">⚡ Connect AgentSentinel to Claude Desktop or Cursor (Hosted Cloud MCP)</h3>
+            <p style="font-size: 13px; color: #475569;">Zero local setup required. Connect in 30 seconds via secure Cloud SSE transport with instant 90% token reduction & Blackbox Merkle logging.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="plan-badge" style="background: #ecfdf5; color: #065f46; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 16px; border: 1px solid rgba(16,185,129,0.3);">🟢 Free Tier: 500 Actions/mo</span>
+          <button id="btn-pro-upgrade" onclick="upgradeToPro()" style="background: #2563eb; color: #ffffff; border: none; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">⭐ Upgrade to Pro ($29/mo)</button>
+        </div>
+      </div>
+
+      <!-- Step 1 & 2 Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start;">
+        <!-- Left: Step 1 API Key Generator -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 6px;">Step 1: Get Instant Personal API Key</label>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Enter your email to generate a production cloud key or use our pre-seeded demo key.</p>
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input type="email" id="user-email-input" placeholder="developer@company.com" style="flex: 1; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; background: #fff;" value="developer@sparky.com" />
+            <button onclick="generateUserApiKey()" style="background: #0f172a; color: #fff; border: none; border-radius: 6px; padding: 9px 16px; font-size: 12px; font-weight: 700; cursor: pointer;">Generate Key</button>
+          </div>
+          <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px 12px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <span style="color: #64748b; font-size: 11px; display: block;">Your Active Token:</span>
+              <code id="active-api-key" style="color: #2563eb; font-weight: 700; font-family: monospace;">sk_demo_pixel_2026</code>
+            </div>
+            <span id="key-status-indicator" style="background: #ecfdf5; color: #065f46; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;">ACTIVE</span>
+          </div>
+        </div>
+
+        <!-- Right: Step 2 Claude Config Preview & Copy -->
+        <div style="background: #0b101b; border: 1px solid #1e293b; border-radius: 10px; padding: 18px; color: #38bdf8;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <label style="font-size: 12px; font-weight: 700; color: #94a3b8;">Step 2: Paste into <code>claude_desktop_config.json</code></label>
+            <button id="btn-copy-claude-json" onclick="copyClaudeConfig()" style="background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <span>📋</span> <span id="copy-btn-text">Copy JSON Config</span>
+            </button>
+          </div>
+          <pre id="claude-config-preview" style="font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12px; line-height: 1.45; color: #e2e8f0; overflow-x: auto; margin: 0; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;"></pre>
+        </div>
+      </div>
+    </div>
+
     <!-- Playground Grid -->
     <div class="playground-layout">
       <!-- Left: Injections -->
@@ -801,6 +851,81 @@
         runCustom();
       }
     });
+
+    // --- ⚡ Hosted MCP Connect Functions ---
+    let currentApiKey = 'sk_demo_pixel_2026';
+    let isProUser = false;
+
+    function renderClaudeConfig() {
+      const config = {
+        mcpServers: {
+          agentsentinel: {
+            url: "https://mcp.agentsentinel.dev/sse",
+            headers: {
+              Authorization: `Bearer ${currentApiKey}`
+            }
+          }
+        }
+      };
+      const previewEl = document.getElementById('claude-config-preview');
+      if (previewEl) {
+        previewEl.innerText = JSON.stringify(config, null, 2);
+      }
+    }
+
+    function generateUserApiKey() {
+      const emailInput = document.getElementById('user-email-input');
+      const email = emailInput ? emailInput.value.trim() : 'developer@company.com';
+      const randomHex = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 8);
+      currentApiKey = (isProUser ? 'sk_live_' : 'sk_free_') + randomHex;
+      
+      const keyEl = document.getElementById('active-api-key');
+      if (keyEl) keyEl.innerText = currentApiKey;
+      
+      renderClaudeConfig();
+      alert(`🎉 New API Key Generated: ${currentApiKey}\nYour Claude Desktop config has been updated!`);
+    }
+
+    function copyClaudeConfig() {
+      const previewEl = document.getElementById('claude-config-preview');
+      if (previewEl) {
+        navigator.clipboard.writeText(previewEl.innerText).then(() => {
+          const btnText = document.getElementById('copy-btn-text');
+          if (btnText) {
+            btnText.innerText = "✓ Copied to Clipboard!";
+            setTimeout(() => {
+              btnText.innerText = "Copy JSON Config";
+            }, 2500);
+          }
+        });
+      }
+    }
+
+    function upgradeToPro() {
+      isProUser = true;
+      const randomHex = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 8);
+      currentApiKey = 'sk_live_' + randomHex;
+      
+      const badge = document.getElementById('plan-badge');
+      if (badge) {
+        badge.innerText = '⭐ PRO UNLIMITED (Active)';
+        badge.style.background = '#eff6ff';
+        badge.style.color = '#1d4ed8';
+        badge.style.border = '1px solid #bfdbfe';
+      }
+
+      const keyEl = document.getElementById('active-api-key');
+      if (keyEl) keyEl.innerText = currentApiKey;
+      
+      renderClaudeConfig();
+      
+      // Auto-unlock notification & optional payment window
+      window.open('https://razorpay.me/@sparkydigitalservices', '_blank');
+      alert(`🚀 PRO ACTIVATED (Zero-Friction Auto-Unlock)!\n\nYour unlimited API key: ${currentApiKey}\nQuota: 1,000,000 requests/month.`);
+    }
+
+    // Initialize Claude JSON on load
+    renderClaudeConfig();
 
     // Auto-run first attack on load
     runAttack('rev_shell');

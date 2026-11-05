@@ -13,6 +13,8 @@ export interface CliOptions {
   targetString?: string;
   preset?: 'enterprise' | 'developer' | 'minimal';
   force?: boolean;
+  port?: number;
+  host?: string;
 }
 
 export interface CliAuditReport {
