@@ -446,21 +446,41 @@
 
   /* Live Cloud Key Container (Ultra-Elite Obsidian Pill on White) */
   .api-key-container {
-    background: #0b101b;
-    border: 1px solid rgba(2, 132, 199, 0.3);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
-    padding: 14px 18px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 14px rgba(11, 16, 27, 0.12);
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
   .api-key-code {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
-    color: #38bdf8;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: #0f172a;
+    letter-spacing: 0.3px;
+  }
+  .btn-setup-tab {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-setup-tab:hover {
+    color: #0f172a;
+  }
+  .btn-setup-tab.active {
+    background: #ffffff;
+    color: #0284c7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
   /* Tables */
@@ -571,13 +591,14 @@
 
   /* Code Box Snippets */
   .code-snippet {
-    background: #0f172a;
-    border: 1px solid #1e293b;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
-    padding: 16px;
+    padding: 14px 16px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: #334155;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #0f172a;
     line-height: 1.6;
     overflow-x: auto;
   }
@@ -852,109 +873,121 @@
 
       <!-- VIEW 2: API KEY & CLOUD MCP SETUP -->
       <div id="view-apikeys" class="dashboard-view">
-        <!-- CARD 1: HOSTED CLOUD MCP SSE ENDPOINT -->
-        <div class="panel-box" style="border-left: 3px solid var(--cyan);">
-          <div class="panel-header">
-            <div class="panel-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-              <span>Hosted Cloud MCP SSE Endpoint</span>
-              <span class="badge-status badge-passed" style="font-size: 10px;">ONLINE (Sub-2ms SLA)</span>
-            </div>
-            <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              Copy SSE Endpoint
-            </button>
-          </div>
-          <div class="api-key-container" style="background: #0f172a; margin-bottom: 8px;">
-            <div class="api-key-code" style="color: #38bdf8;">https://agentsentinel-production.up.railway.app/sse</div>
-            <span class="badge-status" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">SSE STREAM</span>
-          </div>
-          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
-            Universal Zero-Install SSE Gateway. Connects directly with Claude Desktop, Cursor IDE, Devin, Windsurf, Zed, and LangChain agents.
-          </div>
-        </div>
-
-        <!-- CARD 2: ACTIVE API SECRET KEY -->
-        <div class="panel-box" style="border-left: 3px solid #8b5cf6;">
-          <div class="panel-header">
-            <div class="panel-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-              <span>Personal API Secret Key</span>
-              <span class="badge-status badge-passed" style="font-size: 10px;">ACTIVE PRO</span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button onclick="rollApiKey()" class="btn-action-outline" style="font-size: 11px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                Roll New Key
-              </button>
-              <button onclick="copyToClipboard(document.getElementById('liveApiKeyText').textContent, this, 'Copied Key!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Copy Key
-              </button>
-            </div>
-          </div>
-          <div class="api-key-container" style="background: #0f172a; margin-bottom: 8px;">
-            <div class="api-key-code" id="liveApiKeyText" style="color: #a78bfa;">sk_live_sec_7894f28a01cb99e46a788b</div>
-            <span class="badge-status" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3);">PRO KEY</span>
-          </div>
-          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
-            Bearer authentication token for private MCP pipelines and quota allocation. Auto-provisioned with 1,000,000 monthly guarded actions.
-          </div>
-        </div>
-
-        <!-- CARD 3: 1-CLICK AUTO-CONNECTOR SCRIPT -->
-        <div class="panel-box" style="border-left: 3px solid #10b981;">
-          <div class="panel-header">
-            <div class="panel-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-              <span>1-Click Multi-Agent Auto-Connector</span>
-              <span class="badge-status" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 10px;">ZERO CONFIG</span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <a href="Connect-AgentSentinel.bat" download class="btn-action-outline" style="font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download .BAT
-              </a>
-              <button onclick="copyToClipboard('irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex', this, 'Copied Command!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Copy PowerShell
-              </button>
-            </div>
-          </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">Run this command in Windows PowerShell to auto-detect Claude Desktop &amp; Cursor configuration files and connect instantly:</p>
-          <pre class="code-snippet">irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex</pre>
-        </div>
-
+        <!-- CARD 1: SOVEREIGN CREDENTIALS & MCP GATEWAY -->
         <div class="panel-box">
           <div class="panel-header">
             <div class="panel-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-              <span>Claude Desktop Integration Config</span>
+              <span>Cloud MCP Credentials &amp; Gateway</span>
+              <span class="badge-status badge-passed" style="font-size: 10px;">ONLINE (Sub-2ms SLA)</span>
             </div>
-            <button onclick="copyToClipboard(document.getElementById('claudeConfigSnippet').textContent, this, 'Copied JSON!')" class="btn-action-outline">Copy JSON</button>
           </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Paste into your <code>%APPDATA%\Claude\claude_desktop_config.json</code>:</p>
-          <pre class="code-snippet" id="claudeConfigSnippet">{
+
+          <!-- Row 1: Hosted SSE Endpoint -->
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">1. Hosted Cloud MCP SSE Endpoint URL</span>
+              <span style="font-size: 11px; color: #0284c7; font-weight: 600;">Universal Protocol</span>
+            </div>
+            <div class="api-key-container">
+              <div class="api-key-code" id="liveSseEndpointText">https://agentsentinel-production.up.railway.app/sse</div>
+              <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy Endpoint
+              </button>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              Zero-install remote SSE connection for Claude Desktop, Cursor IDE, Devin, Windsurf, Zed, and LangChain.
+            </div>
+          </div>
+
+          <!-- Row 2: Personal API Secret Key -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">2. Personal API Secret Key</span>
+              <span class="badge-status badge-passed" style="font-size: 10px;">ACTIVE PRO (1M Actions/Mo)</span>
+            </div>
+            <div class="api-key-container">
+              <div class="api-key-code" id="liveApiKeyText">sk_live_sec_7894f28a01cb99e46a788b</div>
+              <div style="display: flex; gap: 8px;">
+                <button onclick="rollApiKey()" class="btn-action-outline" style="font-size: 11px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  Roll New Key
+                </button>
+                <button onclick="copyToClipboard(document.getElementById('liveApiKeyText').textContent, this, 'Copied Key!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Key
+                </button>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              Sovereign bearer token for private agent swarms and quota tracking. Keep this key secure.
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: INTERACTIVE CLIENT SETUP GUIDE -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span>Connect to Your AI Workspace</span>
+            </div>
+            <!-- Interactive Switcher Pills -->
+            <div style="display: flex; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: 8px;">
+              <button onclick="switchSetupTab('1click')" id="tabBtn1click" class="btn-setup-tab active">⚡ 1-Click (Recommended)</button>
+              <button onclick="switchSetupTab('claude')" id="tabBtnClaude" class="btn-setup-tab">Claude Desktop</button>
+              <button onclick="switchSetupTab('cursor')" id="tabBtnCursor" class="btn-setup-tab">Cursor IDE</button>
+            </div>
+          </div>
+
+          <!-- SETUP TAB 1: 1-Click Auto Setup -->
+          <div id="setupTab1click" class="setup-tab-content">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              Run this single command in <strong>PowerShell</strong> (Windows) or Terminal (macOS/Linux) to auto-configure Claude Desktop and Cursor instantly with zero manual file editing:
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;">PowerShell Quick-Connect Command</span>
+              <div style="display: flex; gap: 8px;">
+                <a href="Connect-AgentSentinel.bat" download class="btn-action-outline" style="font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download .BAT
+                </a>
+                <button onclick="copyToClipboard('irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex', this, 'Copied Command!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Command</button>
+              </div>
+            </div>
+            <pre class="code-snippet">irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex</pre>
+          </div>
+
+          <!-- SETUP TAB 2: Claude Desktop -->
+          <div id="setupTabClaude" class="setup-tab-content" style="display: none;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              Paste this configuration directly into your <code>%APPDATA%\Claude\claude_desktop_config.json</code> (Windows) or <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS):
+            </p>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button onclick="copyToClipboard(document.getElementById('claudeConfigSnippet').textContent, this, 'Copied JSON!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy JSON</button>
+            </div>
+            <pre class="code-snippet" id="claudeConfigSnippet">{
   "mcpServers": {
     "agentsentinel": {
       "url": "https://agentsentinel-production.up.railway.app/sse"
     }
   }
 }</pre>
-        </div>
-
-        <div class="panel-box">
-          <div class="panel-header">
-            <div class="panel-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              <span>Cursor IDE MCP Protocol</span>
-            </div>
-            <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-outline">Copy SSE URL</button>
           </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">In Cursor Settings &gt; Features &gt; MCP Servers &gt; Add New MCP Server with SSE transport:</p>
-          <pre class="code-snippet">Name: AgentSentinel
+
+          <!-- SETUP TAB 3: Cursor IDE -->
+          <div id="setupTabCursor" class="setup-tab-content" style="display: none;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              In Cursor IDE: Go to <strong>Settings &gt; Features &gt; MCP Servers &gt; Add New MCP Server</strong>:
+            </p>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy SSE URL</button>
+            </div>
+            <pre class="code-snippet">Name: AgentSentinel
 Type: sse
 URL:  https://agentsentinel-production.up.railway.app/sse</pre>
+          </div>
         </div>
       </div>
 
@@ -1183,6 +1216,28 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
       }).catch(() => {
         alert('Copied to clipboard: ' + text);
       });
+    }
+
+    function switchSetupTab(tabId) {
+      document.querySelectorAll('.btn-setup-tab').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.setup-tab-content').forEach(el => el.style.display = 'none');
+      
+      if (tabId === '1click') {
+        const btn = document.getElementById('tabBtn1click');
+        const tab = document.getElementById('setupTab1click');
+        if (btn) btn.classList.add('active');
+        if (tab) tab.style.display = 'block';
+      } else if (tabId === 'claude') {
+        const btn = document.getElementById('tabBtnClaude');
+        const tab = document.getElementById('setupTabClaude');
+        if (btn) btn.classList.add('active');
+        if (tab) tab.style.display = 'block';
+      } else if (tabId === 'cursor') {
+        const btn = document.getElementById('tabBtnCursor');
+        const tab = document.getElementById('setupTabCursor');
+        if (btn) btn.classList.add('active');
+        if (tab) tab.style.display = 'block';
+      }
     }
 
     function rollApiKey() {
