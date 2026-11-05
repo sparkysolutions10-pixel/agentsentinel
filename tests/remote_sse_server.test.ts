@@ -28,6 +28,25 @@ describe('AgentSentinelRemoteSseServer', () => {
     expect(data.endpoints.sse).toBe('/sse');
   });
 
+  it('should serve index.html directly on root / for browsers', async () => {
+    const res = await fetch(`${baseUrl}/`, {
+      headers: { Accept: 'text/html' }
+    });
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('text/html');
+    const html = await res.text();
+    expect(html).toContain('AgentSentinel');
+    expect(html).toContain('Chrome Extension');
+  });
+
+  it('should serve extension zip on /agentsentinel_pro_extension.zip', async () => {
+    const res = await fetch(`${baseUrl}/agentsentinel_pro_extension.zip`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('application/zip');
+    const buffer = await res.arrayBuffer();
+    expect(buffer.byteLength).toBeGreaterThan(100);
+  });
+
   it('should generate free API keys via /api/keys/generate', async () => {
     const res = await fetch(`${baseUrl}/api/keys/generate`, {
       method: 'POST',

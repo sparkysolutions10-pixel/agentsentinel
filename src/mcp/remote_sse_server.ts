@@ -12,6 +12,8 @@
  */
 
 import * as http from 'node:http';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
 import { AgentSentinelMCPServer, type JSONRPCRequest, type JSONRPCResponse } from './mcp_server.js';
 
@@ -234,40 +236,71 @@ export class AgentSentinelRemoteSseServer {
     const parsedUrl = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
     const pathname = parsedUrl.pathname;
 
-    // 1. Health & Server Info (Browser redirect on root to live website portal)
-    if (pathname === '/') {
+    // Resolve docs directory (supports root running and dist runner)
+    const docsDir = fs.existsSync(path.resolve(process.cwd(), 'docs'))
+      ? path.resolve(process.cwd(), 'docs')
+      : path.resolve(__dirname, '../../docs');
+
+    // 1. Direct Web Portal & Static Assets Hosting (Railway is the primary website)
+    if (pathname === '/' || pathname === '/index.html') {
       const accept = req.headers.accept || '';
-      if (accept.includes('text/html')) {
-        res.writeHead(302, { Location: 'https://sparkysolutions10-pixel.github.io/agentsentinel/' });
-        res.end();
+      // If client is a programmatic API consumer explicitly requesting JSON
+      if (accept.includes('application/json') && !accept.includes('text/html')) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(this.getServerInfo(), null, 2));
+        return;
+      }
+
+      // Serve full web portal directly from Railway
+      const indexPath = path.join(docsDir, 'index.html');
+      if (fs.existsSync(indexPath)) {
+        const html = fs.readFileSync(indexPath, 'utf-8');
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(html);
         return;
       }
     }
 
-    if (pathname === '/' || pathname === '/health' || pathname === '/api/status') {
+    // Static 1-Click Chrome Extension Download
+    if (pathname === '/agentsentinel_pro_extension.zip') {
+      const zipPath = path.join(docsDir, 'agentsentinel_pro_extension.zip');
+      if (fs.existsSync(zipPath)) {
+        const zipData = fs.readFileSync(zipPath);
+        res.writeHead(200, {
+          'Content-Type': 'application/zip',
+          'Content-Disposition': 'attachment; filename="agentsentinel_pro_extension.zip"',
+          'Content-Length': zipData.length,
+        });
+        res.end(zipData);
+        return;
+      }
+    }
+
+    // Static Dashboard & Connector Scripts
+    if (pathname === '/dashboard.html') {
+      const dashPath = path.join(docsDir, 'dashboard.html');
+      if (fs.existsSync(dashPath)) {
+        const html = fs.readFileSync(dashPath, 'utf-8');
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(html);
+        return;
+      }
+    }
+
+    if (pathname === '/connect.ps1' || pathname === '/Connect-AgentSentinel.bat') {
+      const filePath = path.join(docsDir, pathname.slice(1));
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath);
+        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end(content);
+        return;
+      }
+    }
+
+    // 2. Health & Server Info
+    if (pathname === '/health' || pathname === '/api/status') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(
-        JSON.stringify(
-          {
-            name: 'AgentSentinel Remote MCP Server',
-            version: '0.1.0',
-            status: 'HEALTHY_ONLINE',
-            protocol: 'Model Context Protocol (JSON-RPC 2.0 over SSE)',
-            docs: 'https://github.com/sparkysolutions10-pixel/agentsentinel',
-            endpoints: {
-              sse: '/sse',
-              messages: '/messages',
-              generateKey: '/api/keys/generate',
-              upgradeKey: '/api/keys/upgrade',
-              metrics: '/api/metrics',
-            },
-            activeSessions: this.sessions.size,
-            uptimeSeconds: Math.floor((Date.now() - this.startTime) / 1000),
-          },
-          null,
-          2
-        )
-      );
+      res.end(JSON.stringify(this.getServerInfo(), null, 2));
       return;
     }
 
@@ -489,6 +522,30 @@ export class AgentSentinelRemoteSseServer {
       totalTokensSavedEstimate: estimatedTokensSaved,
       globalDailyFreeRequestsCount: this.globalDailyFreeRequestsCount,
       globalDailyFreeCap: this.GLOBAL_DAILY_FREE_CAP,
+    };
+  }
+
+  /**
+   * Returns metadata and health status for API consumers and health probes.
+   */
+  public getServerInfo(): Record<string, unknown> {
+    return {
+      name: 'AgentSentinel Remote MCP Server',
+      version: '0.1.0',
+      status: 'HEALTHY_ONLINE',
+      protocol: 'Model Context Protocol (JSON-RPC 2.0 over SSE)',
+      docs: 'https://agentsentinel-production.up.railway.app/',
+      endpoints: {
+        website: '/',
+        sse: '/sse',
+        messages: '/messages',
+        generateKey: '/api/keys/generate',
+        upgradeKey: '/api/keys/upgrade',
+        metrics: '/api/metrics',
+        extension: '/agentsentinel_pro_extension.zip',
+      },
+      activeSessions: this.sessions.size,
+      uptimeSeconds: Math.floor((Date.now() - this.startTime) / 1000),
     };
   }
 }
