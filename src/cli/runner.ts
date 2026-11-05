@@ -3,6 +3,7 @@ import * as path from 'path';
 import { CliOptions, CliAuditReport, CLI_EXIT_CODES } from './types.js';
 import { handleInitCommand } from './init.js';
 import { parseCliArgs } from './parser.js';
+import { AgentSentinelMCPServer } from '../mcp/mcp_server.js';
 import { SentinelEngine } from '../index.js';
 import { ToolCallContext, Verdict, RuleViolation } from '../types.js';
 import { validatePolicyConfig, compileDeclarativeRule } from '../policy.js';
@@ -148,6 +149,10 @@ export async function runCli(
     case 'eval':
       return handleEvalCommand(options, out, err);
 
+    case 'mcp':
+    case 'serve':
+      return handleMcpServerCommand(options, out, err);
+
     case 'audit-log':
       return handleAuditLogCommand(options, out, err);
 
@@ -165,6 +170,7 @@ Usage:
   agentsentinel audit <file> [options]         Audit a script, SQL query, or payload file
   agentsentinel check --cmd "<command>"        Audit an inline command or query
   agentsentinel eval --tool <name> --params    Audit a structured tool call JSON
+  agentsentinel mcp                            Start native MCP server over stdio (Claude Desktop / Cursor)
   agentsentinel audit-log <log.jsonl>          Audit and verify an AgentSentinel audit log
   agentsentinel init [path]                    Scaffold a new agentsentinel.policy.json
   agentsentinel --help | -h                    Show this help manual
@@ -179,6 +185,19 @@ Options:
 `;
 }
 
+
+async function handleMcpServerCommand(
+  _options: CliOptions,
+  _out: (msg: string) => void,
+  _err: (msg: string) => void
+): Promise<number> {
+  const server = new AgentSentinelMCPServer();
+  server.startStdioServer();
+  return new Promise<number>((resolve) => {
+    process.stdin.on('end', () => resolve(CLI_EXIT_CODES.SUCCESS));
+    process.stdin.on('close', () => resolve(CLI_EXIT_CODES.SUCCESS));
+  });
+}
 
 async function handleCheckCommand(options: CliOptions, out: (msg: string) => void, err: (msg: string) => void): Promise<number> {
   const target = options.targetString || options.file;

@@ -125,6 +125,43 @@ const response = await safeBashHandler({ command: ':(){ :|:& };:' });
 
 ---
 
+### 3b. Native Model Context Protocol (MCP) Server (Claude Desktop & Cursor)
+
+AgentSentinel ships with a native, zero-dependency MCP server over `stdio` implementing the official Model Context Protocol (JSON-RPC 2.0). It provides the **Trinity of Autonomous Defense**:
+
+1. 🔒 **Blackbox Flight Recorder:** Cryptographic, append-only, SHA-256 Merkle chain that logs every prompt, tool call, and policy verdict for post-incident forensic audits.
+2. 🔄 **Atomic Rollback Engine:** ACID transactional checkpoints with instant multi-step rollback/undo for files modified or created during risky agent execution.
+3. ⚡ **SmartProxy Gateway:** Dynamic intent-based tool routing that indexes tool schemas and dynamically serves only the relevant 1-3 tools, slashing context window token bloat by up to **90%**.
+
+#### Launch directly via CLI:
+```bash
+npx @sparkysolutions/agentsentinel mcp
+```
+
+#### Add to Claude Desktop (`claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "agentsentinel": {
+      "command": "npx",
+      "args": ["-y", "@sparkysolutions/agentsentinel", "mcp"]
+    }
+  }
+}
+```
+
+#### Exposed MCP Tools:
+- `sentinel_blackbox_record`: Cryptographically log prompts, actions, and policy decisions.
+- `sentinel_blackbox_verify`: Verify SHA-256 Merkle chain integrity and detect tampering.
+- `sentinel_blackbox_export`: Export forensic audit logs in Markdown or JSON.
+- `sentinel_checkpoint_begin`: Snapshot files prior to executing risky actions.
+- `sentinel_checkpoint_commit`: Permanently commit changes when operations succeed.
+- `sentinel_checkpoint_rollback`: Instantly restore snapshot files and delete newly created rogue files.
+- `sentinel_proxy_route`: Dynamically filter tool catalogs based on prompt intent (saving 80-90% tokens).
+- `sentinel_proxy_metrics`: Inspect total tokens saved and catalog query counts.
+
+---
+
 ### 4. Vercel AI SDK Integration
 
 Protect an entire dictionary of Vercel AI SDK tools in a single line:

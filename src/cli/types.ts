@@ -1,7 +1,7 @@
 import { RuleViolation, Verdict } from '../types.js';
 
 export interface CliOptions {
-  command?: 'audit' | 'audit-log' | 'check' | 'eval' | 'init' | 'version' | 'help';
+  command?: 'audit' | 'audit-log' | 'check' | 'eval' | 'init' | 'version' | 'help' | 'mcp' | 'serve';
   file?: string;
   policyFile?: string;
   format?: 'text' | 'json';

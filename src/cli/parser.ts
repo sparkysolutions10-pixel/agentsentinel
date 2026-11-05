@@ -22,7 +22,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     return options;
   }
 
-  if (['audit', 'audit-log', 'check', 'eval', 'init'].includes(firstArg)) {
+  if (['audit', 'audit-log', 'check', 'eval', 'init', 'mcp', 'serve'].includes(firstArg)) {
     options.command = firstArg as any;
     args.shift();
   } else if (!firstArg.startsWith('-')) {
@@ -60,6 +60,8 @@ export function parseCliArgs(argv: string[]): CliOptions {
       }
     } else if (arg === '--force') {
       options.force = true;
+    } else if (arg === '--mcp') {
+      options.command = 'mcp';
     } else if (!arg.startsWith('-') && !options.file) {
       options.file = arg;
     }
