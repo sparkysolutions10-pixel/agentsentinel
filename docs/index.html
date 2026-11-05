@@ -1689,11 +1689,18 @@
       box.style.display = box.style.display === 'none' ? 'block' : 'none';
     }
 
-    function copyCryptoAddr() {
-      const addr = document.getElementById('cryptoWalletAddr').innerText;
-      navigator.clipboard.writeText(addr).then(() => {
-        alert("USDC Wallet Address Copied!\n\nAddress: " + addr + "\nSupported Chains: Polygon, Base, Arbitrum, Ethereum");
-      });
+    function copyCryptoAddr(type) {
+      if (type === 'stellar') {
+        const addr = document.getElementById('cryptoStellarAddr').innerText;
+        navigator.clipboard.writeText(addr).then(() => {
+          alert("Stellar Address Copied!\n\nStellar Public Key: " + addr + "\nAssets: Stellar USDC / Native XLM\nSettlement: 3-Second Instant Finality");
+        });
+      } else {
+        const addr = document.getElementById('cryptoEvmAddr').innerText;
+        navigator.clipboard.writeText(addr).then(() => {
+          alert("EVM USDC Address Copied!\n\nAddress: " + addr + "\nChains: Base, Polygon, Arbitrum, Ethereum (ERC-20)");
+        });
+      }
     }
 
     
@@ -1833,20 +1840,29 @@
             <span style="font-size: 22px;">🪙</span>
             <div style="text-align: left;">
               <div style="font-weight: 800; font-size: 14px;">Web3 USDC (Stablecoin Crypto)</div>
-              <div style="font-size: 11px; color: #64748b;">Polygon / Arbitrum / Base / Ethereum (0% Gas)</div>
+              <div style="font-size: 11px; color: #64748b;">Base / Polygon / Arbitrum / Ethereum / Stellar XLM & USDC</div>
             </div>
           </div>
           <span style="font-weight: 800; font-size: 13px; background: #e2e8f0; padding: 4px 8px; border-radius: 6px;">USDC ▾</span>
         </button>
 
-        <!-- Collapsible Crypto Details -->
-        <div id="cryptoDetailsBox" style="display: none; background: #0f172a; color: #f8fafc; border-radius: 10px; padding: 14px; margin-top: 2px;">
-          <div style="font-size: 11px; color: #94a3b8; margin-bottom: 6px;">Send exact USDC amount to official Sentinel Vault:</div>
-          <div style="display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 8px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px;">
-            <span id="cryptoWalletAddr" style="word-break: break-all; color: #38bdf8;">0x40B7d9273092822341860F5610168861351e71eb</span>
-            <button onclick="copyCryptoAddr()" style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; margin-left: 8px;">Copy</button>
+        <!-- Collapsible Crypto Details (EVM & Stellar) -->
+        <div id="cryptoDetailsBox" style="display: none; background: #0f172a; color: #f8fafc; border-radius: 10px; padding: 16px; margin-top: 4px;">
+          <!-- 1. EVM USDC -->
+          <div style="font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px;">1. Base / Polygon / Arbitrum / Ethereum (USDC):</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 8px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 6px;">
+            <span id="cryptoEvmAddr" style="word-break: break-all; color: #38bdf8;">0x40B7d9273092822341860F5610168861351e71eb</span>
+            <button onclick="copyCryptoAddr('evm')" style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; margin-left: 8px;">Copy</button>
           </div>
-          <div style="font-size: 11px; color: #94a3b8;">Network: Polygon, Base, Arbitrum, Ethereum. Auto-activated on 1 confirmation.</div>
+          <div style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">Supported Chains: Base, Polygon, Arbitrum, Ethereum (ERC-20 USDC). Auto-unlock on 1 confirmation.</div>
+
+          <!-- 2. Stellar Network -->
+          <div style="font-size: 11px; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom: 4px;">2. Stellar Network (XLM & Stellar USDC — 3s Settlement):</div>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 8px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 6px;">
+            <span id="cryptoStellarAddr" style="word-break: break-all; color: #34d399;">GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT</span>
+            <button onclick="copyCryptoAddr('stellar')" style="background: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; margin-left: 8px;">Copy</button>
+          </div>
+          <div style="font-size: 11px; color: #94a3b8;">Asset: Stellar USDC / Native XLM. Zero transaction fee, instant 3-second auto-settlement.</div>
         </div>
       </div>
     </div>
