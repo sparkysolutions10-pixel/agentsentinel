@@ -142,7 +142,75 @@
     color: #ffffff;
   }
 
-  .header-actions {
+  
+    /* Header Auth Buttons & User Profile */
+    .btn-nav-signin {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-nav-signin:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .btn-nav-signup {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--indigo) 100%);
+      color: #07090e;
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+    .btn-nav-signup:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.4);
+    }
+    .btn-dashboard-nav {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-dashboard-nav:hover {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: #34d399;
+    }
+    .btn-signout-nav {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 6px 8px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s ease;
+    }
+    .btn-signout-nav:hover {
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .header-actions {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1376,10 +1444,21 @@
       <div class="status-pulse-dot"></div>
       <span>Cloud MCP Online</span>
     </div>
-    <a href="agentsentinel_pro_extension.zip" download class="btn-ext-header">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      <span>Download Chrome Extension</span>
+    <a href="agentsentinel_pro_extension.zip" download class="btn-ext-header" title="Download Chrome Extension">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span>Extension</span>
     </a>
+    <div id="navAuthGroup" style="display: flex; align-items: center; gap: 10px;">
+      <button onclick="openAuthModal('signin')" class="btn-nav-signin" id="navSignInBtn">Sign In</button>
+      <button onclick="openAuthModal('signup')" class="btn-nav-signup" id="navSignUpBtn">Sign Up Free</button>
+    </div>
+    <div id="navUserProfile" style="display: none; align-items: center; gap: 10px;">
+      <a href="dashboard.html" class="btn-dashboard-nav">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #34d399; display: inline-block;"></span>
+        <span id="navUserEmailDisplay">Dashboard</span>
+      </a>
+      <button onclick="signOutUser()" class="btn-signout-nav" title="Sign Out of Workspace">Log Out</button>
+    </div>
   </div>
 </header>
 
@@ -1989,7 +2068,55 @@
 
 </main>
 
-<!-- Universal Multi-Gateway Checkout Modal -->
+
+  <!-- Dark Luxury Auth Modal (Sign In / Sign Up) -->
+  <div id="authModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 440px;">
+      <button class="modal-close" onclick="closeAuthModal()">✕</button>
+      <div style="font-size: 12px; font-weight: 700; color: var(--cyan); text-transform: uppercase; margin-bottom: 4px;" id="authModalBadge">DEVELOPER WORKSPACE</div>
+      <h3 style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 6px;" id="authModalTitle">Sign In to AgentSentinel</h3>
+      <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;" id="authModalDesc">Access your cloud telemetry, custom MCP endpoints, and quota manager.</p>
+
+      <!-- 1-Click Social Dev Logins -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
+        <button onclick="loginWithOAuth('github')" class="btn-plan btn-plan-outline" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; padding: 11px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Continue with GitHub</span>
+        </button>
+        <button onclick="loginWithOAuth('google')" class="btn-plan btn-plan-outline" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; padding: 11px;">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+          <span>Continue with Google</span>
+        </button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+        <div style="flex: 1; height: 1px; background: var(--border-glass);"></div>
+        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">or work email</span>
+        <div style="flex: 1; height: 1px; background: var(--border-glass);"></div>
+      </div>
+
+      <!-- Email Input Form -->
+      <form onsubmit="handleAuthSubmit(event)">
+        <div style="margin-bottom: 12px; text-align: left;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px;">Work Email</label>
+          <input type="email" id="authEmailInput" class="input-dark" placeholder="developer@yourcompany.com" required style="width: 100%; padding: 11px 14px; font-size: 14px;">
+        </div>
+        <div style="margin-bottom: 18px; text-align: left;" id="authPasswordBox">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 6px;">Password <span style="font-weight: 400; color: var(--text-muted);">(or leave blank for passwordless Magic Link)</span></label>
+          <input type="password" id="authPasswordInput" class="input-dark" placeholder="••••••••••••" style="width: 100%; padding: 11px 14px; font-size: 14px;">
+        </div>
+        <button type="submit" class="btn-plan btn-plan-featured" id="authSubmitBtn" style="width: 100%; padding: 12px; font-size: 14px;">
+          Sign In to Workspace
+        </button>
+      </form>
+
+      <div style="margin-top: 16px; font-size: 13px; color: var(--text-secondary);" id="authToggleText">
+        Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign Up Free</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Universal Multi-Gateway Checkout Modal -->
 <div id="checkoutModal" class="modal-overlay">
   <div class="modal-content">
     <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
