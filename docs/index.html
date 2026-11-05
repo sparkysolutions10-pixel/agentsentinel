@@ -1444,10 +1444,6 @@
       <div class="status-pulse-dot"></div>
       <span>Cloud MCP Online</span>
     </div>
-    <a href="agentsentinel_pro_extension.zip" download class="btn-ext-header" title="Download Chrome Extension">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      <span>Extension</span>
-    </a>
     <div id="navAuthGroup" style="display: flex; align-items: center; gap: 10px;">
       <button onclick="openAuthModal('signin')" class="btn-nav-signin" id="navSignInBtn">Sign In</button>
       <button onclick="openAuthModal('signup')" class="btn-nav-signup" id="navSignUpBtn">Sign Up Free</button>
@@ -1481,9 +1477,9 @@
     </p>
 
     <div class="hero-cta-group">
-      <a href="agentsentinel_pro_extension.zip" download class="btn-primary-hero">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Download Chrome Extension (v1.0.0)</span>
+      <a href="dashboard.html" class="btn-primary-hero">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        <span>Launch Control Dashboard</span>
       </a>
 
       <a href="#simulator" class="btn-secondary-hero">
@@ -1525,10 +1521,7 @@
 
     <!-- Navigation Tabs -->
     <div class="tab-nav-bar">
-      <button class="tab-btn active" onclick="switchTab('tab-extension', this)">
-        <span>🧩 Chrome Extension (1-Click)</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('tab-claude', this)">
+      <button class="tab-btn active" onclick="switchTab('tab-claude', this)">
         <span>🤖 Claude Desktop</span>
       </button>
       <button class="tab-btn" onclick="switchTab('tab-cursor', this)">
@@ -1539,32 +1532,8 @@
       </button>
     </div>
 
-    <!-- Tab 1: Chrome Extension -->
-    <div id="tab-extension" class="tab-content-panel active">
-      <div class="ext-card-box">
-        <div class="ext-card-left">
-          <div class="ext-squircle-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="ext-info">
-            <h3>AgentSentinel Pro Extension <span>v1.0.0</span></h3>
-            <p>Real-time in-browser AST firewall for ChatGPT, Claude.ai, and DeepSeek. Blocks prompt injections, malicious scripts, and data exfiltration right in your active tabs.</p>
-            <div class="ext-badges">
-              <span class="ext-badge">Manifest V3</span>
-              <span class="ext-badge">Zero-Telemetry Privacy</span>
-              <span class="ext-badge">1-Click Local Sync</span>
-            </div>
-          </div>
-        </div>
-        <a href="agentsentinel_pro_extension.zip" download class="btn-download-ext-large">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Download Extension (.zip)</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Tab 2: Claude Desktop -->
-    <div id="tab-claude" class="tab-content-panel">
+    <!-- Tab 1: Claude Desktop -->
+    <div id="tab-claude" class="tab-content-panel active">
       <div class="setup-grid">
         <div class="setup-card">
           <div>
@@ -2174,7 +2143,7 @@
 <!-- Footer -->
 <footer>
   <p style="margin-bottom: 8px;">AgentSentinel is 100% Open Source under Apache 2.0 • Operated by Sparky Solutions (CRN: 0899-0000-5418-4577)</p>
-  <p><a href="https://github.com/sparkysolutions10-pixel/agentsentinel">GitHub Repository</a> • <a href="https://agentsentinel-production.up.railway.app/">Railway Cloud Server</a> • <a href="agentsentinel_pro_extension.zip" download>Download Chrome Extension</a></p>
+  <p><a href="https://github.com/sparkysolutions10-pixel/agentsentinel">GitHub Repository</a> • <a href="https://agentsentinel-production.up.railway.app/">Railway Cloud Server</a> • <a href="dashboard.html">Cloud Control Dashboard</a></p>
 </footer>
 
 <!-- Scripts -->
@@ -2652,7 +2621,7 @@ pause
     if (currentAuthMode === 'signup') {
       if (badge) badge.textContent = 'FREE TIER ACTIVATION';
       if (title) title.textContent = 'Create Your Free Account';
-      if (desc) desc.textContent = 'Get 500 free monthly cloud actions, Chrome extension shield, and AST security.';
+      if (desc) desc.textContent = 'Get 500 free monthly cloud actions, live AST firewall, and developer dashboard.';
       if (submitBtn) submitBtn.textContent = 'Create Free Account & Open Dashboard';
       if (toggleText) toggleText.innerHTML = `Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign In</a>`;
     } else {
