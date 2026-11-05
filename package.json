@@ -34,6 +34,9 @@
     "ast-interceptor",
     "prompt-injection",
     "zero-trust",
+    "blackbox-flight-recorder",
+    "atomic-rollback",
+    "smart-proxy",
     "langchain",
     "vercel-ai"
   ],

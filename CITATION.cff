@@ -1,20 +1,23 @@
 cff-version: 1.2.0
 message: "If you use this software in research, algorithmic trading, or production AI deployments, please cite it as below."
 title: "AgentSentinel: Universal Zero-Trust Runtime Security Firewall & AST Policy Interceptor for AI Agents & MCP"
-abstract: "A deterministic, sub-millisecond, zero-dependency runtime security firewall and AST circuit breaker designed for autonomous AI agents, Model Context Protocol (MCP) servers, and quantitative trading swarms."
+abstract: "A deterministic, sub-millisecond, zero-dependency runtime security firewall and AST circuit breaker designed for autonomous AI agents, Model Context Protocol (MCP) servers, and quantitative trading swarms. Features the Trinity of Autonomous Defense: Blackbox Flight Recorder (cryptographic SHA-256 Merkle chain), Atomic Rollback Engine (ACID multi-file transactional checkpoints & restore), and SmartProxy Gateway (dynamic intent-based tool routing with 90% token reduction)."
 authors:
   - family-names: "Biswas"
     given-names: "Mukesh"
     orcid: "https://orcid.org/0009-0008-2818-6579"
     alias: "sparkysolutions10-pixel"
 version: 0.1.0
-date-released: 2026-10-31
+date-released: 2026-11-05
 license: Apache-2.0
 repository-code: "https://github.com/sparkysolutions10-pixel/agentsentinel"
 keywords:
   - "ai-agents"
   - "model-context-protocol"
   - "mcp-security"
+  - "blackbox-flight-recorder"
+  - "atomic-rollback"
+  - "smart-proxy"
   - "runtime-firewall"
   - "ast-interceptor"
   - "zero-trust"
