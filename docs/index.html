@@ -1374,7 +1374,7 @@
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <div class="brand-title">Agent<span>Sentinel</span></div>
-    <div class="brand-pill">2026 SaaS</div>
+    
   </a>
 
   <nav class="nav-links">
@@ -2037,11 +2037,7 @@
         <span id="modalRazorpayPrice" style="font-size: 12px; color: #ffffff;">(₹2,499)</span>
       </a>
 
-      <!-- Stripe -->
-      <a id="modalStripeBtn" href="https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ" target="_blank" class="btn-plan" style="background: #635bff; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <span>💳 Pay with Stripe 1-Click Card Checkout</span>
-        <span id="modalStripePrice" style="font-size: 12px; opacity: 0.9;">($29)</span>
-      </a>
+
 
       <!-- Crypto -->
       <button onclick="toggleCryptoBox()" class="btn-plan btn-plan-outline" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -2372,10 +2368,8 @@ pause
     const price = document.getElementById('modalPlanPrice');
     const paypalBtn = document.getElementById('modalPaypalBtn');
     const razorpayBtn = document.getElementById('modalRazorpayBtn');
-    const stripeBtn = document.getElementById('modalStripeBtn');
     const paypalPrice = document.getElementById('modalPaypalPrice');
     const razorpayPrice = document.getElementById('modalRazorpayPrice');
-    const stripePrice = document.getElementById('modalStripePrice');
     const keyBox = document.getElementById('modalApiKey');
 
     const freshKey = 'sk_live_' + Array.from(crypto.getRandomValues(new Uint8Array(12))).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -2388,8 +2382,7 @@ pause
       paypalPrice.textContent = '($199)';
       razorpayBtn.href = 'https://rzp.io/rzp/6B5FDzJ';
       razorpayPrice.textContent = '(₹16,999)';
-      stripeBtn.href = 'https://www.paypal.com/ncp/payment/V97MDP5G5AGNY';
-      stripePrice.textContent = '($199)';
+
       keyBox.textContent = freshKey + ' (Dedicated Enterprise VPC Quota)';
     } else {
       badge.textContent = 'PRO ENGINEER';
@@ -2399,8 +2392,7 @@ pause
       paypalPrice.textContent = '($29)';
       razorpayBtn.href = 'https://rzp.io/rzp/75IaShP';
       razorpayPrice.textContent = '(₹2,499)';
-      stripeBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
-      stripePrice.textContent = '($29)';
+
       keyBox.textContent = freshKey + ' (Auto-unlocks instantly upon payment)';
     }
 
