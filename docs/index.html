@@ -489,6 +489,45 @@
       </div>
 
       <!-- Step 1 & 2 Grid -->
+      <!-- 🌟 Zero-Friction 1-Click Connect Banner -->
+      <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div style="max-width: 580px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="background: #2563eb; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Recommended</span>
+            <h4 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">1-Click Automatic Windows Connector</h4>
+          </div>
+          <p style="font-size: 13px; color: #334155; line-height: 1.45; margin: 0;">
+            Zero manual configuration. Download this 1KB launcher, double-click, and it instantly links Claude Desktop to AgentSentinel Cloud Defense with automatic backup and native Windows popup confirmation.
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+          <button onclick="downloadCustomBat()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; border: none; border-radius: 8px; padding: 12px 22px; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25); transition: transform 0.15s ease;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <span>Download 1-Click Connector (.bat)</span>
+          </button>
+          <a href="Connect-AgentSentinel.bat" download="Connect-AgentSentinel.bat" style="font-size: 11px; color: #64748b; text-decoration: underline;">Direct file download mirror</a>
+        </div>
+      </div>
+
+      <!-- Quick 1-Liner Scripts for Mac / Linux / Developers -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
+        <div style="background: #0b101b; border: 1px solid #1e293b; border-radius: 10px; padding: 14px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">PowerShell 1-Liner (Windows / Mac / Linux)</span>
+            <button id="btn-copy-ps" onclick="copyTextToClipboard('ps-cmd-text', 'btn-copy-ps')" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 700; cursor: pointer;">Copy</button>
+          </div>
+          <code id="ps-cmd-text" style="font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12px; color: #38bdf8; word-break: break-all; display: block;">irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex</code>
+        </div>
+        <div style="background: #0b101b; border: 1px solid #1e293b; border-radius: 10px; padding: 14px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CLI Auto-Installer (Any Terminal)</span>
+            <button id="btn-copy-npx" onclick="copyTextToClipboard('npx-cmd-text', 'btn-copy-npx')" style="background: #1e293b; color: #38bdf8; border: 1px solid #334155; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 700; cursor: pointer;">Copy</button>
+          </div>
+          <code id="npx-cmd-text" style="font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12px; color: #38bdf8; word-break: break-all; display: block;">npx @sparkysolutions/agentsentinel install</code>
+        </div>
+      </div>
+
+      <!-- Step 1 & 2 Manual Configuration Grid -->
       <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start;">
         <!-- Left: Step 1 API Key Generator -->
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px;">
@@ -899,6 +938,35 @@
           }
         });
       }
+    }
+
+    function copyTextToClipboard(elemId, btnId) {
+      const el = document.getElementById(elemId);
+      if (el) {
+        const text = el.innerText || el.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById(btnId);
+          if (btn) {
+            const orig = btn.innerText;
+            btn.innerText = "✓ Copied!";
+            setTimeout(() => { btn.innerText = orig; }, 2000);
+          }
+        });
+      }
+    }
+
+    function downloadCustomBat() {
+      const batTemplate = `@echo off\r\nchcp 65001 >nul\r\ntitle AgentSentinel 1-Click Claude Desktop Connector\r\ncolor 0B\r\n\r\necho ==============================================================================\r\necho   🛡️  AGENTSENTINEL CLOUD DEFENSE -- 1-CLICK CLAUDE DESKTOP CONNECTOR\r\necho ==============================================================================\r\necho.\r\necho  [*] Detecting Claude Desktop configuration...\r\n\r\nset "CLAUDE_DIR=%APPDATA%\\Claude"\r\nset "CONFIG_PATH=%CLAUDE_DIR%\\claude_desktop_config.json"\r\nset "BACKUP_PATH=%CLAUDE_DIR%\\claude_desktop_config.backup.%random%.json"\r\n\r\nif not exist "%CLAUDE_DIR%" (\r\n    mkdir "%CLAUDE_DIR%" >nul 2>&1\r\n)\r\n\r\nif exist "%CONFIG_PATH%" (\r\n    copy /y "%CONFIG_PATH%" "%BACKUP_PATH%" >nul 2>&1\r\n    echo  [+] Existing configuration backed up.\r\n)\r\n\r\necho  [*] Injecting AgentSentinel Hosted Cloud MCP Server...\r\n\r\npowershell -NoProfile -ExecutionPolicy Bypass -Command ^\r\n  "$cfgPath = '%CONFIG_PATH%';" ^\r\n  "$cfg = @{ mcpServers = @{} };" ^\r\n  "if (Test-Path $cfgPath) { try { $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json } catch { $cfg = @{ mcpServers = @{} } } };" ^\r\n  "if (-not $cfg.mcpServers) { $cfg | Add-Member -MemberType NoteProperty -Name 'mcpServers' -Value @{} -Force };" ^\r\n  "$sentinelEntry = [ordered]@{ url = 'https://agentsentinel-production.up.railway.app/sse'; headers = [ordered]@{ Authorization = 'Bearer ${currentApiKey}' } };" ^\r\n  "if ($cfg.mcpServers -is [PSCustomObject]) { $cfg.mcpServers | Add-Member -MemberType NoteProperty -Name 'agentsentinel' -Value $sentinelEntry -Force } else { $cfg.mcpServers['agentsentinel'] = $sentinelEntry };" ^\r\n  "$cfg | ConvertTo-Json -Depth 10 | Set-Content -Path $cfgPath -Encoding utf8;"\r\n\r\nif %errorlevel% equ 0 (\r\n    echo.\r\n    echo ==============================================================================\r\n    echo   ✅ SUCCESS! AgentSentinel Cloud is now CONNECTED to Claude Desktop!\r\n    echo ==============================================================================\r\n    echo   • Server:  https://agentsentinel-production.up.railway.app/sse\r\n    echo   • Tools:   Blackbox Recorder, Atomic Rollback, 90%% Token-Saver SmartProxy\r\n    echo.\r\n    echo   [!] Next Step: Please RESTART Claude Desktop to start using your tools!\r\n    echo ==============================================================================\r\n    mshta vbscript:Execute("msgbox ""✅ SUCCESS! AgentSentinel Cloud Defense is now connected to Claude Desktop!"" & vbCrLf & vbCrLf & ""Please restart Claude Desktop to activate your tools."", 64, ""AgentSentinel 1-Click Connect"":close")\r\n) else (\r\n    echo.\r\n    echo  [X] Failed to inject configuration. Please run terminal as Administrator.\r\n)\r\n\r\necho.\r\npause\r\n`;
+
+      const blob = new Blob([batTemplate], { type: 'application/x-bat' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Connect-AgentSentinel.bat';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function upgradeToPro() {
