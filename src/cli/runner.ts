@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { CliOptions, CliAuditReport, CLI_EXIT_CODES } from './types.js';
 import { handleInitCommand } from './init.js';
+import { installToClaudeDesktop } from './installer.js';
 import { parseCliArgs } from './parser.js';
 import { AgentSentinelMCPServer, AgentSentinelRemoteSseServer } from '../mcp/index.js';
 import { SentinelEngine } from '../index.js';
@@ -153,6 +154,9 @@ export async function runCli(
     case 'serve':
       return handleMcpServerCommand(options, out, err);
 
+    case 'install':
+      return handleInstallCommand(options, out, err);
+
     case 'audit-log':
       return handleAuditLogCommand(options, out, err);
 
@@ -172,6 +176,7 @@ Usage:
   agentsentinel eval --tool <name> --params    Audit a structured tool call JSON
   agentsentinel serve [--port 3000]            Start hosted Cloud MCP server over HTTP/SSE (Railway/Docker)
   agentsentinel mcp                            Start native MCP server over stdio (Claude Desktop / Cursor)
+  agentsentinel install [--key <key>]          1-Click auto-install into Claude Desktop (Zero JSON Editing)
   agentsentinel audit-log <log.jsonl>          Audit and verify an AgentSentinel audit log
   agentsentinel init [path]                    Scaffold a new agentsentinel.policy.json
   agentsentinel --help | -h                    Show this help manual
@@ -221,6 +226,30 @@ async function handleMcpServerCommand(
     process.stdin.on('end', () => resolve(CLI_EXIT_CODES.SUCCESS));
     process.stdin.on('close', () => resolve(CLI_EXIT_CODES.SUCCESS));
   });
+}
+
+async function handleInstallCommand(
+  options: CliOptions,
+  out: (msg: string) => void,
+  err: (msg: string) => void
+): Promise<number> {
+  const apiKey = options.apiKey || 'sk_demo_pixel_2026';
+  out(`[AgentSentinel] 🔍 Detecting Claude Desktop configuration directory...`);
+  const result = installToClaudeDesktop(apiKey);
+
+  if (result.success) {
+    out(`[AgentSentinel] ✅ SUCCESS! 1-Click Auto-Installed into ${result.targetApp}`);
+    out(`[AgentSentinel] 📁 Target Config: ${result.targetPath}`);
+    if (result.backupPath) {
+      out(`[AgentSentinel] 💾 Safety Backup Created: ${result.backupPath}`);
+    }
+    out(`[AgentSentinel] 🔑 Injected API Key: ${apiKey}`);
+    out(`[AgentSentinel] 🚀 Restart Claude Desktop to activate AgentSentinel Cloud Defense!`);
+    return CLI_EXIT_CODES.SUCCESS;
+  } else {
+    err(`[AgentSentinel] ❌ Install failed: ${result.error}`);
+    return CLI_EXIT_CODES.FILE_NOT_FOUND;
+  }
 }
 
 async function handleCheckCommand(options: CliOptions, out: (msg: string) => void, err: (msg: string) => void): Promise<number> {
