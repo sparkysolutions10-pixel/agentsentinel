@@ -31,6 +31,8 @@ export interface RemoteServerMetrics {
   totalRequestsServed: number;
   registeredKeysCount: number;
   totalTokensSavedEstimate: number;
+  globalDailyFreeRequestsCount: number;
+  globalDailyFreeCap: number;
 }
 
 interface SseClientSession {
@@ -49,6 +51,11 @@ export class AgentSentinelRemoteSseServer {
   private readonly apiKeys: Map<string, ApiKeyAccount> = new Map();
   private totalRequestsServed: number = 0;
   private startTime: number = Date.now();
+
+  // 🛡️ Global Server-Wide Free Tier Circuit Breaker (Zero Out-of-Pocket Liability Protection)
+  private globalDailyFreeRequestsCount: number = 0;
+  private lastDailyResetTimestamp: number = Date.now();
+  private readonly GLOBAL_DAILY_FREE_CAP: number = 10_000;
 
   constructor() {
     // Seed default starter key for instant zero-friction developer testing
@@ -171,6 +178,21 @@ export class AgentSentinelRemoteSseServer {
         valid: false,
         error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://agentsentinel.dev`,
       };
+    }
+
+    // 🛡️ Global Server-Wide Free Pool Protection: Guarantees zero out-of-pocket server bills
+    if (account.plan === 'free') {
+      const now = Date.now();
+      if (now - this.lastDailyResetTimestamp > 24 * 60 * 60 * 1000) {
+        this.globalDailyFreeRequestsCount = 0;
+        this.lastDailyResetTimestamp = now;
+      }
+      if (this.globalDailyFreeRequestsCount >= this.GLOBAL_DAILY_FREE_CAP) {
+        return {
+          valid: false,
+          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://agentsentinel.dev for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
+        };
+      }
     }
 
     return { valid: true, account };
@@ -365,6 +387,9 @@ export class AgentSentinelRemoteSseServer {
       const account = this.apiKeys.get(session.apiKey);
       if (account) {
         account.quotaUsed += 1;
+        if (account.plan === 'free') {
+          this.globalDailyFreeRequestsCount += 1;
+        }
       }
       this.totalRequestsServed += 1;
 
@@ -436,6 +461,8 @@ export class AgentSentinelRemoteSseServer {
       totalRequestsServed: this.totalRequestsServed,
       registeredKeysCount: this.apiKeys.size,
       totalTokensSavedEstimate: estimatedTokensSaved,
+      globalDailyFreeRequestsCount: this.globalDailyFreeRequestsCount,
+      globalDailyFreeCap: this.GLOBAL_DAILY_FREE_CAP,
     };
   }
 }
