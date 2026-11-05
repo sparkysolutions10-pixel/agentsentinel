@@ -594,63 +594,7 @@
     color: #ffffff;
   }
 
-  /* API Key Auto-Generator Deck */
-  .api-key-deck {
-    margin-top: 24px;
-    background: rgba(10, 14, 26, 0.5);
-    border: 1px solid var(--border-glass);
-    border-radius: 14px;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .api-key-input-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    min-width: 280px;
-  }
-
-  .input-dark {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: #ffffff;
-    font-size: 13px;
-    font-family: 'JetBrains Mono', monospace;
-    width: 100%;
-    outline: none;
-    transition: border 0.15s ease;
-  }
-
-  .input-dark:focus {
-    border-color: var(--cyan);
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
-  }
-
-  .btn-generate-key {
-    background: var(--cyan);
-    color: #07090e;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-
-  .btn-generate-key:hover {
-    background: #7dd3fc;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
-  }
+  
 
   /* Threat Simulator Playground (Lakera / Terminal Showcase) */
   .simulator-layout {
@@ -1574,23 +1518,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Dynamic API Key Deck -->
-    <div class="api-key-deck">
-      <div style="font-size: 13px; font-weight: 700; color: #ffffff;">
-        Personal Cloud MCP Key:
-        <span id="plan-badge" style="font-size: 11px; background: rgba(56, 189, 248, 0.15); color: var(--cyan); padding: 2px 8px; border-radius: 6px; margin-left: 6px;">FREE TIER</span>
-      </div>
-
-      <div class="api-key-input-group">
-        <input type="email" id="user-email-input" class="input-dark" placeholder="developer@yourcompany.com">
-        <button onclick="generateUserApiKey()" class="btn-generate-key">Generate Key</button>
-      </div>
-
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan);" id="active-api-key">
-        Generating dynamic key...
-      </div>
-    </div>
   </section>
 
   <!-- Live Threat Simulator -->
@@ -2058,11 +1985,14 @@
       </div>
     </div>
 
-    <!-- Key Retrieval Bridge -->
-    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); border-radius: 12px; padding: 14px; text-align: center;">
-      <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">Instant Key Unlock Bridge:</div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--green);" id="modalApiKey">
-        sk_live_ready_instant_unlock
+    <!-- Zero-Friction Instant Auto-Unlock (ChatGPT / Anthropic Standard) -->
+    <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 14px; text-align: center;">
+      <div style="font-size: 13px; font-weight: 700; color: var(--green); display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Instant Auto-Unlock • Zero License Keys Needed</span>
+      </div>
+      <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+        Account auto-activates in background via payment webhook. No manual keys to copy or paste.
       </div>
     </div>
   </div>
@@ -2216,36 +2146,20 @@
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 
-  let activePlan = 'free';
-  let activeKey = 'sk_live_' + Array.from(crypto.getRandomValues(new Uint8Array(12))).map(b => b.toString(16).padStart(2, '0')).join('');
-
   function renderClaudeConfig() {
     const el = document.getElementById('claude-config-preview');
     if (!el) return;
     el.textContent = `{
   "mcpServers": {
     "agentsentinel": {
-      "url": "https://agentsentinel-production.up.railway.app/sse",
-      "headers": {
-        "Authorization": "Bearer ${activeKey}"
-      }
+      "url": "https://agentsentinel-production.up.railway.app/sse"
     }
   }
 }`;
-    const keyDisplay = document.getElementById('active-api-key');
-    if (keyDisplay) keyDisplay.textContent = activeKey;
   }
 
   function generateUserApiKey() {
-    const email = document.getElementById('user-email-input').value.trim();
-    if (!email) {
-      alert("Please enter your email to receive your dedicated cloud key.");
-      return;
-    }
-    const prefix = activePlan === 'pro' ? 'sk_live_' : 'sk_free_';
-    activeKey = prefix + Array.from(crypto.getRandomValues(new Uint8Array(12))).map(b => b.toString(16).padStart(2, '0')).join('');
-    renderClaudeConfig();
-    alert("New active key generated and loaded into configuration: " + activeKey);
+    // Zero key friction (ChatGPT / Anthropic standard)
   }
 
   function copyClaudeConfig() {
@@ -2274,10 +2188,7 @@ set "CONFIG_FILE=%TARGET_DIR%\claude_desktop_config.json"
 echo {
 echo   "mcpServers": {
 echo     "agentsentinel": {
-echo       "url": "https://agentsentinel-production.up.railway.app/sse",
-echo       "headers": {
-echo         "Authorization": "Bearer ${activeKey}"
-echo       }
+echo       "url": "https://agentsentinel-production.up.railway.app/sse"
 echo     }
 echo   }
 echo }
@@ -2370,9 +2281,7 @@ pause
     const razorpayBtn = document.getElementById('modalRazorpayBtn');
     const paypalPrice = document.getElementById('modalPaypalPrice');
     const razorpayPrice = document.getElementById('modalRazorpayPrice');
-    const keyBox = document.getElementById('modalApiKey');
 
-    const freshKey = 'sk_live_' + Array.from(crypto.getRandomValues(new Uint8Array(12))).map(b => b.toString(16).padStart(2, '0')).join('');
 
     if (plan === 'enterprise') {
       badge.textContent = 'ENTERPRISE SECURITY';
@@ -2383,7 +2292,6 @@ pause
       razorpayBtn.href = 'https://rzp.io/rzp/6B5FDzJ';
       razorpayPrice.textContent = '(₹16,999)';
 
-      keyBox.textContent = freshKey + ' (Dedicated Enterprise VPC Quota)';
     } else {
       badge.textContent = 'PRO ENGINEER';
       title.textContent = 'Subscribe to Pro Plan';
@@ -2393,7 +2301,6 @@ pause
       razorpayBtn.href = 'https://rzp.io/rzp/75IaShP';
       razorpayPrice.textContent = '(₹2,499)';
 
-      keyBox.textContent = freshKey + ' (Auto-unlocks instantly upon payment)';
     }
 
     modal.classList.add('active');
