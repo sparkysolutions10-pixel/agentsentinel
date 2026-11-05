@@ -117,4 +117,23 @@ describe('AgentSentinelRemoteSseServer', () => {
     // Abort SSE stream to cleanly disconnect
     controller.abort();
   });
+
+  it('should reject SSE connections if Pro subscription has expired after 30 days', async () => {
+    const genRes = await fetch(`${baseUrl}/api/keys/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'expired_dev@example.com' }),
+    });
+    const genData = await genRes.json();
+    const testKey = genData.account.key;
+
+    // Expire key immediately (-1 days)
+    sseServer.upgradeApiKey(testKey, -1);
+
+    // Connect with expired key - expects 402 Payment Required
+    const sseResponse = await fetch(`${baseUrl}/sse?token=${testKey}`);
+    expect(sseResponse.status).toBe(402);
+    const data = await sseResponse.json();
+    expect(data.error).toContain('Subscription expired');
+  });
 });

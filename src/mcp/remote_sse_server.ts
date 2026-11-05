@@ -20,6 +20,8 @@ export interface ApiKeyAccount {
   email: string;
   plan: 'free' | 'pro' | 'enterprise';
   createdAt: string;
+  expiresAt?: number;
+  subscriptionStatus?: 'active' | 'expired' | 'canceled';
   quotaLimit: number;
   quotaUsed: number;
   status: 'active' | 'suspended';
@@ -141,8 +143,9 @@ export class AgentSentinelRemoteSseServer {
 
   /**
    * Upgrades an existing key to Pro tier instantly upon payment completion.
+   * Default validity is 30 days per billing cycle.
    */
-  public upgradeApiKey(key: string): ApiKeyAccount {
+  public upgradeApiKey(key: string, durationDays: number = 30): ApiKeyAccount {
     const existing = this.apiKeys.get(key);
     if (!existing) {
       throw new Error(`API Key not found: ${key}`);
@@ -151,11 +154,13 @@ export class AgentSentinelRemoteSseServer {
     existing.plan = 'pro';
     existing.quotaLimit = 1_000_000;
     existing.status = 'active';
+    existing.subscriptionStatus = 'active';
+    existing.expiresAt = Date.now() + durationDays * 24 * 60 * 60 * 1000;
     return existing;
   }
 
   /**
-   * Validates an API key and checks quota limits.
+   * Validates an API key, subscription expiration, and quota limits.
    */
   public validateApiKey(token: string): { valid: boolean; account?: ApiKeyAccount; error?: string } {
     if (!token) {
@@ -167,6 +172,18 @@ export class AgentSentinelRemoteSseServer {
 
     if (!account) {
       return { valid: false, error: 'Invalid API key. Generate a free key at https://agentsentinel.dev' };
+    }
+
+    // 🛡️ Subscription Expiry Enforcement: Block expired keys when 30-day billing cycle ends
+    if (account.plan !== 'free' && account.expiresAt) {
+      if (Date.now() > account.expiresAt) {
+        account.status = 'suspended';
+        account.subscriptionStatus = 'expired';
+        return {
+          valid: false,
+          error: `Subscription expired on ${new Date(account.expiresAt).toLocaleDateString()}. Please renew at https://sparkysolutions10-pixel.github.io/agentsentinel/ to restore 1,000,000 monthly quota.`,
+        };
+      }
     }
 
     if (account.status !== 'active') {
