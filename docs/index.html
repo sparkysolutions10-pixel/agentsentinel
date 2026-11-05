@@ -731,7 +731,7 @@
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-          <span id="plan-badge" style="background: #ecfdf5; color: #065f46; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 16px; border: 1px solid rgba(16,185,129,0.3);">🟢 Free Tier: 500 Actions/mo</span>
+          <span id="plan-badge" style="background: #ecfdf5; color: #065f46; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 16px; border: 1px solid rgba(16,185,129,0.3);">⏱️ 7-Day Trial (500 Actions)</span>
           <button id="btn-pro-upgrade" onclick="upgradeToPro()" style="background: #2563eb; color: #ffffff; border: none; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">⭐ Upgrade to Pro ($29/mo)</button>
         </div>
       </div>
@@ -920,33 +920,38 @@
       </div>
 
       <div class="pricing-grid">
-        <!-- Tier 1: Free Community -->
+        <!-- Tier 1: Starter Dev -->
         <div class="pricing-card">
           <div>
-            <span class="pricing-tag" style="background: #f1f5f9; color: #475569;">Community Free</span>
-            <div class="price-amount">$0 <span class="price-sub">/ month</span></div>
-            <div class="price-inr">₹0 / month (Free Forever)</div>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">Ideal for hobbyists and individual developers running local agents.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="pricing-tag" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">Starter Dev</span>
+              <span style="font-size: 11px; font-weight: 700; color: #64748b;">7-Day Trial</span>
+            </div>
+            <div class="price-amount">$9 <span class="price-sub">/ month</span></div>
+            <div class="price-inr">₹799 / month (IST)</div>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">Entry-level security for independent developers, students, and freelancers.</p>
             <ul class="pricing-features">
               <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>500 Actions/mo</strong> on Cloud SSE</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>50,000 Actions/mo</strong> Cloud + Local</span>
               </li>
               <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Local AST Firewall (Sub-2ms)</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Sub-2ms Zero-Trust AST Firewall</span>
               </li>
               <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Standard stdio MCP Support</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Stdio & Cloud SSE Transport</span>
               </li>
               <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>100% Open Source (Apache-2.0)</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Email & Discord Support</span>
               </li>
             </ul>
           </div>
-          <button class="btn-pricing btn-pricing-outline" disabled style="opacity: 0.8; cursor: default;">Current Free Plan Active</button>
+          <button onclick="checkoutPlan('starter', 9, 799)" class="btn-pricing btn-pricing-outline">
+            <span>💳 Pay $9 (₹799/mo) — Starter</span>
+          </button>
         </div>
 
         <!-- Tier 2: Pro Developer -->
@@ -1470,6 +1475,14 @@
     function checkoutPlan(tier, usdAmount, inrAmount) {
       if (tier === 'pro') {
         upgradeToPro();
+      } else if (tier === 'starter') {
+        const randomHex = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 8);
+        currentApiKey = 'sk_start_' + randomHex;
+        const keyEl = document.getElementById('active-api-key');
+        if (keyEl) keyEl.innerText = currentApiKey;
+        renderClaudeConfig();
+        window.open('https://razorpay.me/@sparkydigitalservices', '_blank');
+        alert(`🚀 STARTER ACTIVATED!\n\nPlan: Starter Dev ($9 / ₹799/mo)\nYour Key: ${currentApiKey}\nQuota: 50,000 Actions/mo.`);
       } else {
         const randomHex = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 8);
         currentApiKey = 'sk_ent_' + randomHex;
