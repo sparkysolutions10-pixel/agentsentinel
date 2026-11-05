@@ -2533,10 +2533,15 @@ pause
     }
 
     modal.classList.add('active');
+    modal.style.display = 'flex';
   }
 
   function closeCheckoutModal() {
-    document.getElementById('checkoutModal').classList.remove('active');
+    const modal = document.getElementById('checkoutModal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
   }
 
   function toggleCryptoBox() {
@@ -2589,7 +2594,167 @@ pause
     setTimeout(() => { document.getElementById('feedback-success-msg').style.display = 'none'; }, 5000);
   }
 
+
+  // ==========================================
+  // TAB NAVIGATION & FAQ ACCORDION HANDLERS
+  // ==========================================
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const panel = document.getElementById(tabId);
+    if (panel) panel.classList.add('active');
+  }
+
+  function toggleFaq(item) {
+    if (item) item.classList.toggle('active');
+  }
+
+  // ==========================================
+  // AUTHENTICATION & USER SESSION MANAGER
+  // ==========================================
+  let currentAuthMode = 'signin';
+
+  function openAuthModal(mode = 'signin') {
+    currentAuthMode = mode;
+    updateAuthModalUI();
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+    }
+    setTimeout(() => {
+      const input = document.getElementById('authEmailInput');
+      if (input) input.focus();
+    }, 100);
+  }
+
+  function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
+  }
+
+  function toggleAuthMode() {
+    currentAuthMode = currentAuthMode === 'signin' ? 'signup' : 'signin';
+    updateAuthModalUI();
+  }
+
+  function updateAuthModalUI() {
+    const badge = document.getElementById('authModalBadge');
+    const title = document.getElementById('authModalTitle');
+    const desc = document.getElementById('authModalDesc');
+    const submitBtn = document.getElementById('authSubmitBtn');
+    const toggleText = document.getElementById('authToggleText');
+
+    if (currentAuthMode === 'signup') {
+      if (badge) badge.textContent = 'FREE TIER ACTIVATION';
+      if (title) title.textContent = 'Create Your Free Account';
+      if (desc) desc.textContent = 'Get 500 free monthly cloud actions, Chrome extension shield, and AST security.';
+      if (submitBtn) submitBtn.textContent = 'Create Free Account & Open Dashboard';
+      if (toggleText) toggleText.innerHTML = `Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign In</a>`;
+    } else {
+      if (badge) badge.textContent = 'DEVELOPER WORKSPACE';
+      if (title) title.textContent = 'Sign In to AgentSentinel';
+      if (desc) desc.textContent = 'Access your cloud telemetry, custom MCP endpoints, and quota manager.';
+      if (submitBtn) submitBtn.textContent = 'Sign In to Workspace';
+      if (toggleText) toggleText.innerHTML = `Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign Up Free</a>`;
+    }
+  }
+
+  function loginWithOAuth(provider) {
+    const email = provider === 'github' ? 'developer@github.com' : 'developer@gmail.com';
+    completeLogin(email, provider.toUpperCase() + ' OAuth');
+  }
+
+  async function handleAuthSubmit(event) {
+    if (event) event.preventDefault();
+    const emailInput = document.getElementById('authEmailInput');
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email) return;
+
+    const submitBtn = document.getElementById('authSubmitBtn');
+    if (submitBtn) submitBtn.textContent = 'Verifying Account...';
+
+    // Check with backend for active Pro/Enterprise license
+    try {
+      const res = await fetch(`https://agentsentinel-production.up.railway.app/api/auth/status?email=${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        completeLogin(email, 'Email Access', data.plan || 'free');
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend probe offline, proceeding with instant local session:', e);
+    }
+
+    completeLogin(email, 'Email Access', 'free');
+  }
+
+  function completeLogin(email, authMethod = 'Direct', plan = 'free') {
+    const user = {
+      email: email,
+      plan: plan,
+      authMethod: authMethod,
+      loggedInAt: Date.now()
+    };
+    localStorage.setItem('agentsentinel_user', JSON.stringify(user));
+    closeAuthModal();
+    checkUserSession();
+    
+    // Redirect to customer dashboard
+    window.location.href = 'dashboard.html';
+  }
+
+  function checkUserSession() {
+    try {
+      const stored = localStorage.getItem('agentsentinel_user');
+      const authGroup = document.getElementById('navAuthGroup');
+      const userProfile = document.getElementById('navUserProfile');
+      const emailDisplay = document.getElementById('navUserEmailDisplay');
+
+      if (stored) {
+        const user = JSON.parse(stored);
+        if (authGroup) authGroup.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'flex';
+        if (emailDisplay) {
+          const shortEmail = user.email.length > 20 ? user.email.slice(0, 18) + '...' : user.email;
+          emailDisplay.textContent = shortEmail + ' (Dashboard)';
+        }
+      } else {
+        if (authGroup) authGroup.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+      }
+    } catch (e) {
+      console.error('Session check failed:', e);
+    }
+  }
+
+  function signOutUser() {
+    localStorage.removeItem('agentsentinel_user');
+    checkUserSession();
+  }
+
+  // Backdrop modal dismissal and escape listener
+  window.addEventListener('click', (e) => {
+    const authModal = document.getElementById('authModal');
+    if (e.target === authModal) closeAuthModal();
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (e.target === checkoutModal) closeCheckoutModal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAuthModal();
+      closeCheckoutModal();
+    }
+  });
+
+
   // Initialize on load
+  checkUserSession();
   renderClaudeConfig();
   updateRoiCalculator(100);
 </script>
