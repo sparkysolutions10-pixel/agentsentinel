@@ -234,7 +234,16 @@ export class AgentSentinelRemoteSseServer {
     const parsedUrl = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
     const pathname = parsedUrl.pathname;
 
-    // 1. Health & Server Info
+    // 1. Health & Server Info (Browser redirect on root to live website portal)
+    if (pathname === '/') {
+      const accept = req.headers.accept || '';
+      if (accept.includes('text/html')) {
+        res.writeHead(302, { Location: 'https://sparkysolutions10-pixel.github.io/agentsentinel/' });
+        res.end();
+        return;
+      }
+    }
+
     if (pathname === '/' || pathname === '/health' || pathname === '/api/status') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(

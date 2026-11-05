@@ -15,6 +15,8 @@
 [![Global Institutional Playbook](https://img.shields.io/badge/Institutional_Playbook-Wall_St_%7C_London_%7C_Web3_%7C_APAC-gold)](PITCH_DECK_GLOBAL_QUANT_FUNDS.md)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--2818--6579-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0009-0008-2818-6579)
 [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Scheduled_Launch-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/products/agentsentinel/agentsentinel/prelaunch)
+[![Live Website](https://img.shields.io/badge/🌐_Live_Web_Portal-AgentSentinel_SaaS-00f2fe?style=flat&logo=googlechrome&logoColor=white)](https://sparkysolutions10-pixel.github.io/agentsentinel/)
+[![Chrome Extension](https://img.shields.io/badge/🧩_Chrome_Extension-Download_v1.0-2563eb?style=flat)](https://sparkysolutions10-pixel.github.io/agentsentinel/agentsentinel_pro_extension.zip)
 
 ---
 
