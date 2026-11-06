@@ -924,37 +924,43 @@
             </div>
           </div>
 
-          <!-- Row 2: Personal API Secret Key (Paywall Gated) -->
-          <div style="position: relative;">
+          <!-- Row 2: Personal API Secret Key (Paywall Gated - Inline Clean Architecture) -->
+          <div style="margin-top: 18px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">2. Personal API Secret Key</span>
               <span class="badge-status" id="apiKeyTierBadge" style="font-size: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">🔒 LOCKED (PAID PRO ONLY)</span>
             </div>
-            <div class="api-key-container" style="position: relative; overflow: hidden;">
-              <div class="api-key-code" id="liveApiKeyText" style="letter-spacing: 2px; filter: blur(4px);">sk_live_sec_••••••••••••••••••••••••••••</div>
+
+            <!-- UNLOCKED VIEW (Shown when Pro/Enterprise is active) -->
+            <div id="apiKeyUnlockedBox" class="api-key-container" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div class="api-key-code" id="liveApiKeyText">sk_live_sec_7894f28a01cb99e46a788b</div>
               <div style="display: flex; gap: 8px;">
-                <button onclick="handleKeyAction('roll')" class="btn-action-outline" style="font-size: 11px;">
+                <button onclick="rollApiKey()" class="btn-action-outline" style="font-size: 11px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                   Roll New Key
                 </button>
-                <button onclick="handleKeyAction('copy')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+                <button onclick="copyToClipboard(document.getElementById('liveApiKeyText').textContent, this, 'Copied Key!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   Copy Key
                 </button>
               </div>
-
-              <!-- Luminous Paywall Lock Overlay for Free Users -->
-              <div id="apiKeyLockOverlay" style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(23, 33, 56, 0.96) 100%); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-radius: 8px; z-index: 10;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  <span style="font-size: 12px; font-weight: 700; color: #fbbf24;">Cloud MCP API Key Locked: Upgrade to Pro to Reveal</span>
-                </div>
-                <a href="index.html#pricing" class="btn-action-primary" style="background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); color: #020617; font-weight: 800; font-size: 11px; padding: 6px 14px; text-decoration: none; border-radius: 6px; box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);">
-                  Unlock Key ($29 / ₹2,499) ➔
-                </a>
-              </div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;" id="apiKeyHelpText">
+
+            <!-- LOCKED PAYWALL BOX (Shown by default for Free users, 100% inline, zero floating bug) -->
+            <div id="apiKeyLockedBox" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(23, 33, 56, 0.98) 100%); border: 1.5px solid rgba(245, 158, 11, 0.5); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <div>
+                  <div style="font-size: 13px; font-weight: 800; color: #fbbf24; letter-spacing: 0.2px;">Cloud MCP Sovereign Key: Locked</div>
+                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Upgrade to Pro ($29 / ₹2,499) to unlock your personal 24/7 endpoint token.</div>
+                </div>
+              </div>
+              <a href="index.html#pricing" class="btn-action-primary" style="background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); color: #020617; font-weight: 800; font-size: 12px; padding: 8px 18px; text-decoration: none; border-radius: 6px; box-shadow: 0 2px 12px rgba(56, 189, 248, 0.35); white-space: nowrap;">
+                Unlock Key ($29 / ₹2,499) ➔
+              </a>
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;" id="apiKeyHelpText">
               Sovereign bearer token requires an active Pro ($29/mo) or Enterprise subscription. Free tier includes in-browser threat simulation.
             </div>
           </div>
@@ -1034,18 +1040,21 @@
           </div>
         </div>
 
-        <!-- CARD 2: INTERACTIVE CLIENT SETUP GUIDE -->
+        <!-- CARD 2: UNIVERSAL GLOBAL AI WORKSPACE & IDE INTEGRATIONS -->
         <div class="panel-box">
-          <div class="panel-header">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 12px;">
             <div class="panel-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              <span>Connect to Your AI Workspace</span>
+              <span>Connect to Your AI Workspace (All Major Global IDEs &amp; Swarms)</span>
             </div>
-            <!-- Interactive Switcher Pills -->
-            <div style="display: flex; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: 8px;">
-              <button onclick="switchSetupTab('1click')" id="tabBtn1click" class="btn-setup-tab active">⚡ 1-Click (Recommended)</button>
-              <button onclick="switchSetupTab('claude')" id="tabBtnClaude" class="btn-setup-tab">Claude Desktop</button>
+            <!-- Interactive Switcher Pills (Comprehensive Global Coverage) -->
+            <div style="display: flex; gap: 4px; background: #f1f5f9; padding: 3px; border-radius: 8px; flex-wrap: wrap;">
+              <button onclick="switchSetupTab('1click')" id="tabBtn1click" class="btn-setup-tab active">⚡ 1-Click (All IDEs)</button>
               <button onclick="switchSetupTab('cursor')" id="tabBtnCursor" class="btn-setup-tab">Cursor IDE</button>
+              <button onclick="switchSetupTab('vscode')" id="tabBtnVscode" class="btn-setup-tab">VS Code (Cline / Roo)</button>
+              <button onclick="switchSetupTab('claude')" id="tabBtnClaude" class="btn-setup-tab">Claude Desktop</button>
+              <button onclick="switchSetupTab('windsurf')" id="tabBtnWindsurf" class="btn-setup-tab">Windsurf &amp; Zed</button>
+              <button onclick="switchSetupTab('langchain')" id="tabBtnLangchain" class="btn-setup-tab">LangChain &amp; Python</button>
               <button onclick="switchSetupTab('badge')" id="tabBtnBadge" class="btn-setup-tab">🛡️ README Badge</button>
             </div>
           </div>
@@ -1056,7 +1065,7 @@
               <span style="font-size: 18px;">🔒</span>
               <div>
                 <strong style="color: #d97706; font-size: 13px;">Live Workspace Integration Locked (Paid Pro Feature)</strong>
-                <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Connecting Claude Desktop or Cursor IDE to Cloud MCP requires an active Pro subscription ($29 / ₹2,499).</p>
+                <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Connecting Cursor, VS Code, Claude, Windsurf, Zed, or LangChain to Cloud MCP requires an active Pro subscription ($29 / ₹2,499).</p>
               </div>
             </div>
             <a href="index.html#pricing" class="btn-action-primary" style="background: #0284c7; text-decoration: none; font-size: 12px; padding: 8px 16px; border-radius: 6px; font-weight: 700; white-space: nowrap;">
@@ -1064,13 +1073,13 @@
             </a>
           </div>
 
-          <!-- SETUP TAB 1: 1-Click Auto Setup -->
+          <!-- SETUP TAB 1: 1-Click Auto Setup (All IDEs) -->
           <div id="setupTab1click" class="setup-tab-content">
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
-              Run this single command in <strong>PowerShell</strong> (Windows) or Terminal (macOS/Linux) to auto-configure Claude Desktop and Cursor instantly with zero manual file editing:
+              Run this single command in <strong>PowerShell</strong> (Windows) or Terminal (macOS/Linux) to automatically detect and configure <strong>Cursor, Claude Desktop, VS Code (Cline/Roo), and Windsurf</strong> simultaneously:
             </p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <span style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;">PowerShell Quick-Connect Command</span>
+              <span style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;">Universal Quick-Connect Command</span>
               <div style="display: flex; gap: 8px;">
                 <a href="Connect-AgentSentinel.bat" download class="btn-action-outline" style="font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1082,7 +1091,42 @@
             <pre class="code-snippet">irm https://getagentsentinel.com/connect.ps1 | iex</pre>
           </div>
 
-          <!-- SETUP TAB 2: Claude Desktop -->
+          <!-- SETUP TAB 2: Cursor IDE -->
+          <div id="setupTabCursor" class="setup-tab-content" style="display: none;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              In <strong>Cursor IDE</strong>: Navigate to <strong>Settings &gt; Features &gt; MCP Servers &gt; Add New MCP Server</strong>:
+            </p>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy SSE URL</button>
+            </div>
+            <pre class="code-snippet">Name: AgentSentinel
+Type: sse
+URL:  https://mcp.getagentsentinel.com/sse</pre>
+          </div>
+
+          <!-- SETUP TAB 3: VS Code (Cline & Roo Code Extensions) -->
+          <div id="setupTabVscode" class="setup-tab-content" style="display: none;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              In <strong>VS Code</strong> with <strong>Cline</strong> or <strong>Roo Code</strong>: Add to your <code>cline_mcp_settings.json</code>:
+            </p>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard(document.getElementById('vscodeConfigSnippet').textContent, this, 'Copied JSON!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy JSON</button>
+            </div>
+            <pre class="code-snippet" id="vscodeConfigSnippet">{
+  "mcpServers": {
+    "agentsentinel": {
+      "url": "https://mcp.getagentsentinel.com/sse",
+      "alwaysAllow": [
+        "sentinel_audit_command",
+        "sentinel_audit_sql",
+        "sentinel_scan_secrets"
+      ]
+    }
+  }
+}</pre>
+          </div>
+
+          <!-- SETUP TAB 4: Claude Desktop -->
           <div id="setupTabClaude" class="setup-tab-content" style="display: none;">
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
               Paste this configuration directly into your <code>%APPDATA%\Claude\claude_desktop_config.json</code> (Windows) or <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS):
@@ -1103,23 +1147,44 @@
 }</pre>
           </div>
 
-          <!-- SETUP TAB 3: Cursor IDE -->
-          <div id="setupTabCursor" class="setup-tab-content" style="display: none;">
+          <!-- SETUP TAB 5: Windsurf & Zed Editor -->
+          <div id="setupTabWindsurf" class="setup-tab-content" style="display: none;">
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
-              In Cursor IDE: Go to <strong>Settings &gt; Features &gt; MCP Servers &gt; Add New MCP Server</strong>:
+              For <strong>Codeium Windsurf</strong> (<code>~/.codeium/windsurf/mcp_config.json</code>) or <strong>Zed Editor</strong> (<code>~/.config/zed/settings.json</code>):
             </p>
             <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-              <button onclick="copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy SSE URL</button>
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard(document.getElementById('windsurfConfigSnippet').textContent, this, 'Copied Config!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Config</button>
             </div>
-            <pre class="code-snippet">Name: AgentSentinel
-Type: sse
-URL:  https://mcp.getagentsentinel.com/sse</pre>
+            <pre class="code-snippet" id="windsurfConfigSnippet">{
+  "mcpServers": {
+    "agentsentinel": {
+      "serverUrl": "https://mcp.getagentsentinel.com/sse"
+    }
+  }
+}</pre>
           </div>
 
-          <!-- SETUP TAB 4: Viral GitHub README Badge -->
+          <!-- SETUP TAB 6: LangChain, Python & Devin Swarms -->
+          <div id="setupTabLangchain" class="setup-tab-content" style="display: none;">
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+              For autonomous backend agents built with <strong>LangChain, LangGraph, CrewAI, AutoGen, or Devin</strong>:
+            </p>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard(document.getElementById('langchainConfigSnippet').textContent, this, 'Copied Python!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Python</button>
+            </div>
+            <pre class="code-snippet" id="langchainConfigSnippet"># Enterprise Python Agent / LangGraph Screening Gateway
+from langchain_mcp_adapters.client import MultiServerMCPClient
+
+client = MultiServerMCPClient({
+    "agentsentinel": "https://mcp.getagentsentinel.com/sse"
+})
+# All tool calls (bash, SQL, file writes) are screened in &lt; 0.8ms before host execution</pre>
+          </div>
+
+          <!-- SETUP TAB 7: Viral GitHub README Badge -->
           <div id="setupTabBadge" class="setup-tab-content" style="display: none;">
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
-              Embed this verified sovereign security badge in your GitHub repository's <code>README.md</code> or documentation to prove zero-trust runtime containment to your users and auditors:
+              Embed this verified sovereign security badge in your GitHub repository's <code>README.md</code> or documentation:
             </p>
             <div style="background: #f8fafc; border: 1px solid var(--border-glass); border-radius: 8px; padding: 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
               <div>
@@ -1393,26 +1458,22 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
       document.querySelectorAll('.btn-setup-tab').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.setup-tab-content').forEach(el => el.style.display = 'none');
       
-      if (tabId === '1click') {
-        const btn = document.getElementById('tabBtn1click');
-        const tab = document.getElementById('setupTab1click');
-        if (btn) btn.classList.add('active');
-        if (tab) tab.style.display = 'block';
-      } else if (tabId === 'claude') {
-        const btn = document.getElementById('tabBtnClaude');
-        const tab = document.getElementById('setupTabClaude');
-        if (btn) btn.classList.add('active');
-        if (tab) tab.style.display = 'block';
-      } else if (tabId === 'cursor') {
-        const btn = document.getElementById('tabBtnCursor');
-        const tab = document.getElementById('setupTabCursor');
-        if (btn) btn.classList.add('active');
-        if (tab) tab.style.display = 'block';
-      } else if (tabId === 'badge') {
-        const btn = document.getElementById('tabBtnBadge');
-        const tab = document.getElementById('setupTabBadge');
-        if (btn) btn.classList.add('active');
-        if (tab) tab.style.display = 'block';
+      const tabMap = {
+        '1click': { btn: 'tabBtn1click', tab: 'setupTab1click' },
+        'cursor': { btn: 'tabBtnCursor', tab: 'setupTabCursor' },
+        'vscode': { btn: 'tabBtnVscode', tab: 'setupTabVscode' },
+        'claude': { btn: 'tabBtnClaude', tab: 'setupTabClaude' },
+        'windsurf': { btn: 'tabBtnWindsurf', tab: 'setupTabWindsurf' },
+        'langchain': { btn: 'tabBtnLangchain', tab: 'setupTabLangchain' },
+        'badge': { btn: 'tabBtnBadge', tab: 'setupTabBadge' }
+      };
+
+      const target = tabMap[tabId];
+      if (target) {
+        const btnEl = document.getElementById(target.btn);
+        const tabEl = document.getElementById(target.tab);
+        if (btnEl) btnEl.classList.add('active');
+        if (tabEl) tabEl.style.display = 'block';
       }
     }
 
@@ -1645,17 +1706,18 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
           if (quotaBar) quotaBar.style.width = plan === 'enterprise' ? '0.14%' : '1.4%';
           if (quotaRatio) quotaRatio.textContent = plan === 'enterprise' ? '14,280 / 10,000,000 Used' : '14,280 / 1,000,000 Used';
 
-          // Pro Key & Badge (Unlocked)
-          const keyLockOverlay = document.getElementById('apiKeyLockOverlay');
-          if (keyLockOverlay) keyLockOverlay.style.display = 'none';
+          // Pro Key & Badge (Unlocked - Clean Inline Architecture)
+          const lockedBox = document.getElementById('apiKeyLockedBox');
+          if (lockedBox) lockedBox.style.display = 'none';
+
+          const unlockedBox = document.getElementById('apiKeyUnlockedBox');
+          if (unlockedBox) unlockedBox.style.display = 'flex';
 
           const wsLockBanner = document.getElementById('workspaceLockBanner');
           if (wsLockBanner) wsLockBanner.style.display = 'none';
 
           const keyEl = document.getElementById('liveApiKeyText');
           if (keyEl) {
-            keyEl.style.filter = 'none';
-            keyEl.style.letterSpacing = 'normal';
             keyEl.textContent = 'sk_live_sec_7894f28a01cb99e46a788b';
           }
 
@@ -1698,19 +1760,15 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
           if (quotaBar) quotaBar.style.width = '2.8%';
           if (quotaRatio) quotaRatio.textContent = '14 / 500 Used';
 
-          // Free Key & Badge (Locked by Default)
-          const keyLockOverlay = document.getElementById('apiKeyLockOverlay');
-          if (keyLockOverlay) keyLockOverlay.style.display = 'flex';
+          // Free Key & Badge (Locked by Default - Clean Inline Architecture)
+          const lockedBox = document.getElementById('apiKeyLockedBox');
+          if (lockedBox) lockedBox.style.display = 'flex';
+
+          const unlockedBox = document.getElementById('apiKeyUnlockedBox');
+          if (unlockedBox) unlockedBox.style.display = 'none';
 
           const wsLockBanner = document.getElementById('workspaceLockBanner');
           if (wsLockBanner) wsLockBanner.style.display = 'flex';
-
-          const keyEl = document.getElementById('liveApiKeyText');
-          if (keyEl) {
-            keyEl.style.filter = 'blur(4px)';
-            keyEl.style.letterSpacing = '2px';
-            keyEl.textContent = 'sk_live_sec_••••••••••••••••••••••••••••';
-          }
 
           const badgeEl = document.getElementById('apiKeyTierBadge');
           if (badgeEl) {
