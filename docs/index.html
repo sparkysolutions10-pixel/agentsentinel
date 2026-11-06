@@ -3079,6 +3079,20 @@
 
       <!-- VIEW 4: GOOGLE VERIFICATION (STEP 2: OTP VERIFY) -->
       <form id="authViewGoogleOtp" onsubmit="handleGoogleOtpSubmit(event)" style="display: none;">
+        <!-- In-Modal 6-Digit Code Dispatch Banner -->
+        <div id="googleOtpBanner" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">6-Digit Security Code</div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span id="googleDisplayOtp" style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 4px; font-family: 'JetBrains Mono', monospace;">849201</span>
+            <button type="button" onclick="autoFillGoogleOtp()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan); color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+              Auto-Fill
+            </button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+            Security code for <span id="googleDisplayEmail" style="color: #ffffff; font-weight: 600;">sparkydigitalservice@gmail.com</span>
+          </div>
+        </div>
+
         <div class="auth-input-group">
           <label class="auth-input-label" for="googleOtpInput">Enter 6-digit code</label>
           <input type="text" id="googleOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 22px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
@@ -3086,9 +3100,10 @@
         <button type="submit" class="auth-btn-primary" id="googleVerifyOtpBtn" style="margin-top: 6px; margin-bottom: 14px;">
           Verify &amp; Open Dashboard
         </button>
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
           <a href="javascript:void(0)" onclick="resendGoogleOtp()" class="auth-switch-link">Resend code</a>
-          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← Back to log in</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('google-email')" class="auth-switch-link">Change email</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← All options</a>
         </div>
       </form>
 
@@ -3108,6 +3123,20 @@
 
       <!-- VIEW 6: GITHUB VERIFICATION (STEP 2: OTP VERIFY) -->
       <form id="authViewGithubOtp" onsubmit="handleGithubOtpSubmit(event)" style="display: none;">
+        <!-- In-Modal 6-Digit Code Dispatch Banner -->
+        <div id="githubOtpBanner" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">6-Digit Security Code</div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span id="githubDisplayOtp" style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 4px; font-family: 'JetBrains Mono', monospace;">849201</span>
+            <button type="button" onclick="autoFillGithubOtp()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan); color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+              Auto-Fill
+            </button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+            Security code for <span id="githubDisplayEmail" style="color: #ffffff; font-weight: 600;">developer@github.com</span>
+          </div>
+        </div>
+
         <div class="auth-input-group">
           <label class="auth-input-label" for="githubOtpInput">Enter 6-digit code</label>
           <input type="text" id="githubOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 22px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
@@ -3115,9 +3144,10 @@
         <button type="submit" class="auth-btn-primary" id="githubVerifyOtpBtn" style="margin-top: 6px; margin-bottom: 14px;">
           Verify &amp; Open Dashboard
         </button>
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
           <a href="javascript:void(0)" onclick="resendGithubOtp()" class="auth-switch-link">Resend code</a>
-          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← Back to log in</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('github-email')" class="auth-switch-link">Change email</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← All options</a>
         </div>
       </form>
 
@@ -3137,6 +3167,20 @@
 
       <!-- VIEW 8: FORGOT PASSWORD (STEP 2: OTP & NEW PASSWORD) -->
       <form id="authViewForgotOtp" onsubmit="handleForgotOtpSubmit(event)" style="display: none;">
+        <!-- In-Modal 6-Digit Code Dispatch Banner -->
+        <div id="forgotOtpBanner" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: center;">
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px;">Password Reset Code</div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span id="forgotDisplayOtp" style="font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: 4px; font-family: 'JetBrains Mono', monospace;">849201</span>
+            <button type="button" onclick="autoFillForgotOtp()" style="background: rgba(56, 189, 248, 0.2); border: 1px solid var(--cyan); color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+              Auto-Fill
+            </button>
+          </div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+            Sent to <span id="forgotDisplayEmail" style="color: #ffffff; font-weight: 600;">user@example.com</span>
+          </div>
+        </div>
+
         <div class="auth-input-group">
           <label class="auth-input-label" for="forgotOtpInput">6-digit verification code</label>
           <input type="text" id="forgotOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 20px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
@@ -3894,7 +3938,38 @@ pause
   // 1. GOOGLE REAL EMAIL OTP VERIFICATION
   // ==========================================
   function startGoogleVerification() {
-    switchAuthMode('google-email');
+    clearAuthAlert();
+    const input = document.getElementById('googleEmailInput');
+    const email = (input && input.value.trim().toLowerCase()) || activeVerificationEmail || 'sparkydigitalservice@gmail.com';
+    activeVerificationEmail = email;
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = Date.now() + 10 * 60 * 1000;
+    sessionStorage.setItem('sentinel_google_otp', JSON.stringify({ email, otp, expiresAt: expiry }));
+
+    const displayOtp = document.getElementById('googleDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
+    const displayEmail = document.getElementById('googleDisplayEmail');
+    if (displayEmail) displayEmail.textContent = email;
+
+    showToast('Code Ready', `Google verification code for ${email}: [${otp}]`, '📧');
+    switchAuthMode('google-otp');
+  }
+
+  function autoFillGoogleOtp() {
+    let sessionData = null;
+    try {
+      const raw = sessionStorage.getItem('sentinel_google_otp');
+      if (raw) sessionData = JSON.parse(raw);
+    } catch (e) {}
+    if (sessionData && sessionData.otp) {
+      const input = document.getElementById('googleOtpInput');
+      if (input) {
+        input.value = sessionData.otp;
+        input.focus();
+      }
+      showToast('Auto-Filled', 'Google security code entered.', '⚡');
+    }
   }
 
   function handleGoogleEmailSubmit(event) {
@@ -3914,6 +3989,11 @@ pause
     const expiry = Date.now() + 10 * 60 * 1000;
 
     sessionStorage.setItem('sentinel_google_otp', JSON.stringify({ email, otp, expiresAt: expiry }));
+
+    const displayOtp = document.getElementById('googleDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
+    const displayEmail = document.getElementById('googleDisplayEmail');
+    if (displayEmail) displayEmail.textContent = email;
 
     showToast('Code Sent', `Google 6-digit verification code sent to ${email} (OTP: ${otp})`, '📧');
     switchAuthMode('google-otp');
@@ -3968,6 +4048,8 @@ pause
     const email = activeVerificationEmail || 'sparkydigitalservice@gmail.com';
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('sentinel_google_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    const displayOtp = document.getElementById('googleDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
     showToast('New Code Sent', `Fresh verification code: [${otp}] sent to ${email}`, '🔄');
   }
 
@@ -3975,7 +4057,38 @@ pause
   // 2. GITHUB REAL EMAIL OTP VERIFICATION
   // ==========================================
   function startGitHubVerification() {
-    switchAuthMode('github-email');
+    clearAuthAlert();
+    const input = document.getElementById('githubEmailInput');
+    let val = (input && input.value.trim().toLowerCase()) || activeVerificationEmail || 'developer@github.com';
+    if (!val.includes('@')) val = `${val}@github.com`;
+    activeVerificationEmail = val;
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_github_otp', JSON.stringify({ email: val, otp, expiresAt: Date.now() + 600000 }));
+
+    const displayOtp = document.getElementById('githubDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
+    const displayEmail = document.getElementById('githubDisplayEmail');
+    if (displayEmail) displayEmail.textContent = val;
+
+    showToast('Code Ready', `GitHub verification code for ${val}: [${otp}]`, '🐙');
+    switchAuthMode('github-otp');
+  }
+
+  function autoFillGithubOtp() {
+    let sessionData = null;
+    try {
+      const raw = sessionStorage.getItem('sentinel_github_otp');
+      if (raw) sessionData = JSON.parse(raw);
+    } catch (e) {}
+    if (sessionData && sessionData.otp) {
+      const input = document.getElementById('githubOtpInput');
+      if (input) {
+        input.value = sessionData.otp;
+        input.focus();
+      }
+      showToast('Auto-Filled', 'GitHub security code entered.', '⚡');
+    }
   }
 
   function handleGithubEmailSubmit(event) {
@@ -3995,6 +4108,11 @@ pause
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('sentinel_github_otp', JSON.stringify({ email: val, otp, expiresAt: Date.now() + 600000 }));
+
+    const displayOtp = document.getElementById('githubDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
+    const displayEmail = document.getElementById('githubDisplayEmail');
+    if (displayEmail) displayEmail.textContent = val;
 
     showToast('Code Sent', `GitHub verification code sent to ${val} (OTP: ${otp})`, '🐙');
     switchAuthMode('github-otp');
@@ -4044,6 +4162,8 @@ pause
     const email = activeVerificationEmail || 'developer@github.com';
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('sentinel_github_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    const displayOtp = document.getElementById('githubDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
     showToast('New Code Sent', `Fresh verification code: [${otp}] sent to ${email}`, '🔄');
   }
 
@@ -4155,6 +4275,22 @@ pause
   // ==========================================
   // 4. FORGOT PASSWORD (6-DIGIT CODE RESET)
   // ==========================================
+  function autoFillForgotOtp() {
+    let sessionData = null;
+    try {
+      const raw = sessionStorage.getItem('sentinel_reset_otp');
+      if (raw) sessionData = JSON.parse(raw);
+    } catch (e) {}
+    if (sessionData && sessionData.otp) {
+      const input = document.getElementById('forgotOtpInput');
+      if (input) {
+        input.value = sessionData.otp;
+        input.focus();
+      }
+      showToast('Auto-Filled', 'Reset code entered automatically.', '⚡');
+    }
+  }
+
   function handleForgotEmailSubmit(event) {
     if (event) event.preventDefault();
     clearAuthAlert();
@@ -4171,6 +4307,11 @@ pause
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
 
+    const displayOtp = document.getElementById('forgotDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
+    const displayEmail = document.getElementById('forgotDisplayEmail');
+    if (displayEmail) displayEmail.textContent = email;
+
     showToast('Code Sent', `Password reset code sent to ${email} (OTP: ${otp})`, '📧');
     switchAuthMode('forgot-otp');
   }
@@ -4179,6 +4320,8 @@ pause
     const email = activeVerificationEmail || 'developer@gmail.com';
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    const displayOtp = document.getElementById('forgotDisplayOtp');
+    if (displayOtp) displayOtp.textContent = otp;
     showToast('New Code Sent', `Fresh code [${otp}] sent to ${email}`, '🔄');
   }
 
@@ -4260,7 +4403,6 @@ pause
       submitBtn.textContent = 'Reset password';
     }
   }
-
   // ==========================================
   // 5. SESSION & NAV CONTROLS
   // ==========================================
