@@ -4802,6 +4802,27 @@
     }
   }
 
+  function updateRoiCalculator(val) {
+    val = parseFloat(val) || 100;
+    const spendDisplay = document.getElementById('roi-spend-display');
+    const tokensSaved = document.getElementById('roi-tokens-saved');
+    const dollarsSaved = document.getElementById('roi-dollars-saved');
+    const planCost = document.getElementById('roi-plan-cost');
+    const netProfit = document.getElementById('roi-net-profit');
+
+    if (spendDisplay) spendDisplay.textContent = '$' + Math.round(val) + ' / month';
+    const grossSavings = Math.round(val * 0.90);
+    const tokens = ((val / 20) * 1.7).toFixed(1);
+    if (tokensSaved) tokensSaved.textContent = tokens + 'M';
+    if (dollarsSaved) dollarsSaved.textContent = '$' + grossSavings;
+    if (planCost) planCost.textContent = '$29';
+    const net = grossSavings - 29;
+    if (netProfit) {
+      netProfit.textContent = (net >= 0 ? '+$' : '-$') + Math.abs(net) + ' / mo';
+      netProfit.style.color = net >= 0 ? '#10b981' : '#ef4444';
+    }
+  }
+
   // Initialize on load
   getStoredAccounts();
   handlePaymentRedirectParams();

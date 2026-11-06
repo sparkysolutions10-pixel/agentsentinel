@@ -1482,7 +1482,9 @@ client = MultiServerMCPClient({
           document.body.removeChild(el);
           showSuccess();
         } catch (e) {
-          prompt('Copy to clipboard: Ctrl+C, Enter', str);
+          if (typeof window !== 'undefined' && typeof window.prompt === 'function') {
+            window.prompt('Copy to clipboard: Ctrl+C, Enter', str);
+          }
         }
       }
     }
@@ -1583,7 +1585,15 @@ client = MultiServerMCPClient({
         <td><span class="badge-status badge-blocked">BLOCKED</span></td>
         <td>${escapeHtml(item.latency)}</td>
       `;
-      tableBody.prepend(tr);
+      if (tableBody) {
+        if (typeof tableBody.prepend === 'function') {
+          tableBody.prepend(tr);
+        } else if (tableBody.firstChild) {
+          tableBody.insertBefore(tr, tableBody.firstChild);
+        } else {
+          tableBody.appendChild(tr);
+        }
+      }
 
       // Increment threats blocked stat
       const statThreats = document.getElementById('statThreats');
@@ -1609,6 +1619,7 @@ client = MultiServerMCPClient({
       let csv = '\uFEFF"S.No.","Timestamp","Agent Runtime","Command Payload","Rule Invariant","Verdict","Merkle Root Hash"\n';
       const rows = document.querySelectorAll('#logsTableBody tr');
       rows.forEach((r, i) => {
+        if (!r || typeof r.querySelectorAll !== 'function') return;
         const cols = r.querySelectorAll('td');
         if (cols.length >= 7) {
           const sno = cols[0].textContent.trim();
