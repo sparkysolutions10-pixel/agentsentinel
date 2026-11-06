@@ -10,6 +10,8 @@
  */
 
 import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { runCli } from '../dist/cli/runner.js';
 import { CLI_EXIT_CODES } from '../dist/cli/types.js';
 import { createDefaultCliEngine } from '../dist/cli/runner.js';
@@ -18,6 +20,10 @@ import { createBidiSpoofingDetectorRule } from '../dist/armor/bidi_spoofing_dete
 import { creditCardScrubberRule } from '../dist/secrets/credit_card_scrubber.js';
 import { pathTraversalGuardRule } from '../dist/fs/path_traversal.js';
 import { BlackboxFlightRecorder } from '../dist/mcp/blackbox_flight_recorder.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
 
 const RESULTS = {
   passed: 0,
@@ -102,7 +108,7 @@ async function runMasterSuite() {
   // PILLAR 2: SIGNIN, SIGNUP & AUTH LOGIC (Positive & Negative Simulation)
   // ====================================================================================
   console.log('\nPILLAR 2: Signin, Signup, Passwordless Choosers & Session Management');
-  const indexHtml = fs.readFileSync('docs/index.html', 'utf8');
+  const indexHtml = fs.readFileSync(path.join(projectRoot, 'docs/index.html'), 'utf8');
 
   function simulateAccounts() {
     return {
@@ -295,7 +301,7 @@ async function runMasterSuite() {
   }
 
   // 5.3 Quota Separation in Dashboard (Positive)
-  const dashHtml = fs.readFileSync('docs/dashboard.html', 'utf8');
+  const dashHtml = fs.readFileSync(path.join(projectRoot, 'docs/dashboard.html'), 'utf8');
   const hasQuotaUI = dashHtml.includes('FREE TIER (500 Actions)') && dashHtml.includes('dashQuotaRatio');
   assertTest('Dashboard', 'Granular Quota Bar & Tier Telemetry Rendered', 'positive', hasQuotaUI);
 

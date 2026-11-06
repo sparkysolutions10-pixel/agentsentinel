@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 <title>AgentSentinel — Zero-Trust Security Firewall for Autonomous AI Agents</title>
 <meta name="description" content="Next-Gen Zero-Trust AST Security Firewall, Merkle Blackbox Flight Recorder, and 90% Token-Saving SmartProxy for Autonomous AI Agents (Claude, Cursor, ChatGPT).">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,9 +49,13 @@
     flex-direction: column;
     overflow-x: hidden;
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.18) 0%, rgba(15, 23, 42, 0.6) 45%, var(--bg-base) 100%), radial-gradient(circle at 85% 25%, rgba(99, 102, 241, 0.12) 0%, transparent 40%), radial-gradient(circle at 15% 65%, rgba(56, 189, 248, 0.10) 0%, transparent 40%),
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.18) 0%, rgba(15, 23, 42, 0.5) 45%, var(--bg-base) 100%),
+      radial-gradient(circle at 85% 25%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 15% 55%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.14) 0%, transparent 45%),
+      radial-gradient(circle at 50% 95%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
     background-size: 100% 100%, 48px 48px, 48px 48px;
     background-position: 0 0, -1px -1px, -1px -1px;
   }
@@ -1724,12 +1731,13 @@
 
   /* Footer */
   footer {
-    border-top: 1px solid var(--border-glass);
-    padding: 40px;
+    border-top: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 48px 24px;
     text-align: center;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 13px;
-    background: rgba(5, 7, 12, 0.9);
+    background: linear-gradient(180deg, #0b0f19 0%, #0f172a 100%);
+    box-shadow: inset 0 20px 40px rgba(0, 0, 0, 0.3);
   }
 
   footer a {
@@ -2011,7 +2019,7 @@
   /* High-Impact Pre-Footer Banner */
   .banner-cta-section {
     padding: 60px 24px;
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(79, 70, 229, 0.25) 50%, rgba(14, 165, 233, 0.15) 100%);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(23, 33, 56, 0.95) 50%, #0b0f19 100%);
     border-top: 1px solid rgba(56, 189, 248, 0.3);
     border-bottom: 1px solid rgba(56, 189, 248, 0.3);
     text-align: center;
@@ -2537,11 +2545,7 @@
     </div>
 
     <!-- Viral GitHub Shield Badge Strip -->
-    <div style="margin-bottom: 24px; display: inline-flex; align-items: center; gap: 12px; background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 30px; padding: 6px 18px;">
-      <span style="font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">GitHub README Badge:</span>
-      <img src="https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square" alt="AgentSentinel Verified" style="height: 20px; border-radius: 3px;" />
-      <button onclick="copyToClipboard('[![Security: AgentSentinel](https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square)](https://getagentsentinel.com/)', this, 'Copied Badge!')" style="background: none; border: none; color: #e2e8f0; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: underline;">Copy Badge</button>
-    </div>
+    
 
     <div class="trust-strip">
       <div class="trust-item">
@@ -3593,7 +3597,7 @@
 
 <footer>
   <p style="margin-bottom: 8px;">AgentSentinel is 100% Open Source under Apache 2.0 • Operated by Sparky Solutions (CRN: 0899-0000-5418-4577)</p>
-  <p><a href="https://github.com/sparkysolutions10-pixel/agentsentinel">GitHub Repository</a> • <a href="https://mcp.getagentsentinel.com/">Railway Cloud Server</a> • <a href="dashboard.html">Cloud Control Dashboard</a></p>
+  <p><a href="https://mcp.getagentsentinel.com/">Railway Cloud Server</a> • <a href="dashboard.html">Cloud Control Dashboard</a></p>
 </footer>
 
 <!-- Scripts -->
@@ -5020,13 +5024,13 @@
 <!-- ============================================================================== -->
 <!-- FLOATING CONTACT DOCK & ENTERPRISE DM DRAWER (MIROFISH 2026 SOVEREIGN STANDARD) -->
 <!-- ============================================================================== -->
-<div id="floatingContactDock" style="position: fixed; right: 24px; bottom: 24px; z-index: 9990;">
-  <button onclick="openContactDrawer()" id="btnOpenContactDock" style="background: linear-gradient(135deg, #0b101b 0%, #17223b 100%); color: #ffffff; border: 1px solid rgba(56, 189, 248, 0.5); padding: 12px 20px; border-radius: 50px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.25); font-family: inherit; font-size: 13px; font-weight: 700; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+<div id="floatingContactDock" style="position: fixed !important; right: 24px !important; bottom: 24px !important; top: auto !important; left: auto !important; transform: none !important; z-index: 99999 !important;">
+  <button onclick="openContactDrawer()" id="btnOpenContactDock" style="background: linear-gradient(135deg, #0b101b 0%, #17223b 100%) !important; color: #ffffff !important; border: 1.5px solid #38bdf8 !important; padding: 12px 22px !important; border-radius: 50px !important; cursor: pointer !important; display: inline-flex !important; flex-direction: row !important; align-items: center !important; gap: 10px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(56, 189, 248, 0.35) !important; font-family: inherit !important; font-size: 13px !important; font-weight: 700 !important; writing-mode: horizontal-tb !important; transform: none !important; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;">
     <span style="position: relative; display: flex; align-items: center; justify-content: center;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
       <span style="position: absolute; top: -2px; right: -2px; width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;"></span>
     </span>
-    <span style="letter-spacing: 0.2px; color: #ffffff;">Contact &amp; DMs</span>
+    <span style="writing-mode: horizontal-tb !important; transform: none !important; letter-spacing: 0.3px; color: #ffffff; white-space: nowrap;">Contact &amp; DMs</span>
   </button>
 </div>
 

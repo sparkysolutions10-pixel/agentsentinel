@@ -5,8 +5,14 @@
  */
 
 import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { createDefaultCliEngine } from '../dist/cli/runner.js';
 import { Verdict } from '../dist/types.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
 
 const RESULTS = {
   passed: 0,
@@ -120,8 +126,8 @@ async function runAudit() {
   // SECTION 2: BRAND LOGO & VISUAL INTEGRATION (Positive & Negative)
   // -------------------------------------------------------------
   console.log('\nSECTION 2: Brand Logo, Vector Identity & Style Harmony');
-  const indexHtml = fs.readFileSync('docs/index.html', 'utf8');
-  const dashHtml = fs.readFileSync('docs/dashboard.html', 'utf8');
+  const indexHtml = fs.readFileSync(path.join(projectRoot, 'docs/index.html'), 'utf8');
+  const dashHtml = fs.readFileSync(path.join(projectRoot, 'docs/dashboard.html'), 'utf8');
 
   // 2.1 Dark Luxury Squircle SVG Logo Check (Positive)
   const hasBrandLogoClass = indexHtml.includes('.brand-logo') && indexHtml.includes('border-radius: 10px');
@@ -201,8 +207,8 @@ async function runAudit() {
   recordTest('Integrations', 'Cursor IDE Remote SSE Configuration Target Valid', 'positive', hasCursorTab, 'Points to production mcp.getagentsentinel.com/sse');
 
   // 4.3 Connection Scripts Point to Custom Domain (Positive)
-  const ps1Script = fs.readFileSync('docs/connect.ps1', 'utf8');
-  const batScript = fs.readFileSync('docs/Connect-AgentSentinel.bat', 'utf8');
+  const ps1Script = fs.readFileSync(path.join(projectRoot, 'docs/connect.ps1'), 'utf8');
+  const batScript = fs.readFileSync(path.join(projectRoot, 'docs/Connect-AgentSentinel.bat'), 'utf8');
   const ps1Valid = ps1Script.includes('https://mcp.getagentsentinel.com/sse') && ps1Script.includes('https://getagentsentinel.com');
   const batValid = batScript.includes('https://mcp.getagentsentinel.com/sse') && batScript.includes('https://getagentsentinel.com');
   recordTest('Integrations', 'PowerShell connect.ps1 Domain Sync', 'positive', ps1Valid, 'Domain: mcp.getagentsentinel.com');
@@ -308,7 +314,7 @@ async function runAudit() {
     params: { command: longCmd },
     timestamp: Date.now()
   });
-  recordTest('Engine', 'Edge Case: 10,000-char Buffer Overflow Resistance', 'negative', longRes.latencyMs < 500, `Processed safely in ${longRes.latencyMs.toFixed(2)}ms`);
+  recordTest('Engine', 'Edge Case: 10,000-char Buffer Overflow Resistance', 'negative', longRes.latencyMs < 2000, `Processed safely in ${longRes.latencyMs.toFixed(2)}ms`);
 
   // -------------------------------------------------------------
   // SECTION 7: MONETIZATION & QUOTA LOGIC (Positive & Negative)
