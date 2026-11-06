@@ -24,7 +24,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "pack:dry-run": "npm pack --dry-run",
-    "demo": "node scripts/demo.cjs"
+    "demo": "node scripts/demo.cjs",
+    "preflight": "node scripts/run_saas_preflight_verification.cjs"
   },
   "keywords": [
     "ai-agents",

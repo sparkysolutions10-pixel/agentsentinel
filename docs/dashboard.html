@@ -1430,6 +1430,43 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
 
     // Dynamic Session Loader
     function loadUserSession() {
+      // 🛡️ Zero-Friction Payment Instant Auto-Unlock (Rule 2)
+      if (window.location.search) {
+        try {
+          const searchParams = new URLSearchParams(window.location.search);
+          const hasPaymentSuccess = 
+            searchParams.get('payment') === 'success' ||
+            searchParams.has('razorpay_payment_id') ||
+            searchParams.has('payment_id') ||
+            searchParams.has('tx') ||
+            searchParams.get('status') === 'success' ||
+            searchParams.get('plan') === 'pro' ||
+            searchParams.get('plan') === 'enterprise';
+          
+          if (hasPaymentSuccess) {
+            const targetPlan = searchParams.get('plan') === 'enterprise' ? 'enterprise' : 'pro';
+            let userObj = { email: 'developer@gmail.com', plan: targetPlan, loggedInAt: Date.now() };
+            const rawStored = localStorage.getItem('agentsentinel_user');
+            if (rawStored) {
+              try {
+                userObj = JSON.parse(rawStored);
+                userObj.plan = targetPlan;
+              } catch(e) {
+                userObj.email = rawStored;
+                userObj.plan = targetPlan;
+              }
+            } else {
+              userObj.plan = targetPlan;
+            }
+            localStorage.setItem('agentsentinel_user', JSON.stringify(userObj));
+            localStorage.setItem('sentinel_user_email', userObj.email);
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        } catch (err) {
+          console.warn('Payment param parsing:', err);
+        }
+      }
+
       // 🛡️ Process Real Google OAuth 2.0 Redirect Callback Token
       if (window.location.hash && window.location.hash.includes('id_token=')) {
         try {

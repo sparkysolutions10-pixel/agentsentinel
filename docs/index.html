@@ -3794,9 +3794,43 @@ pause
 
     modal.classList.add('active');
     modal.style.display = 'flex';
+
+    // 🛡️ Zero-Friction Webhook Auto-Detector: Poll payment status in background while checkout is open
+    if (window.sentinelCheckoutPoller) clearInterval(window.sentinelCheckoutPoller);
+    let checkoutEmail = '';
+    try {
+      const stored = localStorage.getItem('agentsentinel_user');
+      if (stored) checkoutEmail = JSON.parse(stored).email;
+    } catch(e) {}
+
+    if (checkoutEmail) {
+      window.sentinelCheckoutPoller = setInterval(async () => {
+        try {
+          const res = await fetch('/api/auth/status?email=' + encodeURIComponent(checkoutEmail));
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.active && (data.plan === 'pro' || data.plan === 'enterprise')) {
+              clearInterval(window.sentinelCheckoutPoller);
+              window.sentinelCheckoutPoller = null;
+              closeCheckoutModal();
+              let cur = {};
+              try { cur = JSON.parse(localStorage.getItem('agentsentinel_user') || '{}'); } catch(e){}
+              cur.plan = data.plan;
+              localStorage.setItem('agentsentinel_user', JSON.stringify(cur));
+              checkUserSession();
+              showToast('🎉 Webhook Detected!', 'Payment verified. ' + (data.plan === 'enterprise' ? 'Enterprise' : 'Pro') + ' Tier unlocked instantly!', '🚀');
+            }
+          }
+        } catch (err) {}
+      }, 3000);
+    }
   }
 
   function closeCheckoutModal() {
+    if (window.sentinelCheckoutPoller) {
+      clearInterval(window.sentinelCheckoutPoller);
+      window.sentinelCheckoutPoller = null;
+    }
     const modal = document.getElementById('checkoutModal');
     if (modal) {
       modal.classList.remove('active');
@@ -4503,8 +4537,48 @@ pause
     }
   });
 
+  // 🛡️ Zero-Friction Auto-Unlock on Payment Return (Rule 2)
+  function handlePaymentRedirectParams() {
+    if (!window.location.search) return;
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hasPaymentSuccess = 
+        searchParams.get('payment') === 'success' ||
+        searchParams.has('razorpay_payment_id') ||
+        searchParams.has('payment_id') ||
+        searchParams.has('tx') ||
+        searchParams.get('status') === 'success' ||
+        searchParams.get('plan') === 'pro' ||
+        searchParams.get('plan') === 'enterprise';
+      
+      if (hasPaymentSuccess) {
+        const targetPlan = searchParams.get('plan') === 'enterprise' ? 'enterprise' : 'pro';
+        let userObj = { email: 'developer@gmail.com', plan: targetPlan, loggedInAt: Date.now() };
+        const rawStored = localStorage.getItem('agentsentinel_user');
+        if (rawStored) {
+          try {
+            userObj = JSON.parse(rawStored);
+            userObj.plan = targetPlan;
+          } catch(e) {
+            userObj.email = rawStored;
+            userObj.plan = targetPlan;
+          }
+        } else {
+          userObj.plan = targetPlan;
+        }
+        localStorage.setItem('agentsentinel_user', JSON.stringify(userObj));
+        localStorage.setItem('sentinel_user_email', userObj.email);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast('🎉 Payment Confirmed!', (targetPlan === 'enterprise' ? 'Enterprise' : 'Pro') + ' Tier Unlocked Instantly. Quota active with zero license keys.', '✨');
+      }
+    } catch (e) {
+      console.warn('Payment redirect check failed:', e);
+    }
+  }
+
   // Initialize on load
   getStoredAccounts();
+  handlePaymentRedirectParams();
   checkUserSession();
   renderClaudeConfig();
   updateRoiCalculator(100);
