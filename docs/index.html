@@ -3983,6 +3983,7 @@
     const title = document.getElementById('modalPlanTitle');
     const price = document.getElementById('modalPlanPrice');
     const paypalBtn = document.getElementById('modalPaypalBtn');
+    const rzpBtn = document.getElementById('modalRazorpayBtn');
     const paypalPrice = document.getElementById('modalPaypalPrice');
     const rzpPrice = document.getElementById('modalRazorpayPrice');
 
@@ -3997,6 +3998,7 @@
       if (paypalPrice) paypalPrice.textContent = '($10)';
       if (rzpPrice) rzpPrice.textContent = '(₹899)';
       if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/W97QCMF28TJ68';
+      if (rzpBtn) rzpBtn.href = 'https://rzp.io/rzp/o3OC3PrD';
     } else if (plan === 'enterprise_booster') {
       if (badge) badge.textContent = '🚀 ENTERPRISE SWARM REFILL';
       if (title) title.textContent = 'Enterprise Swarm Booster (+5,000,000 Actions)';
@@ -4004,6 +4006,7 @@
       if (paypalPrice) paypalPrice.textContent = '($69)';
       if (rzpPrice) rzpPrice.textContent = '(₹5,999)';
       if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/QGR98XNW3CXU2';
+      if (rzpBtn) rzpBtn.href = 'https://rzp.io/rzp/sEzyEO28';
     } else if (plan === 'starter') {
       if (badge) badge.textContent = 'STARTER DEV';
       if (title) title.textContent = 'Subscribe to Starter Plan';
@@ -4011,6 +4014,7 @@
       if (paypalPrice) paypalPrice.textContent = '($9)';
       if (rzpPrice) rzpPrice.textContent = '(₹799)';
       if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/WE7J64AMZA5GW';
+      if (rzpBtn) rzpBtn.href = 'https://rzp.io/rzp/cCeH69m';
     } else if (plan === 'enterprise') {
       if (badge) badge.textContent = 'ENTERPRISE SECURITY';
       if (title) title.textContent = 'Subscribe to Enterprise Plan';
@@ -4018,6 +4022,7 @@
       if (paypalPrice) paypalPrice.textContent = '($199)';
       if (rzpPrice) rzpPrice.textContent = '(₹16,999)';
       if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/V97MDP5G5AGNY';
+      if (rzpBtn) rzpBtn.href = 'https://rzp.io/rzp/2f7g7UHI';
     } else {
       if (badge) badge.textContent = 'PRO ENGINEER';
       if (title) title.textContent = 'Subscribe to Pro Plan';
@@ -4025,6 +4030,7 @@
       if (paypalPrice) paypalPrice.textContent = '($29)';
       if (rzpPrice) rzpPrice.textContent = '(₹2,499)';
       if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
+      if (rzpBtn) rzpBtn.href = 'https://rzp.io/rzp/75IaShP';
     }
 
     modal.classList.add('active');

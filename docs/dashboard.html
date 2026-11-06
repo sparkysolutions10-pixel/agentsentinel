@@ -2017,6 +2017,7 @@ client = MultiServerMCPClient({
       const paypalPrice = document.getElementById('boosterPaypalPriceBadge');
       const rzpPrice = document.getElementById('boosterRazorpayPriceBadge');
       const boosterPaypalBtn = document.getElementById('boosterPaypalBtn');
+      const boosterRazorpayBtn = document.getElementById('boosterRazorpayBtn');
 
       if (tier === 'enterprise') {
         if (cardEnt) {
@@ -2030,6 +2031,7 @@ client = MultiServerMCPClient({
         if (paypalPrice) paypalPrice.textContent = '$69.00';
         if (rzpPrice) rzpPrice.textContent = '₹5,999';
         if (boosterPaypalBtn) boosterPaypalBtn.href = 'https://www.paypal.com/ncp/payment/QGR98XNW3CXU2';
+        if (boosterRazorpayBtn) boosterRazorpayBtn.href = 'https://rzp.io/rzp/sEzyEO28';
         try { localStorage.setItem('agentsentinel_pending_checkout', 'enterprise_booster'); } catch(e) {}
       } else {
         if (cardPro) {
@@ -2043,6 +2045,7 @@ client = MultiServerMCPClient({
         if (paypalPrice) paypalPrice.textContent = '$10.00';
         if (rzpPrice) rzpPrice.textContent = '₹899';
         if (boosterPaypalBtn) boosterPaypalBtn.href = 'https://www.paypal.com/ncp/payment/W97QCMF28TJ68';
+        if (boosterRazorpayBtn) boosterRazorpayBtn.href = 'https://rzp.io/rzp/o3OC3PrD';
         try { localStorage.setItem('agentsentinel_pending_checkout', 'pro_booster'); } catch(e) {}
       }
     }
