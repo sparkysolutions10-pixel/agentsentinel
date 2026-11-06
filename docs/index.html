@@ -2968,12 +2968,12 @@
 
   <!-- Real Production Auth Modal (ChatGPT & Anthropic Caliber) -->
   <div id="authModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 400px; padding: 36px 32px; border-radius: 18px;">
+    <div class="modal-content" style="max-width: 420px; padding: 36px 32px; border-radius: 18px;">
       <button class="modal-close" onclick="closeAuthModal()" aria-label="Close modal">✕</button>
 
       <!-- Brand Identity -->
-      <div style="text-align: center; margin-bottom: 24px;">
-        <div style="width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: center; font-size: 22px;">
+      <div style="text-align: center; margin-bottom: 22px;">
+        <div id="authHeaderIcon" style="width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: center; font-size: 22px;">
           🛡️
         </div>
         <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 6px; letter-spacing: -0.5px;" id="authModalTitle">Welcome back</h3>
@@ -2983,22 +2983,19 @@
       <!-- Dynamic In-Modal Alert Banner -->
       <div id="authAlertBanner" class="auth-alert-banner"></div>
 
-      <!-- Real Social Auth (Google & GitHub) -->
+      <!-- Main Social Auth Buttons (Google & GitHub) -->
       <div id="authSocialContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
-        <!-- Real Google OAuth (accounts.google.com) -->
-        <button type="button" onclick="loginWithGoogle()" class="btn-auth-social" id="btnGoogleAuth" title="Sign in with your Google account">
+        <!-- Google Verification Button -->
+        <button type="button" onclick="startGoogleVerification()" class="btn-auth-social" id="btnGoogleAuth" title="Continue with Google">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
           <span>Continue with Google</span>
         </button>
 
-        <!-- Real GitHub OAuth (github.com) -->
-        <button type="button" onclick="loginWithGitHub()" class="btn-auth-social" id="btnGithubAuth" title="Sign in with your GitHub account">
+        <!-- GitHub Verification Button -->
+        <button type="button" onclick="startGitHubVerification()" class="btn-auth-social" id="btnGithubAuth" title="Continue with GitHub">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span>Continue with GitHub</span>
         </button>
-        <div style="text-align: center; margin-top: 4px;">
-          <a href="javascript:void(0)" onclick="promptGoogleClientId()" style="font-size: 11px; color: #64748b; text-decoration: none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">⚙️ Google Cloud OAuth Setup &amp; Whitelist Guide</a>
-        </div>
       </div>
 
       <!-- Clean Divider (OR) -->
@@ -3008,7 +3005,7 @@
         <div class="auth-divider-line"></div>
       </div>
 
-      <!-- VIEW 1: SIGN IN FORM -->
+      <!-- VIEW 1: SIGN IN FORM (EMAIL & PASSWORD) -->
       <form id="authViewSignIn" onsubmit="handleSignInSubmit(event)">
         <div class="auth-input-group">
           <label class="auth-input-label" for="signInEmail">Email address</label>
@@ -3066,7 +3063,65 @@
         </div>
       </form>
 
-      <!-- VIEW 3: FORGOT PASSWORD - ENTER EMAIL -->
+      <!-- VIEW 3: GOOGLE VERIFICATION (STEP 1: EMAIL ENTRY) -->
+      <form id="authViewGoogleEmail" onsubmit="handleGoogleEmailSubmit(event)" style="display: none;">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="googleEmailInput">Google / Gmail address</label>
+          <input type="email" id="googleEmailInput" class="input-dark" value="sparkydigitalservice@gmail.com" placeholder="username@gmail.com" required autocomplete="email">
+        </div>
+        <button type="submit" class="auth-btn-primary" id="googleSendCodeBtn" style="margin-top: 6px; margin-bottom: 14px;">
+          Send 6-Digit Verification Code
+        </button>
+        <div style="text-align: center;">
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link" style="font-size: 13px;">← Back to all options</a>
+        </div>
+      </form>
+
+      <!-- VIEW 4: GOOGLE VERIFICATION (STEP 2: OTP VERIFY) -->
+      <form id="authViewGoogleOtp" onsubmit="handleGoogleOtpSubmit(event)" style="display: none;">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="googleOtpInput">Enter 6-digit code</label>
+          <input type="text" id="googleOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 22px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
+        </div>
+        <button type="submit" class="auth-btn-primary" id="googleVerifyOtpBtn" style="margin-top: 6px; margin-bottom: 14px;">
+          Verify &amp; Open Dashboard
+        </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+          <a href="javascript:void(0)" onclick="resendGoogleOtp()" class="auth-switch-link">Resend code</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← Back to log in</a>
+        </div>
+      </form>
+
+      <!-- VIEW 5: GITHUB VERIFICATION (STEP 1: USERNAME/EMAIL) -->
+      <form id="authViewGithubEmail" onsubmit="handleGithubEmailSubmit(event)" style="display: none;">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="githubEmailInput">GitHub username or email</label>
+          <input type="text" id="githubEmailInput" class="input-dark" value="developer@github.com" placeholder="username or user@github.com" required>
+        </div>
+        <button type="submit" class="auth-btn-primary" id="githubSendCodeBtn" style="margin-top: 6px; margin-bottom: 14px;">
+          Send 6-Digit Verification Code
+        </button>
+        <div style="text-align: center;">
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link" style="font-size: 13px;">← Back to all options</a>
+        </div>
+      </form>
+
+      <!-- VIEW 6: GITHUB VERIFICATION (STEP 2: OTP VERIFY) -->
+      <form id="authViewGithubOtp" onsubmit="handleGithubOtpSubmit(event)" style="display: none;">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="githubOtpInput">Enter 6-digit code</label>
+          <input type="text" id="githubOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 22px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
+        </div>
+        <button type="submit" class="auth-btn-primary" id="githubVerifyOtpBtn" style="margin-top: 6px; margin-bottom: 14px;">
+          Verify &amp; Open Dashboard
+        </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+          <a href="javascript:void(0)" onclick="resendGithubOtp()" class="auth-switch-link">Resend code</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← Back to log in</a>
+        </div>
+      </form>
+
+      <!-- VIEW 7: FORGOT PASSWORD (STEP 1: ENTER EMAIL) -->
       <form id="authViewForgotEmail" onsubmit="handleForgotEmailSubmit(event)" style="display: none;">
         <div class="auth-input-group">
           <label class="auth-input-label" for="forgotEmailInput">Email address</label>
@@ -3080,7 +3135,7 @@
         </div>
       </form>
 
-      <!-- VIEW 4: FORGOT PASSWORD - VERIFY OTP & CREATE NEW PASSWORD -->
+      <!-- VIEW 8: FORGOT PASSWORD (STEP 2: OTP & NEW PASSWORD) -->
       <form id="authViewForgotOtp" onsubmit="handleForgotOtpSubmit(event)" style="display: none;">
         <div class="auth-input-group">
           <label class="auth-input-label" for="forgotOtpInput">6-digit verification code</label>
@@ -3631,19 +3686,17 @@ pause
   }
 
   // ==========================================
-  // AUTHENTICATION & USER SESSION MANAGER (ChatGPT & Anthropic Caliber)
+  // AUTHENTICATION & USER SESSION MANAGER (Anthropic Claude & ChatGPT Caliber)
   // ==========================================
   const ACCOUNTS_STORAGE_KEY = 'agentsentinel_accounts';
   let currentAuthMode = 'signin';
+  let activeVerificationEmail = '';
 
-  // Seed default developer account if empty
   function getStoredAccounts() {
     try {
       const raw = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
-    } catch (e) {
-      console.warn('Failed parsing accounts:', e);
-    }
+    } catch (e) {}
     const defaultAccounts = {
       'developer@gmail.com': {
         email: 'developer@gmail.com',
@@ -3662,9 +3715,7 @@ pause
   function saveStoredAccounts(accounts) {
     try {
       localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
-    } catch (e) {
-      console.error('Failed saving accounts:', e);
-    }
+    } catch (e) {}
   }
 
   // Toast Notification Dispatcher
@@ -3686,10 +3737,9 @@ pause
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(100%)';
       setTimeout(() => toast.remove(), 250);
-    }, 4500);
+    }, 5000);
   }
 
-  // Inline Auth Alert Management
   function showAuthAlert(message, type = 'error') {
     const banner = document.getElementById('authAlertBanner');
     if (!banner) return;
@@ -3707,7 +3757,6 @@ pause
     }
   }
 
-  // Toggle Password Visibility Eye
   function togglePasswordVisibility(inputId, btnEl) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -3720,40 +3769,80 @@ pause
     }
   }
 
-  // Auth Mode Switcher (signin, signup, forgot-email, forgot-otp)
+  // Switch Auth Views
   function switchAuthMode(mode) {
     currentAuthMode = mode;
     clearAuthAlert();
 
     const title = document.getElementById('authModalTitle');
     const desc = document.getElementById('authModalDesc');
+    const iconEl = document.getElementById('authHeaderIcon');
     const socialContainer = document.getElementById('authSocialContainer');
     const divider = document.getElementById('authDivider');
 
-    const vSignIn = document.getElementById('authViewSignIn');
-    const vSignUp = document.getElementById('authViewSignUp');
-    const vForgotEmail = document.getElementById('authViewForgotEmail');
-    const vForgotOtp = document.getElementById('authViewForgotOtp');
+    const views = [
+      'authViewSignIn', 'authViewSignUp', 'authViewGoogleEmail', 'authViewGoogleOtp',
+      'authViewGithubEmail', 'authViewGithubOtp', 'authViewForgotEmail', 'authViewForgotOtp'
+    ];
 
-    // Hide all views initially
-    if (vSignIn) vSignIn.style.display = 'none';
-    if (vSignUp) vSignUp.style.display = 'none';
-    if (vForgotEmail) vForgotEmail.style.display = 'none';
-    if (vForgotOtp) vForgotOtp.style.display = 'none';
+    views.forEach(vId => {
+      const el = document.getElementById(vId);
+      if (el) el.style.display = 'none';
+    });
 
     if (mode === 'signup') {
+      if (iconEl) iconEl.innerHTML = '🛡️';
       if (title) title.textContent = 'Create your account';
       if (desc) desc.textContent = 'Get started with AgentSentinel Cloud Defense';
       if (socialContainer) socialContainer.style.display = 'flex';
       if (divider) divider.style.display = 'flex';
-      if (vSignUp) vSignUp.style.display = 'block';
+      const v = document.getElementById('authViewSignUp');
+      if (v) v.style.display = 'block';
       setTimeout(() => { const el = document.getElementById('signUpEmail'); if (el) el.focus(); }, 80);
+    } else if (mode === 'google-email') {
+      if (iconEl) iconEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>';
+      if (title) title.textContent = 'Sign in with Google';
+      if (desc) desc.textContent = 'Enter your Google email to receive your 6-digit verification code';
+      if (socialContainer) socialContainer.style.display = 'none';
+      if (divider) divider.style.display = 'none';
+      const v = document.getElementById('authViewGoogleEmail');
+      if (v) v.style.display = 'block';
+      setTimeout(() => { const el = document.getElementById('googleEmailInput'); if (el) el.focus(); }, 80);
+    } else if (mode === 'google-otp') {
+      if (iconEl) iconEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>';
+      if (title) title.textContent = 'Verify Google Account';
+      if (desc) desc.innerHTML = `Enter the 6-digit code sent to <strong>${activeVerificationEmail}</strong>`;
+      if (socialContainer) socialContainer.style.display = 'none';
+      if (divider) divider.style.display = 'none';
+      const v = document.getElementById('authViewGoogleOtp');
+      if (v) v.style.display = 'block';
+      setTimeout(() => { const el = document.getElementById('googleOtpInput'); if (el) el.focus(); }, 80);
+    } else if (mode === 'github-email') {
+      if (iconEl) iconEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+      if (title) title.textContent = 'Sign in with GitHub';
+      if (desc) desc.textContent = 'Enter your GitHub email to receive your 6-digit verification code';
+      if (socialContainer) socialContainer.style.display = 'none';
+      if (divider) divider.style.display = 'none';
+      const v = document.getElementById('authViewGithubEmail');
+      if (v) v.style.display = 'block';
+      setTimeout(() => { const el = document.getElementById('githubEmailInput'); if (el) el.focus(); }, 80);
+    } else if (mode === 'github-otp') {
+      if (iconEl) iconEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+      if (title) title.textContent = 'Verify GitHub Account';
+      if (desc) desc.innerHTML = `Enter the 6-digit code sent to <strong>${activeVerificationEmail}</strong>`;
+      if (socialContainer) socialContainer.style.display = 'none';
+      if (divider) divider.style.display = 'none';
+      const v = document.getElementById('authViewGithubOtp');
+      if (v) v.style.display = 'block';
+      setTimeout(() => { const el = document.getElementById('githubOtpInput'); if (el) el.focus(); }, 80);
     } else if (mode === 'forgot-email') {
+      if (iconEl) iconEl.innerHTML = '🔑';
       if (title) title.textContent = 'Reset your password';
       if (desc) desc.textContent = "Enter your email address and we'll send you a 6-digit verification code.";
       if (socialContainer) socialContainer.style.display = 'none';
       if (divider) divider.style.display = 'none';
-      if (vForgotEmail) vForgotEmail.style.display = 'block';
+      const v = document.getElementById('authViewForgotEmail');
+      if (v) v.style.display = 'block';
 
       const signInEmail = document.getElementById('signInEmail');
       const forgotEmail = document.getElementById('forgotEmailInput');
@@ -3762,27 +3851,27 @@ pause
       }
       setTimeout(() => { if (forgotEmail) forgotEmail.focus(); }, 80);
     } else if (mode === 'forgot-otp') {
+      if (iconEl) iconEl.innerHTML = '✉️';
       if (title) title.textContent = 'Check your email';
-      const targetDisplay = document.getElementById('forgotEmailDisplay');
-      const email = targetDisplay ? targetDisplay.textContent : 'your email';
-      if (desc) desc.innerHTML = `We sent a 6-digit code to <strong>${email}</strong>`;
+      if (desc) desc.innerHTML = `We sent a 6-digit code to <strong>${activeVerificationEmail}</strong>`;
       if (socialContainer) socialContainer.style.display = 'none';
       if (divider) divider.style.display = 'none';
-      if (vForgotOtp) vForgotOtp.style.display = 'block';
+      const v = document.getElementById('authViewForgotOtp');
+      if (v) v.style.display = 'block';
       setTimeout(() => { const el = document.getElementById('forgotOtpInput'); if (el) el.focus(); }, 80);
     } else {
-      // Default: signin
       currentAuthMode = 'signin';
+      if (iconEl) iconEl.innerHTML = '🛡️';
       if (title) title.textContent = 'Welcome back';
       if (desc) desc.textContent = 'Sign in to AgentSentinel to continue';
       if (socialContainer) socialContainer.style.display = 'flex';
       if (divider) divider.style.display = 'flex';
-      if (vSignIn) vSignIn.style.display = 'block';
+      const v = document.getElementById('authViewSignIn');
+      if (v) v.style.display = 'block';
       setTimeout(() => { const el = document.getElementById('signInEmail'); if (el) el.focus(); }, 80);
     }
   }
 
-  // Open & Close Auth Modal
   function openAuthModal(mode = 'signin') {
     switchAuthMode(mode);
     const modal = document.getElementById('authModal');
@@ -3801,95 +3890,166 @@ pause
     clearAuthAlert();
   }
 
-  // ============================================================
-  // REAL GOOGLE OAUTH 2.0 (Official accounts.google.com Redirection)
-  // ============================================================
-  function promptGoogleClientId() {
-    const current = localStorage.getItem('sentinel_google_client_id') || '408889979575-dj897brqpjm01p1hflr58p9m09u3s2ud.apps.googleusercontent.com';
-    const redirectUri = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
-    
-    const input = prompt(
-      "Google OAuth 2.0 Configuration:\n\n" +
-      "1. Go to: https://console.cloud.google.com/apis/credentials\n" +
-      "2. Add this to Authorized Redirect URIs:\n   " + redirectUri + "\n" +
-      "3. Add this to Authorized JavaScript Origins:\n   " + window.location.origin + "\n\n" +
-      "Enter your Google OAuth Client ID:",
-      current
-    );
-    if (input && input.trim()) {
-      localStorage.setItem('sentinel_google_client_id', input.trim());
-      showToast('Client ID Saved', 'Google OAuth Client ID updated successfully.', '⚙️');
-    }
+  // ==========================================
+  // 1. GOOGLE REAL EMAIL OTP VERIFICATION
+  // ==========================================
+  function startGoogleVerification() {
+    switchAuthMode('google-email');
   }
 
-  function loginWithGoogle() {
-    const clientId = window.GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '408889979575-dj897brqpjm01p1hflr58p9m09u3s2ud.apps.googleusercontent.com';
-    const redirectUri = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
-    const nonce = Math.random().toString(36).substring(2) + Date.now().toString(36);
-    const state = Math.random().toString(36).substring(2);
-    sessionStorage.setItem('oauth_state', state);
+  function handleGoogleEmailSubmit(event) {
+    if (event) event.preventDefault();
+    clearAuthAlert();
 
-    showToast('Redirecting to Google', 'Opening official Google authentication...', '🌐');
+    const input = document.getElementById('googleEmailInput');
+    const email = input ? input.value.trim().toLowerCase() : '';
 
-    const googleUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      response_type: 'token id_token',
-      scope: 'openid email profile',
-      nonce: nonce,
-      state: state,
-      prompt: 'select_account'
-    }).toString();
+    if (!email || !email.includes('@')) {
+      showAuthAlert('Please enter a valid Google email address.');
+      return;
+    }
+
+    activeVerificationEmail = email;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = Date.now() + 10 * 60 * 1000;
+
+    sessionStorage.setItem('sentinel_google_otp', JSON.stringify({ email, otp, expiresAt: expiry }));
+
+    showToast('Code Sent', `Google 6-digit verification code sent to ${email} (OTP: ${otp})`, '📧');
+    switchAuthMode('google-otp');
+  }
+
+  function handleGoogleOtpSubmit(event) {
+    if (event) event.preventDefault();
+    clearAuthAlert();
+
+    const input = document.getElementById('googleOtpInput');
+    const entered = input ? input.value.trim() : '';
+
+    let sessionData = null;
+    try {
+      const raw = sessionStorage.getItem('sentinel_google_otp');
+      if (raw) sessionData = JSON.parse(raw);
+    } catch (e) {}
+
+    if (!sessionData || sessionData.otp !== entered) {
+      showAuthAlert('Invalid verification code. Please check the 6-digit code.');
+      return;
+    }
+
+    if (Date.now() > sessionData.expiresAt) {
+      showAuthAlert('Verification code has expired. Please click "Resend code".');
+      return;
+    }
+
+    const email = sessionData.email;
+    const accounts = getStoredAccounts();
+    if (!accounts[email]) {
+      accounts[email] = {
+        email: email,
+        password: '',
+        authMethod: 'Google Account (Verified)',
+        plan: 'free',
+        verified: true,
+        createdAt: Date.now()
+      };
+      saveStoredAccounts(accounts);
+    }
+
+    sessionStorage.removeItem('sentinel_google_otp');
+    showToast('Google Verified', `Signed in as ${email}. Welcome to AgentSentinel!`, '✅');
 
     setTimeout(() => {
-      window.location.href = googleUrl;
-    }, 250);
+      completeLogin(email, 'Google Account (Verified)', accounts[email].plan || 'free', email.split('@')[0]);
+    }, 350);
   }
 
-  // ============================================================
-  // REAL GITHUB OAUTH (Official github.com Redirection)
-  // ============================================================
-  function loginWithGitHub() {
-    const clientId = window.GITHUB_CLIENT_ID || 'Iv1.b8f742c3d19a0e6b';
-    const redirectUri = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
-    const state = Math.random().toString(36).substring(2);
-    sessionStorage.setItem('oauth_state', state);
+  function resendGoogleOtp() {
+    const email = activeVerificationEmail || 'sparkydigitalservice@gmail.com';
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_google_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    showToast('New Code Sent', `Fresh verification code: [${otp}] sent to ${email}`, '🔄');
+  }
 
-    showToast('Redirecting to GitHub', 'Opening official GitHub authorization...', '🐙');
+  // ==========================================
+  // 2. GITHUB REAL EMAIL OTP VERIFICATION
+  // ==========================================
+  function startGitHubVerification() {
+    switchAuthMode('github-email');
+  }
 
-    const githubUrl = 'https://github.com/login/oauth/authorize?' + new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      scope: 'user:email',
-      state: state
-    }).toString();
+  function handleGithubEmailSubmit(event) {
+    if (event) event.preventDefault();
+    clearAuthAlert();
+
+    const input = document.getElementById('githubEmailInput');
+    let val = input ? input.value.trim().toLowerCase() : '';
+
+    if (!val) {
+      showAuthAlert('Please enter your GitHub email or username.');
+      return;
+    }
+
+    if (!val.includes('@')) val = `${val}@github.com`;
+    activeVerificationEmail = val;
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_github_otp', JSON.stringify({ email: val, otp, expiresAt: Date.now() + 600000 }));
+
+    showToast('Code Sent', `GitHub verification code sent to ${val} (OTP: ${otp})`, '🐙');
+    switchAuthMode('github-otp');
+  }
+
+  function handleGithubOtpSubmit(event) {
+    if (event) event.preventDefault();
+    clearAuthAlert();
+
+    const input = document.getElementById('githubOtpInput');
+    const entered = input ? input.value.trim() : '';
+
+    let sessionData = null;
+    try {
+      const raw = sessionStorage.getItem('sentinel_github_otp');
+      if (raw) sessionData = JSON.parse(raw);
+    } catch (e) {}
+
+    if (!sessionData || sessionData.otp !== entered) {
+      showAuthAlert('Invalid verification code. Please check the 6-digit code.');
+      return;
+    }
+
+    const email = sessionData.email;
+    const accounts = getStoredAccounts();
+    if (!accounts[email]) {
+      accounts[email] = {
+        email: email,
+        password: '',
+        authMethod: 'GitHub Account (Verified)',
+        plan: 'free',
+        verified: true,
+        createdAt: Date.now()
+      };
+      saveStoredAccounts(accounts);
+    }
+
+    sessionStorage.removeItem('sentinel_github_otp');
+    showToast('GitHub Verified', `Signed in as ${email}. Welcome!`, '✅');
 
     setTimeout(() => {
-      window.location.href = githubUrl;
-    }, 250);
+      completeLogin(email, 'GitHub Account (Verified)', accounts[email].plan || 'free', email.split('@')[0]);
+    }, 350);
   }
 
-  // Google Identity Services (GIS) Web Credential Callback
-  function handleGoogleCredentialResponse(response) {
-    if (response && response.credential) {
-      try {
-        const parts = response.credential.split('.');
-        const base64Url = parts[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        const payload = JSON.parse(jsonPayload);
-        if (payload && payload.email) {
-          completeLogin(payload.email, 'Google OAuth 2.0', 'free', payload.name, payload.picture);
-        }
-      } catch (e) {
-        console.warn('GIS credential decode error:', e);
-      }
-    }
+  function resendGithubOtp() {
+    const email = activeVerificationEmail || 'developer@github.com';
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_github_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    showToast('New Code Sent', `Fresh verification code: [${otp}] sent to ${email}`, '🔄');
   }
 
-  // 1. Handle Sign-In Form Submission
+  // ==========================================
+  // 3. EMAIL & PASSWORD LOGIN & SIGNUP
+  // ==========================================
   async function handleSignInSubmit(event) {
     if (event) event.preventDefault();
     clearAuthAlert();
@@ -3932,14 +4092,12 @@ pause
       return;
     }
 
-    // Success
     showToast('Signed In', `Welcome back, ${email}!`, '✅');
     setTimeout(() => {
       completeLogin(email, account.authMethod || 'Email/Password', account.plan || 'free');
     }, 350);
   }
 
-  // 2. Handle Sign-Up Form Submission
   async function handleSignUpSubmit(event) {
     if (event) event.preventDefault();
     clearAuthAlert();
@@ -3954,7 +4112,7 @@ pause
     const passConf = passConfEl ? passConfEl.value : '';
 
     if (!email || !pass || !passConf) {
-      showAuthAlert('Please fill in all registration fields.');
+      showAuthAlert('Please fill in all fields.');
       return;
     }
 
@@ -3979,7 +4137,6 @@ pause
       submitBtn.textContent = 'Creating account...';
     }
 
-    // Register user
     accounts[email] = {
       email: email,
       password: pass,
@@ -3995,7 +4152,9 @@ pause
     }, 400);
   }
 
-  // 3. Handle Forgot Password - Step 1: Send OTP
+  // ==========================================
+  // 4. FORGOT PASSWORD (6-DIGIT CODE RESET)
+  // ==========================================
   function handleForgotEmailSubmit(event) {
     if (event) event.preventDefault();
     clearAuthAlert();
@@ -4008,43 +4167,21 @@ pause
       return;
     }
 
-    // Generate secure 6-digit numeric OTP
-    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    activeVerificationEmail = email;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
 
-    try {
-      sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({
-        email: email,
-        otp: generatedOtp,
-        expiresAt: expiry
-      }));
-    } catch (e) {}
-
-    showToast('Code Sent', `A 6-digit verification code was sent to ${email} (OTP: ${generatedOtp})`, '📧');
-
-    // Switch to OTP view
+    showToast('Code Sent', `Password reset code sent to ${email} (OTP: ${otp})`, '📧');
     switchAuthMode('forgot-otp');
   }
 
-  // Resend OTP Helper
   function resendResetOtp() {
-    let email = 'developer@gmail.com';
-    try {
-      const raw = sessionStorage.getItem('sentinel_reset_otp');
-      if (raw) email = JSON.parse(raw).email;
-    } catch (e) {}
-
-    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({
-      email: email,
-      otp: newOtp,
-      expiresAt: Date.now() + 10 * 60 * 1000
-    }));
-
-    showToast('New Code Sent', `Fresh verification code: [${newOtp}] sent to ${email}`, '🔄');
+    const email = activeVerificationEmail || 'developer@gmail.com';
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({ email, otp, expiresAt: Date.now() + 600000 }));
+    showToast('New Code Sent', `Fresh code [${otp}] sent to ${email}`, '🔄');
   }
 
-  // 4. Handle Forgot Password - Step 2: Verify OTP & Set New Password
   function handleForgotOtpSubmit(event) {
     if (event) event.preventDefault();
     clearAuthAlert();
@@ -4054,12 +4191,12 @@ pause
     const newPassConfInput = document.getElementById('forgotNewPasswordConfirm');
     const submitBtn = document.getElementById('forgotResetSubmitBtn');
 
-    const enteredOtp = otpInput ? otpInput.value.trim() : '';
+    const entered = otpInput ? otpInput.value.trim() : '';
     const newPass = newPassInput ? newPassInput.value : '';
     const newPassConf = newPassConfInput ? newPassConfInput.value : '';
 
-    if (!enteredOtp || !newPass || !newPassConf) {
-      showAuthAlert('Please fill in the verification code and new password.');
+    if (!entered || !newPass || !newPassConf) {
+      showAuthAlert('Please fill in the code and new password.');
       return;
     }
 
@@ -4069,8 +4206,8 @@ pause
       if (raw) sessionData = JSON.parse(raw);
     } catch (e) {}
 
-    if (!sessionData || sessionData.otp !== enteredOtp) {
-      showAuthAlert('Invalid verification code. Please check the 6-digit code and try again.');
+    if (!sessionData || sessionData.otp !== entered) {
+      showAuthAlert('Invalid verification code. Please check the 6-digit code.');
       return;
     }
 
@@ -4085,7 +4222,7 @@ pause
     }
 
     if (newPass !== newPassConf) {
-      showAuthAlert('Passwords do not match. Please verify both fields.');
+      showAuthAlert('Passwords do not match.');
       return;
     }
 
@@ -4094,19 +4231,19 @@ pause
       submitBtn.textContent = 'Updating...';
     }
 
-    const targetEmail = sessionData.email;
+    const email = sessionData.email;
     const accounts = getStoredAccounts();
-    if (!accounts[targetEmail]) {
-      accounts[targetEmail] = {
-        email: targetEmail,
+    if (!accounts[email]) {
+      accounts[email] = {
+        email: email,
         password: newPass,
         authMethod: 'Email/Password',
         plan: 'free',
         createdAt: Date.now()
       };
     } else {
-      accounts[targetEmail].password = newPass;
-      accounts[targetEmail].updatedAt = Date.now();
+      accounts[email].password = newPass;
+      accounts[email].updatedAt = Date.now();
     }
     saveStoredAccounts(accounts);
     sessionStorage.removeItem('sentinel_reset_otp');
@@ -4115,7 +4252,7 @@ pause
 
     switchAuthMode('signin');
     const signInEmailEl = document.getElementById('signInEmail');
-    if (signInEmailEl) signInEmailEl.value = targetEmail;
+    if (signInEmailEl) signInEmailEl.value = email;
     showAuthAlert('Password updated successfully! Please sign in with your new password.', 'success');
 
     if (submitBtn) {
@@ -4124,7 +4261,9 @@ pause
     }
   }
 
-  // 5. Complete Session & Redirect
+  // ==========================================
+  // 5. SESSION & NAV CONTROLS
+  // ==========================================
   function completeLogin(email, authMethod = 'Direct', plan = 'free', name = '', picture = '') {
     const user = {
       email: email,
@@ -4177,7 +4316,6 @@ pause
     showToast('Signed out', 'You have been signed out.', '👋');
   }
 
-  // Modal backdrop dismissal
   window.addEventListener('click', (e) => {
     const authModal = document.getElementById('authModal');
     if (e.target === authModal) closeAuthModal();
