@@ -452,4 +452,5 @@ function outputReport(report: CliAuditReport, options: CliOptions, out: (msg: st
     });
   }
   out(`------------------------------------------------------------`);
+  out('👉 Connect to Cursor & Claude Desktop 24/7: https://getagentsentinel.com/dashboard.html');
 }
