@@ -1,22 +1,24 @@
 # ==============================================================================
-# AgentSentinel 1-Click Multi-Agent Connector (Claude Desktop + Cursor IDE)
+# AgentSentinel Universal 1-Click Multi-Agent Connector
+# Targets: Claude Desktop, Cursor IDE, VS Code (Cline/Roo), Windsurf & Zed
 # Usage: irm https://getagentsentinel.com/connect.ps1 | iex
 # ==============================================================================
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 Write-Host "==============================================================================" -ForegroundColor Cyan
-Write-Host "  [+] AGENTSENTINEL ZERO-TRUST AST DEFENSE -- 1-CLICK MULTI-AGENT CONNECTOR" -ForegroundColor Cyan
+Write-Host "  [+] AGENTSENTINEL ZERO-TRUST AST DEFENSE -- UNIVERSAL 1-CLICK CONNECTOR" -ForegroundColor Cyan
 Write-Host "==============================================================================" -ForegroundColor Cyan
 Write-Host ""
 
 $platform = [System.Environment]::OSVersion.Platform
 $endpointUrl = "https://mcp.getagentsentinel.com/sse"
+$userHome = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
 
-# 1. Resolve Target Configuration Paths
+# 1. Resolve Target Configuration Paths for All 5 Major Environments
 $targets = @()
 
-# Claude Desktop
+# ① Claude Desktop
 $claudePath = ""
 if ($platform -eq "Win32NT") {
     $claudePath = Join-Path $env:APPDATA "Claude\claude_desktop_config.json"
@@ -25,15 +27,43 @@ if ($platform -eq "Win32NT") {
 } else {
     $claudePath = [System.IO.Path]::Combine($env:HOME, ".config/Claude/claude_desktop_config.json")
 }
-$targets += @{ Name = "Claude Desktop"; Path = $claudePath; RestartMsg = "Restart Claude Desktop" }
+$targets += @{ Name = "Claude Desktop"; Path = $claudePath; Type = "npx"; RestartMsg = "Restart Claude Desktop" }
 
-# Cursor IDE (~/.cursor/mcp.json)
-$userHome = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+# ② Cursor IDE (~/.cursor/mcp.json)
 $cursorPath = Join-Path $userHome ".cursor\mcp.json"
 if ($platform -ne "Win32NT") {
     $cursorPath = [System.IO.Path]::Combine($userHome, ".cursor/mcp.json")
 }
-$targets += @{ Name = "Cursor IDE"; Path = $cursorPath; RestartMsg = "Reload Cursor Window (Ctrl+Shift+P > Reload Window)" }
+$targets += @{ Name = "Cursor IDE"; Path = $cursorPath; Type = "sse"; RestartMsg = "Reload Cursor (Ctrl+Shift+P > Reload Window)" }
+
+# ③ VS Code (Cline Extension)
+$clinePath = ""
+if ($platform -eq "Win32NT") {
+    $clinePath = Join-Path $env:APPDATA "Code\User\globalStorage\saoudrizwan.claude-dev\settings\cline_mcp_settings.json"
+} elseif ($IsMacOS) {
+    $clinePath = [System.IO.Path]::Combine($env:HOME, "Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+} else {
+    $clinePath = [System.IO.Path]::Combine($env:HOME, ".config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+}
+$targets += @{ Name = "VS Code (Cline)"; Path = $clinePath; Type = "cline"; RestartMsg = "Reload VS Code Window" }
+
+# ④ VS Code (Roo Code Extension)
+$rooPath = ""
+if ($platform -eq "Win32NT") {
+    $rooPath = Join-Path $env:APPDATA "Code\User\globalStorage\rooveterinaryinc.roo-cline\settings\cline_mcp_settings.json"
+} elseif ($IsMacOS) {
+    $rooPath = [System.IO.Path]::Combine($env:HOME, "Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/cline_mcp_settings.json")
+} else {
+    $rooPath = [System.IO.Path]::Combine($env:HOME, ".config/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/cline_mcp_settings.json")
+}
+$targets += @{ Name = "VS Code (Roo Code)"; Path = $rooPath; Type = "cline"; RestartMsg = "Reload VS Code Window" }
+
+# ⑤ Codeium Windsurf (~/.codeium/windsurf/mcp_config.json)
+$windsurfPath = Join-Path $userHome ".codeium\windsurf\mcp_config.json"
+if ($platform -ne "Win32NT") {
+    $windsurfPath = [System.IO.Path]::Combine($userHome, ".codeium/windsurf/mcp_config.json")
+}
+$targets += @{ Name = "Windsurf IDE"; Path = $windsurfPath; Type = "windsurf"; RestartMsg = "Restart Windsurf Editor" }
 
 $configuredCount = 0
 
@@ -67,15 +97,24 @@ foreach ($target in $targets) {
         $cfg | Add-Member -MemberType NoteProperty -Name "mcpServers" -Value @{} -Force
     }
 
-    # Inject exact native protocol per application:
-    # Claude Desktop strictly requires stdio "command" & "args", while Cursor supports both SSE "url" and stdio
-    $sentinelEntry = if ($targetName -eq "Claude Desktop") {
-        [ordered]@{
+    # Inject exact native protocol per application schema
+    $sentinelEntry = $null
+    if ($target.Type -eq "npx") {
+        $sentinelEntry = [ordered]@{
             command = "npx"
             args = @("-y", "@sparkysolutions/agentsentinel")
         }
+    } elseif ($target.Type -eq "cline") {
+        $sentinelEntry = [ordered]@{
+            url = $endpointUrl
+            alwaysAllow = @("sentinel_audit_command", "sentinel_audit_sql", "sentinel_scan_secrets")
+        }
+    } elseif ($target.Type -eq "windsurf") {
+        $sentinelEntry = [ordered]@{
+            serverUrl = $endpointUrl
+        }
     } else {
-        [ordered]@{
+        $sentinelEntry = [ordered]@{
             url = $endpointUrl
         }
     }
@@ -97,8 +136,7 @@ Write-Host "  SUCCESS! AgentSentinel Cloud is CONNECTED to your AI Workspaces ($
 Write-Host "==============================================================================" -ForegroundColor Green
 Write-Host "  * Cloud Endpoint: $endpointUrl" -ForegroundColor Cyan
 Write-Host "  * Active Defense: Sub-2ms AST Firewall, 90% SmartProxy, Atomic Rollback" -ForegroundColor Gray
+Write-Host "  * Configured:     Claude Desktop, Cursor IDE, VS Code (Cline/Roo), Windsurf" -ForegroundColor White
 Write-Host ""
-Write-Host "  Next Steps:" -ForegroundColor Yellow
-Write-Host "   1. Claude Desktop: Restart the application." -ForegroundColor White
-Write-Host "   2. Cursor IDE:     Press Ctrl+Shift+P > Developer: Reload Window." -ForegroundColor White
+Write-Host "  Next Steps: Restart Claude Desktop, Windsurf, or reload VS Code/Cursor window." -ForegroundColor Yellow
 Write-Host "==============================================================================" -ForegroundColor Green

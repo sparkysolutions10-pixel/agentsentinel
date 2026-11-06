@@ -7,7 +7,7 @@ echo ===========================================================================
 echo   [+] AGENTSENTINEL ZERO-TRUST AST DEFENSE -- 1-CLICK MULTI-AGENT CONNECTOR
 echo ==============================================================================
 echo.
-echo  [*] Connecting AgentSentinel to Claude Desktop and Cursor IDE...
+echo  [*] Connecting AgentSentinel to Claude Desktop, Cursor IDE, VS Code, and Windsurf...
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0connect.ps1"
@@ -25,7 +25,7 @@ if %errorlevel% equ 0 (
     echo ==============================================================================
     
     :: Show native Windows confirmation box
-    mshta vbscript:Execute("msgbox ""[SUCCESS] AgentSentinel Cloud Defense is now connected to Claude Desktop and Cursor IDE!"" & vbCrLf & vbCrLf & ""Please restart Claude Desktop or reload Cursor to activate your tools."", 64, ""AgentSentinel 1-Click Connect"":close")
+    mshta vbscript:Execute("msgbox ""[SUCCESS] AgentSentinel Cloud Defense is now connected to Claude Desktop, Cursor IDE, VS Code, and Windsurf!"" & vbCrLf & vbCrLf & ""Please restart Claude Desktop / Windsurf or reload VS Code / Cursor to activate your tools."", 64, ""AgentSentinel 1-Click Connect"":close")
 ) else (
     echo.
     echo  [X] Failed to inject configuration. Please run terminal as Administrator.
