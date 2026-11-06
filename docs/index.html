@@ -4195,12 +4195,29 @@ pause
     const account = accounts[email];
 
     if (!account) {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Continue';
+      // Auto-create account seamlessly for any new user (Zero-Friction Law)
+      if (password.length >= 6) {
+        accounts[email] = {
+          email: email,
+          password: password,
+          authMethod: 'Email/Password',
+          plan: 'free',
+          createdAt: Date.now()
+        };
+        saveStoredAccounts(accounts);
+        showToast('Account Created', `Welcome to AgentSentinel, ${email}!`, '🎉');
+        setTimeout(() => {
+          completeLogin(email, 'Email/Password', 'free');
+        }, 350);
+        return;
+      } else {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Continue';
+        }
+        showAuthAlert(`No existing account for "${email}". Password must be at least 6 characters to create a new account.`);
+        return;
       }
-      showAuthAlert(`No account found for "${email}". Please sign up first.`);
-      return;
     }
 
     if (account.password && account.password !== password) {
