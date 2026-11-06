@@ -3986,34 +3986,38 @@
     const paypalPrice = document.getElementById('modalPaypalPrice');
     const rzpPrice = document.getElementById('modalRazorpayPrice');
 
+    try {
+      localStorage.setItem('agentsentinel_pending_checkout', plan);
+    } catch(e) {}
+
     if (plan === 'pro_booster') {
       if (badge) badge.textContent = '⚡ ON-DEMAND QUOTA REFILL';
       if (title) title.textContent = 'Pro Quota Booster (+500,000 Actions)';
       if (price) price.textContent = '$10 / one-time (₹899)';
       if (paypalPrice) paypalPrice.textContent = '($10)';
       if (rzpPrice) rzpPrice.textContent = '(₹899)';
-      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
+      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/W97QCMF28TJ68';
     } else if (plan === 'enterprise_booster') {
       if (badge) badge.textContent = '🚀 ENTERPRISE SWARM REFILL';
       if (title) title.textContent = 'Enterprise Swarm Booster (+5,000,000 Actions)';
       if (price) price.textContent = '$69 / one-time (₹5,999)';
       if (paypalPrice) paypalPrice.textContent = '($69)';
       if (rzpPrice) rzpPrice.textContent = '(₹5,999)';
-      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
+      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/QGR98XNW3CXU2';
     } else if (plan === 'starter') {
       if (badge) badge.textContent = 'STARTER DEV';
       if (title) title.textContent = 'Subscribe to Starter Plan';
       if (price) price.textContent = '$9 / month (₹799)';
       if (paypalPrice) paypalPrice.textContent = '($9)';
       if (rzpPrice) rzpPrice.textContent = '(₹799)';
-      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
+      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/WE7J64AMZA5GW';
     } else if (plan === 'enterprise') {
       if (badge) badge.textContent = 'ENTERPRISE SECURITY';
       if (title) title.textContent = 'Subscribe to Enterprise Plan';
       if (price) price.textContent = '$199 / month (₹16,999)';
       if (paypalPrice) paypalPrice.textContent = '($199)';
       if (rzpPrice) rzpPrice.textContent = '(₹16,999)';
-      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ';
+      if (paypalBtn) paypalBtn.href = 'https://www.paypal.com/ncp/payment/V97MDP5G5AGNY';
     } else {
       if (badge) badge.textContent = 'PRO ENGINEER';
       if (title) title.textContent = 'Subscribe to Pro Plan';

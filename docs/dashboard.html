@@ -1663,22 +1663,31 @@ client = MultiServerMCPClient({
             searchParams.get('plan') === 'enterprise';
           
           if (hasPaymentSuccess) {
-            const targetPlan = searchParams.get('plan') === 'enterprise' ? 'enterprise' : 'pro';
-            let userObj = { email: 'developer@gmail.com', plan: targetPlan, loggedInAt: Date.now() };
-            const rawStored = localStorage.getItem('agentsentinel_user');
-            if (rawStored) {
-              try {
-                userObj = JSON.parse(rawStored);
-                userObj.plan = targetPlan;
-              } catch(e) {
-                userObj.email = rawStored;
+            const pending = localStorage.getItem('agentsentinel_pending_checkout') || searchParams.get('plan') || 'pro';
+            if (pending === 'pro_booster' || pending === 'enterprise_booster') {
+              const addedActions = pending === 'enterprise_booster' ? 5000000 : 500000;
+              const curQuota = parseInt(localStorage.getItem('agentsentinel_extra_quota') || '0');
+              localStorage.setItem('agentsentinel_extra_quota', (curQuota + addedActions).toString());
+              alert('🎉 Quota Booster Refill Confirmed! +' + addedActions.toLocaleString() + ' actions added to your live Sovereign Key with lifetime carry-forward.');
+            } else {
+              const targetPlan = pending === 'enterprise' ? 'enterprise' : (pending === 'starter' ? 'starter' : 'pro');
+              let userObj = { email: 'developer@gmail.com', plan: targetPlan, loggedInAt: Date.now() };
+              const rawStored = localStorage.getItem('agentsentinel_user');
+              if (rawStored) {
+                try {
+                  userObj = JSON.parse(rawStored);
+                  userObj.plan = targetPlan;
+                } catch(e) {
+                  userObj.email = rawStored;
+                  userObj.plan = targetPlan;
+                }
+              } else {
                 userObj.plan = targetPlan;
               }
-            } else {
-              userObj.plan = targetPlan;
+              localStorage.setItem('agentsentinel_user', JSON.stringify(userObj));
+              localStorage.setItem('sentinel_user_email', userObj.email);
             }
-            localStorage.setItem('agentsentinel_user', JSON.stringify(userObj));
-            localStorage.setItem('sentinel_user_email', userObj.email);
+            try { localStorage.removeItem('agentsentinel_pending_checkout'); } catch(e) {}
             window.history.replaceState({}, document.title, window.location.pathname);
           }
         } catch (err) {
@@ -1911,7 +1920,7 @@ client = MultiServerMCPClient({
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
         
         <!-- Gateway 1: PayPal / Global Cards / Apple Pay -->
-        <a id="boosterPaypalBtn" href="https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ" target="_blank" style="background: #0070ba; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px; box-shadow: 0 2px 8px rgba(0, 112, 186, 0.25);">
+        <a id="boosterPaypalBtn" href="https://www.paypal.com/ncp/payment/W97QCMF28TJ68" target="_blank" style="background: #0070ba; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px; box-shadow: 0 2px 8px rgba(0, 112, 186, 0.25);">
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 18px;">🅿️</span>
             <span>PayPal / Apple Pay / Credit Cards (Global)</span>
@@ -2007,6 +2016,7 @@ client = MultiServerMCPClient({
       const cardEnt = document.getElementById('boosterCardEnterprise');
       const paypalPrice = document.getElementById('boosterPaypalPriceBadge');
       const rzpPrice = document.getElementById('boosterRazorpayPriceBadge');
+      const boosterPaypalBtn = document.getElementById('boosterPaypalBtn');
 
       if (tier === 'enterprise') {
         if (cardEnt) {
@@ -2019,6 +2029,8 @@ client = MultiServerMCPClient({
         }
         if (paypalPrice) paypalPrice.textContent = '$69.00';
         if (rzpPrice) rzpPrice.textContent = '₹5,999';
+        if (boosterPaypalBtn) boosterPaypalBtn.href = 'https://www.paypal.com/ncp/payment/QGR98XNW3CXU2';
+        try { localStorage.setItem('agentsentinel_pending_checkout', 'enterprise_booster'); } catch(e) {}
       } else {
         if (cardPro) {
           cardPro.style.borderColor = '#0284c7';
@@ -2030,6 +2042,8 @@ client = MultiServerMCPClient({
         }
         if (paypalPrice) paypalPrice.textContent = '$10.00';
         if (rzpPrice) rzpPrice.textContent = '₹899';
+        if (boosterPaypalBtn) boosterPaypalBtn.href = 'https://www.paypal.com/ncp/payment/W97QCMF28TJ68';
+        try { localStorage.setItem('agentsentinel_pending_checkout', 'pro_booster'); } catch(e) {}
       }
     }
 
