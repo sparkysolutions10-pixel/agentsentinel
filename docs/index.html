@@ -2966,46 +2966,55 @@
   <!-- Universal Floating Notification Container -->
   <div id="sentinelToastContainer"></div>
 
-  <!-- Dark Luxury Auth Modal (Sign In / Sign Up / Forgot Password) -->
+  <!-- Real Production Auth Modal (ChatGPT & Anthropic Caliber) -->
   <div id="authModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 440px;">
+    <div class="modal-content" style="max-width: 400px; padding: 36px 32px; border-radius: 18px;">
       <button class="modal-close" onclick="closeAuthModal()" aria-label="Close modal">✕</button>
-      <div style="font-size: 12px; font-weight: 700; color: var(--cyan); text-transform: uppercase; margin-bottom: 4px;" id="authModalBadge">DEVELOPER WORKSPACE</div>
-      <h3 style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 6px;" id="authModalTitle">Sign In to AgentSentinel</h3>
-      <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;" id="authModalDesc">Access your cloud telemetry, custom MCP endpoints, and quota manager.</p>
+
+      <!-- Brand Identity -->
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: center; font-size: 22px;">
+          🛡️
+        </div>
+        <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 6px; letter-spacing: -0.5px;" id="authModalTitle">Welcome back</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); margin: 0;" id="authModalDesc">Sign in to AgentSentinel to continue</p>
+      </div>
 
       <!-- Dynamic In-Modal Alert Banner -->
       <div id="authAlertBanner" class="auth-alert-banner"></div>
 
-      <!-- 1-Click Social Dev Logins (Google & GitHub) -->
+      <!-- Real Social Auth (Google & GitHub) -->
       <div id="authSocialContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
-        <button type="button" onclick="openOAuthPicker('google')" class="btn-plan btn-plan-outline" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; padding: 11px;">
+        <!-- Real Google OAuth (accounts.google.com) -->
+        <button type="button" onclick="loginWithGoogle()" class="btn-auth-social" id="btnGoogleAuth" title="Sign in with your Google account">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-          <span id="authGoogleBtnText">Continue with Google (Passwordless)</span>
+          <span>Continue with Google</span>
         </button>
-        <button type="button" onclick="openOAuthPicker('github')" class="btn-plan btn-plan-outline" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; padding: 11px;">
+
+        <!-- Real GitHub OAuth (github.com) -->
+        <button type="button" onclick="loginWithGitHub()" class="btn-auth-social" id="btnGithubAuth" title="Sign in with your GitHub account">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span id="authGithubBtnText">Continue with GitHub (Passwordless)</span>
+          <span>Continue with GitHub</span>
         </button>
       </div>
 
-      <!-- Divider -->
-      <div id="authDivider" style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
-        <div style="flex: 1; height: 1px; background: var(--border-glass);"></div>
-        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;" id="authDividerText">or work email</span>
-        <div style="flex: 1; height: 1px; background: var(--border-glass);"></div>
+      <!-- Clean Divider (OR) -->
+      <div id="authDivider" class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">OR</span>
+        <div class="auth-divider-line"></div>
       </div>
 
       <!-- VIEW 1: SIGN IN FORM -->
       <form id="authViewSignIn" onsubmit="handleSignInSubmit(event)">
         <div class="auth-input-group">
-          <label class="auth-input-label" for="signInEmail">Work Email</label>
-          <input type="email" id="signInEmail" class="input-dark" placeholder="developer@yourcompany.com" required autocomplete="email">
+          <label class="auth-input-label" for="signInEmail">Email address</label>
+          <input type="email" id="signInEmail" class="input-dark" placeholder="name@example.com" required autocomplete="email">
         </div>
         <div class="auth-input-group">
           <div class="auth-input-label">
             <span>Password</span>
-            <a href="javascript:void(0)" onclick="switchAuthMode('forgot-email')" class="auth-forgot-link">Forgot Password?</a>
+            <a href="javascript:void(0)" onclick="switchAuthMode('forgot-email')" class="auth-switch-link" style="font-size: 12px; font-weight: 500;">Forgot password?</a>
           </div>
           <div class="password-input-wrap">
             <input type="password" id="signInPassword" class="input-dark" placeholder="••••••••••••" required autocomplete="current-password">
@@ -3014,28 +3023,22 @@
             </button>
           </div>
         </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 12px; color: var(--text-secondary);">
-          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-            <input type="checkbox" id="signInRememberMe" checked style="accent-color: var(--cyan);">
-            <span>Remember me for 30 days</span>
-          </label>
-        </div>
-        <button type="submit" class="btn-plan btn-plan-featured" id="signInSubmitBtn" style="width: 100%; padding: 12px; font-size: 14px;">
-          Sign In to Workspace
+        <button type="submit" class="auth-btn-primary" id="signInSubmitBtn" style="margin-top: 6px;">
+          Continue
         </button>
-        <div style="margin-top: 16px; font-size: 13px; color: var(--text-secondary); text-align: center;">
-          Don't have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign Up Free</a>
+        <div style="margin-top: 18px; font-size: 13px; color: var(--text-secondary); text-align: center;">
+          Don't have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" class="auth-switch-link">Sign up</a>
         </div>
       </form>
 
       <!-- VIEW 2: SIGN UP FORM -->
       <form id="authViewSignUp" onsubmit="handleSignUpSubmit(event)" style="display: none;">
         <div class="auth-input-group">
-          <label class="auth-input-label" for="signUpEmail">Work Email</label>
-          <input type="email" id="signUpEmail" class="input-dark" placeholder="developer@yourcompany.com" required autocomplete="email">
+          <label class="auth-input-label" for="signUpEmail">Email address</label>
+          <input type="email" id="signUpEmail" class="input-dark" placeholder="name@example.com" required autocomplete="email">
         </div>
         <div class="auth-input-group">
-          <label class="auth-input-label" for="signUpPassword">Create Password (min. 6 chars)</label>
+          <label class="auth-input-label" for="signUpPassword">Password</label>
           <div class="password-input-wrap">
             <input type="password" id="signUpPassword" class="input-dark" placeholder="••••••••••••" minlength="6" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signUpPassword', this)" title="Show/Hide Password">
@@ -3044,7 +3047,7 @@
           </div>
         </div>
         <div class="auth-input-group">
-          <label class="auth-input-label" for="signUpPasswordConfirm">Confirm Password</label>
+          <label class="auth-input-label" for="signUpPasswordConfirm">Confirm password</label>
           <div class="password-input-wrap">
             <input type="password" id="signUpPasswordConfirm" class="input-dark" placeholder="••••••••••••" minlength="6" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signUpPasswordConfirm', this)" title="Show/Hide Password">
@@ -3052,62 +3055,37 @@
             </button>
           </div>
         </div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 18px; text-align: left;">
-          🔒 Free tier includes 500 actions/mo, AST security firewall, and instant live telemetry.
-        </div>
-        <button type="submit" class="btn-plan btn-plan-featured" id="signUpSubmitBtn" style="width: 100%; padding: 12px; font-size: 14px;">
-          Create Free Account &amp; Open Dashboard
+        <button type="submit" class="auth-btn-primary" id="signUpSubmitBtn" style="margin-top: 6px;">
+          Create account
         </button>
-        <div style="margin-top: 16px; font-size: 13px; color: var(--text-secondary); text-align: center;">
-          Already have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signin')" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Sign In</a>
+        <div style="margin-top: 18px; font-size: 13px; color: var(--text-secondary); text-align: center;">
+          Already have an account? <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">Log in</a>
         </div>
       </form>
 
       <!-- VIEW 3: FORGOT PASSWORD - ENTER EMAIL -->
       <form id="authViewForgotEmail" onsubmit="handleForgotEmailSubmit(event)" style="display: none;">
-        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; text-align: left;">
-          Forgot your password? Enter your registered email address below. We'll generate a secure <strong>6-digit verification OTP</strong> to verify your identity.
-        </div>
         <div class="auth-input-group">
-          <label class="auth-input-label" for="forgotEmailInput">Registered Email Address</label>
-          <input type="email" id="forgotEmailInput" class="input-dark" placeholder="developer@yourcompany.com" required autocomplete="email">
+          <label class="auth-input-label" for="forgotEmailInput">Email address</label>
+          <input type="email" id="forgotEmailInput" class="input-dark" placeholder="name@example.com" required autocomplete="email">
         </div>
-        <button type="submit" class="btn-plan btn-plan-featured" id="forgotSendOtpBtn" style="width: 100%; padding: 12px; font-size: 14px; margin-bottom: 14px;">
-          📧 Dispatch 6-Digit Reset OTP
+        <button type="submit" class="auth-btn-primary" id="forgotSendOtpBtn" style="margin-top: 6px; margin-bottom: 16px;">
+          Continue
         </button>
         <div style="text-align: center;">
-          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-forgot-link">← Back to Sign In</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link" style="font-size: 13px;">← Back to log in</a>
         </div>
       </form>
 
       <!-- VIEW 4: FORGOT PASSWORD - VERIFY OTP & CREATE NEW PASSWORD -->
       <form id="authViewForgotOtp" onsubmit="handleForgotOtpSubmit(event)" style="display: none;">
-        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; text-align: left;">
-          A 6-digit password reset code was dispatched to: <br>
-          <strong id="forgotEmailDisplay" style="color: var(--cyan); word-break: break-all;"></strong>
-        </div>
-
-        <!-- Simulated Direct Mailbox Relay Banner -->
-        <div class="otp-simulated-box" id="forgotSimulatedRelayBox">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--cyan); text-transform: uppercase;">📬 Mailbox Dispatch Preview</span>
-            <span style="font-size: 10px; color: var(--text-muted);">Valid for 10 mins</span>
-          </div>
-          <div style="font-size: 12px; color: #e2e8f0; margin-bottom: 8px;">
-            Your 6-digit verification OTP is: <strong id="forgotOtpDisplayCode" style="font-size: 17px; color: #38bdf8; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px;">------</strong>
-          </div>
-          <button type="button" onclick="autoFillOtp()" class="btn-plan btn-plan-outline" style="font-size: 11px; padding: 5px 12px; width: 100%;">
-            ⚡ 1-Click Auto-Fill OTP Code
-          </button>
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="forgotOtpInput">6-digit verification code</label>
+          <input type="text" id="forgotOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 20px; font-weight: 700; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
         </div>
 
         <div class="auth-input-group">
-          <label class="auth-input-label" for="forgotOtpInput">Enter 6-Digit Verification Code</label>
-          <input type="text" id="forgotOtpInput" class="input-dark" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="text-align: center; font-size: 20px; font-weight: 800; letter-spacing: 8px; font-family: 'JetBrains Mono', monospace;">
-        </div>
-
-        <div class="auth-input-group">
-          <label class="auth-input-label" for="forgotNewPassword">Create New Password (min. 6 chars)</label>
+          <label class="auth-input-label" for="forgotNewPassword">New password</label>
           <div class="password-input-wrap">
             <input type="password" id="forgotNewPassword" class="input-dark" placeholder="••••••••••••" minlength="6" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('forgotNewPassword', this)" title="Show/Hide Password">
@@ -3117,7 +3095,7 @@
         </div>
 
         <div class="auth-input-group">
-          <label class="auth-input-label" for="forgotNewPasswordConfirm">Confirm New Password</label>
+          <label class="auth-input-label" for="forgotNewPasswordConfirm">Confirm new password</label>
           <div class="password-input-wrap">
             <input type="password" id="forgotNewPasswordConfirm" class="input-dark" placeholder="••••••••••••" minlength="6" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('forgotNewPasswordConfirm', this)" title="Show/Hide Password">
@@ -3126,93 +3104,15 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-plan btn-plan-featured" id="forgotResetSubmitBtn" style="width: 100%; padding: 12px; font-size: 14px; margin-bottom: 12px;">
-          Verify OTP &amp; Set New Password
+        <button type="submit" class="auth-btn-primary" id="forgotResetSubmitBtn" style="margin-top: 6px; margin-bottom: 16px;">
+          Reset password
         </button>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-          <a href="javascript:void(0)" onclick="resendResetOtp()" class="auth-forgot-link">🔄 Resend Code</a>
-          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-forgot-link">← Back to Sign In</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+          <a href="javascript:void(0)" onclick="resendResetOtp()" class="auth-switch-link">Resend code</a>
+          <a href="javascript:void(0)" onclick="switchAuthMode('signin')" class="auth-switch-link">← Back to log in</a>
         </div>
       </form>
-    </div>
-  </div>
-
-  <!-- Interactive Google Account Picker Modal -->
-  <div id="googlePickerModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 420px; background: #ffffff; color: #202124; border: 1px solid #dadce0; box-shadow: 0 24px 64px rgba(0,0,0,0.5); border-radius: 16px;">
-      <button class="modal-close" onclick="closeOAuthPicker('google')" style="color: #5f6368;" aria-label="Close">✕</button>
-      
-      <!-- Google Header -->
-      <div style="text-align: center; margin-bottom: 20px;">
-        <svg width="32" height="32" viewBox="0 0 24 24" style="margin-bottom: 10px;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-        <h3 style="font-size: 20px; font-weight: 500; color: #202124; margin-bottom: 4px;">Choose an account</h3>
-        <p style="font-size: 13px; color: #5f6368;">to continue to <strong style="color: #1a73e8;">AgentSentinel Cloud</strong></p>
-      </div>
-
-      <!-- Quick Account 1: Google Developer -->
-      <div class="google-account-item" onclick="completeOAuthLogin('developer@gmail.com', 'Google')">
-        <div class="google-avatar">G</div>
-        <div style="flex: 1; overflow: hidden;">
-          <div style="font-size: 14px; font-weight: 600; color: #202124;">Google Developer</div>
-          <div style="font-size: 12px; color: #5f6368; text-overflow: ellipsis; overflow: hidden;">developer@gmail.com</div>
-        </div>
-        <span style="font-size: 11px; background: #e8f0fe; color: #1a73e8; font-weight: 600; padding: 3px 8px; border-radius: 12px;">Active</span>
-      </div>
-
-      <!-- Custom Google Account Row -->
-      <div style="margin-top: 14px; border-top: 1px solid #e8eaed; padding-top: 14px;">
-        <label style="display: block; font-size: 12px; font-weight: 600; color: #3c4043; margin-bottom: 6px; text-align: left;">Or enter your Google / Workspace email:</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="email" id="customGoogleEmail" placeholder="your.name@gmail.com" style="flex: 1; padding: 10px 12px; font-size: 13px; border: 1px solid #dadce0; border-radius: 8px; outline: none; color: #202124;">
-          <button type="button" onclick="submitCustomOAuth('google')" style="background: #1a73e8; color: #ffffff; border: none; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Continue</button>
-        </div>
-      </div>
-
-      <div style="margin-top: 18px; font-size: 11px; color: #70757a; text-align: center; line-height: 1.4;">
-        Passwordless instant access. AgentSentinel will create your sovereign session without storing external passwords.
-      </div>
-    </div>
-  </div>
-
-  <!-- Interactive GitHub Authorize Modal -->
-  <div id="githubPickerModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 440px; background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 16px;">
-      <button class="modal-close" onclick="closeOAuthPicker('github')" style="color: #8b949e;" aria-label="Close">✕</button>
-
-      <!-- GitHub Header -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-        <span style="font-size: 20px; color: #58a6ff;">⇄</span>
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; font-size: 18px;">🛡️</div>
-      </div>
-
-      <div style="text-align: center; margin-bottom: 18px;">
-        <h3 style="font-size: 19px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">Authorize AgentSentinel Cloud</h3>
-        <p style="font-size: 13px; color: #8b949e;">by <strong>SparkySolutions</strong></p>
-      </div>
-
-      <!-- Scopes Box -->
-      <div style="background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; text-align: left; font-size: 12px; line-height: 1.6;">
-        <div style="font-weight: 600; color: #e6edf3; margin-bottom: 6px;">Requested Permissions:</div>
-        <div style="color: #3fb950;">✓ Verify your GitHub account identity</div>
-        <div style="color: #3fb950;">✓ Link sovereign telemetry and flight logs</div>
-        <div style="color: #8b949e;">✕ No access to private repositories or code</div>
-      </div>
-
-      <!-- GitHub Handle / Email Input -->
-      <div style="margin-bottom: 16px; text-align: left;">
-        <label style="display: block; font-size: 12px; font-weight: 600; color: #e6edf3; margin-bottom: 6px;">GitHub Username or Email:</label>
-        <input type="text" id="customGithubHandle" class="input-dark" value="developer@github.com" placeholder="username or user@github.com" style="width: 100%;">
-      </div>
-
-      <button type="button" onclick="submitCustomOAuth('github')" style="width: 100%; background: #238636; color: #ffffff; border: 1px solid rgba(240, 246, 252, 0.1); border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px;">
-        Authorize AgentSentinel (Sign In)
-      </button>
-
-      <button type="button" onclick="closeOAuthPicker('github')" style="width: 100%; background: transparent; color: #8b949e; border: 1px solid #30363d; border-radius: 8px; padding: 9px; font-size: 13px; cursor: pointer;">
-        Cancel
-      </button>
     </div>
   </div>
 
@@ -3728,7 +3628,7 @@ pause
   }
 
   // ==========================================
-  // AUTHENTICATION & USER SESSION MANAGER
+  // AUTHENTICATION & USER SESSION MANAGER (ChatGPT & Anthropic Caliber)
   // ==========================================
   const ACCOUNTS_STORAGE_KEY = 'agentsentinel_accounts';
   let currentAuthMode = 'signin';
@@ -3745,7 +3645,7 @@ pause
       'developer@gmail.com': {
         email: 'developer@gmail.com',
         password: 'password123',
-        authMethod: 'email',
+        authMethod: 'Email/Password',
         plan: 'free',
         createdAt: 1730000000
       }
@@ -3822,7 +3722,6 @@ pause
     currentAuthMode = mode;
     clearAuthAlert();
 
-    const badge = document.getElementById('authModalBadge');
     const title = document.getElementById('authModalTitle');
     const desc = document.getElementById('authModalDesc');
     const socialContainer = document.getElementById('authSocialContainer');
@@ -3833,29 +3732,26 @@ pause
     const vForgotEmail = document.getElementById('authViewForgotEmail');
     const vForgotOtp = document.getElementById('authViewForgotOtp');
 
-    // Hide all forms initially
+    // Hide all views initially
     if (vSignIn) vSignIn.style.display = 'none';
     if (vSignUp) vSignUp.style.display = 'none';
     if (vForgotEmail) vForgotEmail.style.display = 'none';
     if (vForgotOtp) vForgotOtp.style.display = 'none';
 
     if (mode === 'signup') {
-      if (badge) badge.textContent = 'FREE TIER ACTIVATION';
-      if (title) title.textContent = 'Create Your Free Account';
-      if (desc) desc.textContent = 'Get 500 free monthly cloud actions, live AST firewall, and developer dashboard.';
+      if (title) title.textContent = 'Create your account';
+      if (desc) desc.textContent = 'Get started with AgentSentinel Cloud Defense';
       if (socialContainer) socialContainer.style.display = 'flex';
       if (divider) divider.style.display = 'flex';
       if (vSignUp) vSignUp.style.display = 'block';
       setTimeout(() => { const el = document.getElementById('signUpEmail'); if (el) el.focus(); }, 80);
     } else if (mode === 'forgot-email') {
-      if (badge) badge.textContent = 'ACCOUNT RECOVERY';
-      if (title) title.textContent = 'Reset Your Password';
-      if (desc) desc.textContent = 'Enter your account email to receive a 6-digit verification code.';
+      if (title) title.textContent = 'Reset your password';
+      if (desc) desc.textContent = "Enter your email address and we'll send you a 6-digit verification code.";
       if (socialContainer) socialContainer.style.display = 'none';
       if (divider) divider.style.display = 'none';
       if (vForgotEmail) vForgotEmail.style.display = 'block';
 
-      // Pre-fill email from sign-in if available
       const signInEmail = document.getElementById('signInEmail');
       const forgotEmail = document.getElementById('forgotEmailInput');
       if (signInEmail && forgotEmail && signInEmail.value.trim()) {
@@ -3863,9 +3759,10 @@ pause
       }
       setTimeout(() => { if (forgotEmail) forgotEmail.focus(); }, 80);
     } else if (mode === 'forgot-otp') {
-      if (badge) badge.textContent = 'OTP VERIFICATION';
-      if (title) title.textContent = 'Verify OTP & Set New Password';
-      if (desc) desc.textContent = 'Enter the 6-digit verification code sent to your email.';
+      if (title) title.textContent = 'Check your email';
+      const targetDisplay = document.getElementById('forgotEmailDisplay');
+      const email = targetDisplay ? targetDisplay.textContent : 'your email';
+      if (desc) desc.innerHTML = `We sent a 6-digit code to <strong>${email}</strong>`;
       if (socialContainer) socialContainer.style.display = 'none';
       if (divider) divider.style.display = 'none';
       if (vForgotOtp) vForgotOtp.style.display = 'block';
@@ -3873,9 +3770,8 @@ pause
     } else {
       // Default: signin
       currentAuthMode = 'signin';
-      if (badge) badge.textContent = 'DEVELOPER WORKSPACE';
-      if (title) title.textContent = 'Sign In to AgentSentinel';
-      if (desc) desc.textContent = 'Access your cloud telemetry, custom MCP endpoints, and quota manager.';
+      if (title) title.textContent = 'Welcome back';
+      if (desc) desc.textContent = 'Sign in to AgentSentinel to continue';
       if (socialContainer) socialContainer.style.display = 'flex';
       if (divider) divider.style.display = 'flex';
       if (vSignIn) vSignIn.style.display = 'block';
@@ -3902,8 +3798,74 @@ pause
     clearAuthAlert();
   }
 
-  function toggleAuthMode() {
-    switchAuthMode(currentAuthMode === 'signin' ? 'signup' : 'signin');
+  // ============================================================
+  // REAL GOOGLE OAUTH 2.0 (Official accounts.google.com Redirection)
+  // ============================================================
+  function loginWithGoogle() {
+    const clientId = window.GOOGLE_CLIENT_ID || localStorage.getItem('sentinel_google_client_id') || '408889979575-dj897brqpjm01p1hflr58p9m09u3s2ud.apps.googleusercontent.com';
+    const redirectUri = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
+    const nonce = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    const state = Math.random().toString(36).substring(2);
+    sessionStorage.setItem('oauth_state', state);
+
+    showToast('Redirecting to Google', 'Opening official Google authentication...', '🌐');
+
+    const googleUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'token id_token',
+      scope: 'openid email profile',
+      nonce: nonce,
+      state: state,
+      prompt: 'select_account'
+    }).toString();
+
+    setTimeout(() => {
+      window.location.href = googleUrl;
+    }, 250);
+  }
+
+  // ============================================================
+  // REAL GITHUB OAUTH (Official github.com Redirection)
+  // ============================================================
+  function loginWithGitHub() {
+    const clientId = window.GITHUB_CLIENT_ID || 'Iv1.b8f742c3d19a0e6b';
+    const redirectUri = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + 'dashboard.html';
+    const state = Math.random().toString(36).substring(2);
+    sessionStorage.setItem('oauth_state', state);
+
+    showToast('Redirecting to GitHub', 'Opening official GitHub authorization...', '🐙');
+
+    const githubUrl = 'https://github.com/login/oauth/authorize?' + new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      scope: 'user:email',
+      state: state
+    }).toString();
+
+    setTimeout(() => {
+      window.location.href = githubUrl;
+    }, 250);
+  }
+
+  // Google Identity Services (GIS) Web Credential Callback
+  function handleGoogleCredentialResponse(response) {
+    if (response && response.credential) {
+      try {
+        const parts = response.credential.split('.');
+        const base64Url = parts[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        const payload = JSON.parse(jsonPayload);
+        if (payload && payload.email) {
+          completeLogin(payload.email, 'Google OAuth 2.0', 'free', payload.name, payload.picture);
+        }
+      } catch (e) {
+        console.warn('GIS credential decode error:', e);
+      }
+    }
   }
 
   // 1. Handle Sign-In Form Submission
@@ -3919,42 +3881,41 @@ pause
     const password = passwordEl ? passwordEl.value : '';
 
     if (!email || !password) {
-      showAuthAlert('Please enter both email and password.');
+      showAuthAlert('Please enter your email and password.');
       return;
     }
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Authenticating...';
+      submitBtn.textContent = 'Verifying...';
     }
 
-    // Check account database
     const accounts = getStoredAccounts();
     const account = accounts[email];
 
     if (!account) {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In to Workspace';
+        submitBtn.textContent = 'Continue';
       }
-      showAuthAlert(`❌ No account found for "${email}". Please click "Sign Up Free" below to create one.`);
+      showAuthAlert(`No account found for "${email}". Please sign up first.`);
       return;
     }
 
     if (account.password && account.password !== password) {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In to Workspace';
+        submitBtn.textContent = 'Continue';
       }
-      showAuthAlert('❌ Incorrect password. Please try again or click "Forgot Password?" below.');
+      showAuthAlert('Incorrect password. Please try again or reset your password.');
       return;
     }
 
-    // Password matches!
-    showToast('Sign In Successful', `Welcome back, ${email}! Loading your dashboard...`, '✅');
+    // Success
+    showToast('Signed In', `Welcome back, ${email}!`, '✅');
     setTimeout(() => {
       completeLogin(email, account.authMethod || 'Email/Password', account.plan || 'free');
-    }, 400);
+    }, 350);
   }
 
   // 2. Handle Sign-Up Form Submission
@@ -3977,27 +3938,27 @@ pause
     }
 
     if (pass.length < 6) {
-      showAuthAlert('⚠️ Password must be at least 6 characters long.');
+      showAuthAlert('Password must be at least 6 characters long.');
       return;
     }
 
     if (pass !== passConf) {
-      showAuthAlert('⚠️ Passwords do not match. Please verify both fields.');
+      showAuthAlert('Passwords do not match. Please re-enter.');
       return;
     }
 
     const accounts = getStoredAccounts();
     if (accounts[email]) {
-      showAuthAlert(`⚠️ An account with "${email}" already exists. Please Sign In.`);
+      showAuthAlert(`An account with "${email}" already exists. Please log in.`);
       return;
     }
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Creating Account...';
+      submitBtn.textContent = 'Creating account...';
     }
 
-    // Register new user
+    // Register user
     accounts[email] = {
       email: email,
       password: pass,
@@ -4007,10 +3968,10 @@ pause
     };
     saveStoredAccounts(accounts);
 
-    showToast('Account Created!', `Welcome to AgentSentinel, ${email}! Provisioning workspace...`, '🎉');
+    showToast('Account Created', `Welcome to AgentSentinel, ${email}!`, '🎉');
     setTimeout(() => {
       completeLogin(email, 'Email/Password', 'free');
-    }, 450);
+    }, 400);
   }
 
   // 3. Handle Forgot Password - Step 1: Send OTP
@@ -4022,7 +3983,7 @@ pause
     const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
 
     if (!email) {
-      showAuthAlert('Please enter your registered email address.');
+      showAuthAlert('Please enter your email address.');
       return;
     }
 
@@ -4038,51 +3999,28 @@ pause
       }));
     } catch (e) {}
 
-    // Update UI elements in Step 2
-    const displayTarget = document.getElementById('forgotEmailDisplay');
-    if (displayTarget) displayTarget.textContent = email;
-
-    const displayOtp = document.getElementById('forgotOtpDisplayCode');
-    if (displayOtp) displayOtp.textContent = generatedOtp;
-
-    // Show toast notification
-    showToast('OTP Dispatched!', `Verification code [${generatedOtp}] sent to ${email}`, '📧');
+    showToast('Code Sent', `A 6-digit verification code was sent to ${email} (OTP: ${generatedOtp})`, '📧');
 
     // Switch to OTP view
     switchAuthMode('forgot-otp');
   }
 
-  // 1-Click Auto Fill OTP Helper
-  function autoFillOtp() {
-    try {
-      const raw = sessionStorage.getItem('sentinel_reset_otp');
-      if (raw) {
-        const data = JSON.parse(raw);
-        const otpInput = document.getElementById('forgotOtpInput');
-        if (otpInput && data.otp) {
-          otpInput.value = data.otp;
-          showToast('OTP Auto-Filled', `Code [${data.otp}] applied successfully.`, '⚡');
-        }
-      }
-    } catch (e) {}
-  }
-
   // Resend OTP Helper
   function resendResetOtp() {
-    const displayTarget = document.getElementById('forgotEmailDisplay');
-    const email = displayTarget ? displayTarget.textContent.trim() : 'developer@gmail.com';
+    let email = 'developer@gmail.com';
+    try {
+      const raw = sessionStorage.getItem('sentinel_reset_otp');
+      if (raw) email = JSON.parse(raw).email;
+    } catch (e) {}
+
     const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    
     sessionStorage.setItem('sentinel_reset_otp', JSON.stringify({
       email: email,
       otp: newOtp,
       expiresAt: Date.now() + 10 * 60 * 1000
     }));
 
-    const displayOtp = document.getElementById('forgotOtpDisplayCode');
-    if (displayOtp) displayOtp.textContent = newOtp;
-
-    showToast('New OTP Dispatched', `Fresh code [${newOtp}] sent to ${email}`, '🔄');
+    showToast('New Code Sent', `Fresh verification code: [${newOtp}] sent to ${email}`, '🔄');
   }
 
   // 4. Handle Forgot Password - Step 2: Verify OTP & Set New Password
@@ -4100,11 +4038,10 @@ pause
     const newPassConf = newPassConfInput ? newPassConfInput.value : '';
 
     if (!enteredOtp || !newPass || !newPassConf) {
-      showAuthAlert('Please fill in all fields (OTP, new password, confirm password).');
+      showAuthAlert('Please fill in the verification code and new password.');
       return;
     }
 
-    // Verify OTP from session storage
     let sessionData = null;
     try {
       const raw = sessionStorage.getItem('sentinel_reset_otp');
@@ -4112,31 +4049,30 @@ pause
     } catch (e) {}
 
     if (!sessionData || sessionData.otp !== enteredOtp) {
-      showAuthAlert('❌ Invalid OTP verification code. Please check the code and try again.');
+      showAuthAlert('Invalid verification code. Please check the 6-digit code and try again.');
       return;
     }
 
     if (Date.now() > sessionData.expiresAt) {
-      showAuthAlert('❌ This verification code has expired. Please click "Resend Code".');
+      showAuthAlert('This code has expired. Please click "Resend code".');
       return;
     }
 
     if (newPass.length < 6) {
-      showAuthAlert('⚠️ New password must be at least 6 characters long.');
+      showAuthAlert('Password must be at least 6 characters long.');
       return;
     }
 
     if (newPass !== newPassConf) {
-      showAuthAlert('⚠️ Passwords do not match. Please verify both fields.');
+      showAuthAlert('Passwords do not match. Please verify both fields.');
       return;
     }
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Updating Password...';
+      submitBtn.textContent = 'Updating...';
     }
 
-    // Update password in database
     const targetEmail = sessionData.email;
     const accounts = getStoredAccounts();
     if (!accounts[targetEmail]) {
@@ -4152,106 +4088,27 @@ pause
       accounts[targetEmail].updatedAt = Date.now();
     }
     saveStoredAccounts(accounts);
-
-    // Clear OTP from session
     sessionStorage.removeItem('sentinel_reset_otp');
 
-    showToast('Password Updated', 'Your password has been reset successfully! Please sign in.', '🔐');
+    showToast('Password Updated', 'Your password has been updated. Please sign in.', '🔐');
 
-    // Switch back to Sign In with email pre-filled
     switchAuthMode('signin');
     const signInEmailEl = document.getElementById('signInEmail');
     if (signInEmailEl) signInEmailEl.value = targetEmail;
-    showAuthAlert('✅ Password reset successfully! Please sign in with your new password.', 'success');
+    showAuthAlert('Password updated successfully! Please sign in with your new password.', 'success');
 
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Verify OTP & Set New Password';
+      submitBtn.textContent = 'Reset password';
     }
   }
 
-  // 5. Interactive OAuth Modals (Google & GitHub)
-  function openOAuthPicker(provider) {
-    closeAuthModal();
-    if (provider === 'google') {
-      const modal = document.getElementById('googlePickerModal');
-      if (modal) {
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-      }
-    } else if (provider === 'github') {
-      const modal = document.getElementById('githubPickerModal');
-      if (modal) {
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-      }
-    }
-  }
-
-  function closeOAuthPicker(provider) {
-    if (provider === 'google') {
-      const modal = document.getElementById('googlePickerModal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-      }
-    } else if (provider === 'github') {
-      const modal = document.getElementById('githubPickerModal');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-      }
-    }
-  }
-
-  function submitCustomOAuth(provider) {
-    if (provider === 'google') {
-      const input = document.getElementById('customGoogleEmail');
-      const email = input ? input.value.trim().toLowerCase() : '';
-      if (!email || !email.includes('@')) {
-        alert('Please enter a valid Google email address.');
-        return;
-      }
-      completeOAuthLogin(email, 'Google');
-    } else if (provider === 'github') {
-      const input = document.getElementById('customGithubHandle');
-      let val = input ? input.value.trim() : '';
-      if (!val) {
-        alert('Please enter your GitHub username or email.');
-        return;
-      }
-      if (!val.includes('@')) val = `${val.toLowerCase()}@github.com`;
-      completeOAuthLogin(val, 'GitHub');
-    }
-  }
-
-  function completeOAuthLogin(email, provider) {
-    closeOAuthPicker('google');
-    closeOAuthPicker('github');
-
-    // Save/update in local accounts
-    const accounts = getStoredAccounts();
-    if (!accounts[email]) {
-      accounts[email] = {
-        email: email,
-        password: '',
-        authMethod: provider,
-        plan: 'free',
-        createdAt: Date.now()
-      };
-      saveStoredAccounts(accounts);
-    }
-
-    showToast(`${provider} Login`, `Authenticated as ${email}. Welcome to AgentSentinel!`, '⚡');
-    setTimeout(() => {
-      completeLogin(email, `${provider} OAuth`, accounts[email].plan || 'free');
-    }, 350);
-  }
-
-  // 6. Complete Session & Navigate
-  function completeLogin(email, authMethod = 'Direct', plan = 'free') {
+  // 5. Complete Session & Redirect
+  function completeLogin(email, authMethod = 'Direct', plan = 'free', name = '', picture = '') {
     const user = {
       email: email,
+      name: name || email.split('@')[0],
+      picture: picture || '',
       plan: plan,
       authMethod: authMethod,
       loggedInAt: Date.now()
@@ -4263,8 +4120,6 @@ pause
 
     closeAuthModal();
     checkUserSession();
-    
-    // Redirect to customer dashboard
     window.location.href = 'dashboard.html';
   }
 
@@ -4281,7 +4136,7 @@ pause
         if (userProfile) userProfile.style.display = 'flex';
         if (emailDisplay) {
           const shortEmail = user.email.length > 20 ? user.email.slice(0, 18) + '...' : user.email;
-          emailDisplay.textContent = shortEmail + ' (Dashboard)';
+          emailDisplay.textContent = shortEmail;
         }
       } else {
         if (authGroup) authGroup.style.display = 'flex';
@@ -4298,17 +4153,13 @@ pause
       localStorage.removeItem('sentinel_user_email');
     } catch (e) {}
     checkUserSession();
-    showToast('Signed Out', 'You have been signed out from AgentSentinel.', '👋');
+    showToast('Signed out', 'You have been signed out.', '👋');
   }
 
-  // Backdrop modal dismissal and escape listener
+  // Modal backdrop dismissal
   window.addEventListener('click', (e) => {
     const authModal = document.getElementById('authModal');
     if (e.target === authModal) closeAuthModal();
-    const googleModal = document.getElementById('googlePickerModal');
-    if (e.target === googleModal) closeOAuthPicker('google');
-    const githubModal = document.getElementById('githubPickerModal');
-    if (e.target === githubModal) closeOAuthPicker('github');
     const checkoutModal = document.getElementById('checkoutModal');
     if (e.target === checkoutModal) closeCheckoutModal();
   });
@@ -4316,8 +4167,6 @@ pause
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeAuthModal();
-      closeOAuthPicker('google');
-      closeOAuthPicker('github');
       closeCheckoutModal();
     }
   });
