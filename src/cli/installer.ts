@@ -63,11 +63,13 @@ export function installToClaudeDesktop(
       config.mcpServers = {};
     }
 
-    // Safely inject or update agentsentinel remote entry
+    // Safely inject or update agentsentinel entry for Claude Desktop
+    // Claude Desktop claude_desktop_config.json strictly requires local stdio "command" & "args"
     config.mcpServers.agentsentinel = {
-      url: remoteUrl,
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
+      command: 'npx',
+      args: ['-y', '@sparkysolutions/agentsentinel'],
+      env: {
+        AGENT_SENTINEL_API_KEY: apiKey,
       },
     };
 

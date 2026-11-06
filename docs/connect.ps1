@@ -67,9 +67,17 @@ foreach ($target in $targets) {
         $cfg | Add-Member -MemberType NoteProperty -Name "mcpServers" -Value @{} -Force
     }
 
-    # 100% Keyless Standard - No fragile manual keys required
-    $sentinelEntry = [ordered]@{
-        url = $endpointUrl
+    # Inject exact native protocol per application:
+    # Claude Desktop strictly requires stdio "command" & "args", while Cursor supports both SSE "url" and stdio
+    $sentinelEntry = if ($targetName -eq "Claude Desktop") {
+        [ordered]@{
+            command = "npx"
+            args = @("-y", "@sparkysolutions/agentsentinel")
+        }
+    } else {
+        [ordered]@{
+            url = $endpointUrl
+        }
     }
 
     if ($cfg.mcpServers -is [PSCustomObject]) {

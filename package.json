@@ -25,7 +25,9 @@
     "test:coverage": "vitest run --coverage",
     "pack:dry-run": "npm pack --dry-run",
     "demo": "node scripts/demo.cjs",
-    "preflight": "node scripts/run_saas_preflight_verification.cjs"
+    "preflight": "node scripts/run_saas_preflight_verification.cjs",
+    "stress:100m": "node scripts/mirofish_100m_stress_simulator.cjs",
+    "stress:loop": "node scripts/loop_preflight.cjs"
   },
   "keywords": [
     "ai-agents",

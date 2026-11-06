@@ -54,6 +54,9 @@ function recordTest(layerKey, testName, isSuccess, message) {
 }
 
 async function runMasterVerification() {
+  const masterKeyPath = path.resolve(__dirname, '../data/api_keys.json');
+  const masterOriginalKeys = fs.existsSync(masterKeyPath) ? fs.readFileSync(masterKeyPath, 'utf8') : null;
+
   console.log(`\n${c.cyan}${c.bold}========================================================================${c.reset}`);
   console.log(`${c.cyan}${c.bold}   AGENTSENTINEL: 2026 SAAS MCP PRE-FLIGHT VERIFICATION PIPELINE       ${c.reset}`);
   console.log(`${c.dim}   Autonomous Verification across 6 Architectural Layers               ${c.reset}`);
@@ -509,6 +512,11 @@ async function runMasterVerification() {
     recordTest('layer6', 'Git Working Tree Documentation State', true, `${gitStatus.trim().split('\n').filter(Boolean).length} pending files tracked`);
   } catch (err) {
     recordTest('layer6', 'Production Health Exception', false, err.message);
+  }
+
+  // Restore pristine api_keys.json to prevent test keys or secret leaks in git
+  if (masterOriginalKeys && fs.existsSync(masterKeyPath)) {
+    fs.writeFileSync(masterKeyPath, masterOriginalKeys, 'utf8');
   }
 
   // ========================================================================

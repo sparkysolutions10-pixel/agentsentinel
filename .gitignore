@@ -7,6 +7,8 @@ scripts/*
 !scripts/demo.cjs
 !scripts/run_saas_preflight_verification.cjs
 !scripts/audit_dom_elements.py
+!scripts/mirofish_100m_stress_simulator.cjs
+!scripts/loop_preflight.cjs
 /temp_*
 
 *.tgz

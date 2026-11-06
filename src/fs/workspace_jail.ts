@@ -84,6 +84,17 @@ export function inspectWorkspaceJail(
 
   const effectiveBase = baseDir || (typeof process !== 'undefined' && process.cwd ? process.cwd() : '/');
 
+  // 🛡️ Windows UNC / SMB Network Share & Extended Device Namespace Protection
+  const trimmed = targetPath.trim();
+  const isUncOrDevice = /^(\\\\[^\s]+|[\/\\]{2}(?:\?|\.)[\/\\])/i.test(trimmed);
+  if (isUncOrDevice) {
+    return {
+      isAllowed: false,
+      resolvedPath: targetPath,
+      reason: `UNC network share or device path is strictly confined outside workspace jail: '${targetPath}'`,
+    };
+  }
+
   // Determine if target path is absolute (POSIX / or Windows C:/)
   const isPosixAbsolute = targetPath.startsWith('/');
   const isWinAbsolute = /^[a-zA-Z]:[/\\]/.test(targetPath);

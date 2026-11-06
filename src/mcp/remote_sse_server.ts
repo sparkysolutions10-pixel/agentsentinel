@@ -62,6 +62,9 @@ export class AgentSentinelRemoteSseServer {
   private lastDailyResetTimestamp: number = Date.now();
   private readonly GLOBAL_DAILY_FREE_CAP: number = 25_000;
 
+  // 🛡️ Fintech Tamper Resistance: Webhook Idempotency Registry (Anti-Replay Attack Protection)
+  private readonly processedWebhookEvents: Set<string> = new Set();
+
   constructor() {
     // 1. Seed default starter key for instant zero-friction developer testing
     this.apiKeys.set('sk_demo_pixel_2026', {
@@ -460,6 +463,23 @@ export class AgentSentinelRemoteSseServer {
         const event = String(body.event || 'payment.captured');
         const payloadObj = (body.payload || {}) as Record<string, any>;
         const payment = (payloadObj.payment?.entity || payloadObj.order?.entity || body) as Record<string, any>;
+        const paymentId = String(payment.id || body.id || '');
+
+        // 🛡️ Webhook Idempotency Check (Anti-Replay Attack Protection)
+        if (paymentId && this.processedWebhookEvents.has(paymentId)) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            idempotent: true,
+            alreadyProcessed: true,
+            gateway: 'razorpay',
+            paymentId,
+            message: 'Webhook event already processed (idempotency enforced).'
+          }, null, 2));
+          return;
+        }
+        if (paymentId) this.processedWebhookEvents.add(paymentId);
+
         const email = String(payment.email || body.email || 'customer@razorpay.com');
         const amountPaise = Number(payment.amount || 0);
 
@@ -491,6 +511,23 @@ export class AgentSentinelRemoteSseServer {
         const body = await this.readJsonBody(req);
         const eventType = String(body.event_type || 'PAYMENT.CAPTURE.COMPLETED');
         const resource = (body.resource || {}) as Record<string, any>;
+        const captureId = String(resource.id || body.id || '');
+
+        // 🛡️ Webhook Idempotency Check (Anti-Replay Attack Protection)
+        if (captureId && this.processedWebhookEvents.has(captureId)) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            idempotent: true,
+            alreadyProcessed: true,
+            gateway: 'paypal',
+            captureId,
+            message: 'Webhook event already processed (idempotency enforced).'
+          }, null, 2));
+          return;
+        }
+        if (captureId) this.processedWebhookEvents.add(captureId);
+
         const email = String(resource.payer?.email_address || body.email || 'customer@paypal.com');
         const amountUsd = parseFloat(resource.amount?.value || '0');
 
