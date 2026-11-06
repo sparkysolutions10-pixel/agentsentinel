@@ -18,6 +18,7 @@ if %errorlevel% equ 0 (
     echo   [OK] SUCCESS! AgentSentinel Cloud is now CONNECTED!
     echo ==============================================================================
     echo   * Endpoint: https://mcp.getagentsentinel.com/sse
+    echo   * Web Console: https://getagentsentinel.com/dashboard.html
     echo   * Defense:  AST Firewall, 90%% Token-Saver SmartProxy, Merkle Flight Recorder
     echo.
     echo   Next Step: Please RESTART Claude Desktop / Reload Cursor to activate.
