@@ -914,7 +914,7 @@
             </div>
             <div class="api-key-container">
               <div class="api-key-code" id="liveSseEndpointText">https://mcp.getagentsentinel.com/sse</div>
-              <button onclick="copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy Endpoint
               </button>
@@ -924,27 +924,38 @@
             </div>
           </div>
 
-          <!-- Row 2: Personal API Secret Key -->
-          <div>
+          <!-- Row 2: Personal API Secret Key (Paywall Gated) -->
+          <div style="position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <span style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">2. Personal API Secret Key</span>
-              <span class="badge-status" id="apiKeyTierBadge" style="font-size: 10px; background: rgba(100, 116, 139, 0.15); color: #475569; border: 1px solid rgba(100, 116, 139, 0.3);">FREE TIER (500 Calls Cap)</span>
+              <span class="badge-status" id="apiKeyTierBadge" style="font-size: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">🔒 LOCKED (PAID PRO ONLY)</span>
             </div>
-            <div class="api-key-container">
-              <div class="api-key-code" id="liveApiKeyText">sk_free_starter_7894f28a01cb99e4</div>
+            <div class="api-key-container" style="position: relative; overflow: hidden;">
+              <div class="api-key-code" id="liveApiKeyText" style="letter-spacing: 2px; filter: blur(4px);">sk_live_sec_••••••••••••••••••••••••••••</div>
               <div style="display: flex; gap: 8px;">
-                <button onclick="rollApiKey()" class="btn-action-outline" style="font-size: 11px;">
+                <button onclick="handleKeyAction('roll')" class="btn-action-outline" style="font-size: 11px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                   Roll New Key
                 </button>
-                <button onclick="copyToClipboard(document.getElementById('liveApiKeyText').textContent, this, 'Copied Key!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+                <button onclick="handleKeyAction('copy')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   Copy Key
                 </button>
               </div>
+
+              <!-- Luminous Paywall Lock Overlay for Free Users -->
+              <div id="apiKeyLockOverlay" style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(23, 33, 56, 0.96) 100%); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-radius: 8px; z-index: 10;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span style="font-size: 12px; font-weight: 700; color: #fbbf24;">Cloud MCP API Key Locked: Upgrade to Pro to Reveal</span>
+                </div>
+                <a href="index.html#pricing" class="btn-action-primary" style="background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); color: #020617; font-weight: 800; font-size: 11px; padding: 6px 14px; text-decoration: none; border-radius: 6px; box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);">
+                  Unlock Key ($29 / ₹2,499) ➔
+                </a>
+              </div>
             </div>
-            <div style="font-size: 12px; color: var(--text-muted);" id="apiKeyHelpText">
-              Sovereign bearer token for private agent swarms and quota tracking. Keep this key secure.
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;" id="apiKeyHelpText">
+              Sovereign bearer token requires an active Pro ($29/mo) or Enterprise subscription. Free tier includes in-browser threat simulation.
             </div>
           </div>
 
@@ -1039,6 +1050,20 @@
             </div>
           </div>
 
+          <!-- Workspace Connection Lock Banner for Free Users -->
+          <div id="workspaceLockBanner" style="margin: 0 24px 16px 24px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%); border: 1px dashed rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 18px;">🔒</span>
+              <div>
+                <strong style="color: #d97706; font-size: 13px;">Live Workspace Integration Locked (Paid Pro Feature)</strong>
+                <p style="font-size: 12px; color: #64748b; margin: 2px 0 0 0;">Connecting Claude Desktop or Cursor IDE to Cloud MCP requires an active Pro subscription ($29 / ₹2,499).</p>
+              </div>
+            </div>
+            <a href="index.html#pricing" class="btn-action-primary" style="background: #0284c7; text-decoration: none; font-size: 12px; padding: 8px 16px; border-radius: 6px; font-weight: 700; white-space: nowrap;">
+              Unlock Workspace Access ➔
+            </a>
+          </div>
+
           <!-- SETUP TAB 1: 1-Click Auto Setup -->
           <div id="setupTab1click" class="setup-tab-content">
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
@@ -1051,7 +1076,7 @@
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   Download .BAT
                 </a>
-                <button onclick="copyToClipboard('irm https://getagentsentinel.com/connect.ps1 | iex', this, 'Copied Command!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Command</button>
+                <button onclick="checkProWorkspaceAction(() => copyToClipboard('irm https://getagentsentinel.com/connect.ps1 | iex', this, 'Copied Command!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Command</button>
               </div>
             </div>
             <pre class="code-snippet">irm https://getagentsentinel.com/connect.ps1 | iex</pre>
@@ -1063,7 +1088,7 @@
               Paste this configuration directly into your <code>%APPDATA%\Claude\claude_desktop_config.json</code> (Windows) or <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS):
             </p>
             <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-              <button onclick="copyToClipboard(document.getElementById('claudeConfigSnippet').textContent, this, 'Copied JSON!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy JSON</button>
+              <button onclick="checkProWorkspaceAction(() => copyToClipboard(document.getElementById('claudeConfigSnippet').textContent, this, 'Copied JSON!'))" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy JSON</button>
             </div>
             <pre class="code-snippet" id="claudeConfigSnippet">{
   "mcpServers": {
@@ -1391,20 +1416,50 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
       }
     }
 
-    function rollApiKey() {
-      const randomHex = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
-      const stored = localStorage.getItem('agentsentinel_user');
-      let isPro = false;
+    function checkIsPaidUser() {
       try {
-        if (stored && (JSON.parse(stored).plan === 'pro' || JSON.parse(stored).plan === 'enterprise')) {
-          isPro = true;
+        const stored = localStorage.getItem('agentsentinel_user');
+        if (stored) {
+          const u = JSON.parse(stored);
+          if (u.plan === 'pro' || u.plan === 'enterprise') return true;
         }
       } catch (e) {}
+      return false;
+    }
 
-      const prefix = isPro ? 'sk_live_sec_' : 'sk_free_starter_';
-      const newKey = prefix + randomHex;
-      document.getElementById('liveApiKeyText').textContent = newKey;
-      alert((isPro ? 'New Live Pro API Key' : 'New Free Starter API Key') + ' rolled successfully:\n' + newKey);
+    function handleKeyAction(action) {
+      if (checkIsPaidUser()) {
+        if (action === 'roll') rollApiKey();
+        if (action === 'copy') {
+          const keyText = document.getElementById('liveApiKeyText').textContent;
+          copyToClipboard(keyText, this, 'Copied Key!');
+        }
+      } else {
+        alert('🔒 Cloud MCP API Key is locked for Pro subscribers.\n\nPlease upgrade to Pro ($29 / ₹2,499) to unlock your personal 24/7 API Key and live endpoint.');
+        window.location.href = 'index.html#pricing';
+      }
+    }
+
+    function checkProWorkspaceAction(actionFn) {
+      if (checkIsPaidUser()) {
+        actionFn();
+      } else {
+        alert('🔒 Cloud MCP workspace configuration is locked for Pro subscribers.\n\nPlease upgrade to Pro ($29 / ₹2,499) to unlock 1-click automatic setup for Claude Desktop & Cursor IDE.');
+        window.location.href = 'index.html#pricing';
+      }
+    }
+
+    function rollApiKey() {
+      if (!checkIsPaidUser()) {
+        alert('🔒 Cloud MCP API Key is locked for Pro subscribers.\n\nPlease upgrade to Pro ($29 / ₹2,499) to unlock your personal 24/7 API Key.');
+        window.location.href = 'index.html#pricing';
+        return;
+      }
+      const randomHex = Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+      const newKey = 'sk_live_sec_' + randomHex;
+      const keyEl = document.getElementById('liveApiKeyText');
+      if (keyEl) keyEl.textContent = newKey;
+      alert('New Live Pro API Key rolled successfully:\n' + newKey);
     }
 
     let injectionCount = 0;
@@ -1590,9 +1645,19 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
           if (quotaBar) quotaBar.style.width = plan === 'enterprise' ? '0.14%' : '1.4%';
           if (quotaRatio) quotaRatio.textContent = plan === 'enterprise' ? '14,280 / 10,000,000 Used' : '14,280 / 1,000,000 Used';
 
-          // Pro Key & Badge
+          // Pro Key & Badge (Unlocked)
+          const keyLockOverlay = document.getElementById('apiKeyLockOverlay');
+          if (keyLockOverlay) keyLockOverlay.style.display = 'none';
+
+          const wsLockBanner = document.getElementById('workspaceLockBanner');
+          if (wsLockBanner) wsLockBanner.style.display = 'none';
+
           const keyEl = document.getElementById('liveApiKeyText');
-          if (keyEl) keyEl.textContent = 'sk_live_sec_7894f28a01cb99e46a788b';
+          if (keyEl) {
+            keyEl.style.filter = 'none';
+            keyEl.style.letterSpacing = 'normal';
+            keyEl.textContent = 'sk_live_sec_7894f28a01cb99e46a788b';
+          }
 
           const badgeEl = document.getElementById('apiKeyTierBadge');
           if (badgeEl) {
@@ -1633,17 +1698,27 @@ URL:  https://mcp.getagentsentinel.com/sse</pre>
           if (quotaBar) quotaBar.style.width = '2.8%';
           if (quotaRatio) quotaRatio.textContent = '14 / 500 Used';
 
-          // Free Key & Badge
+          // Free Key & Badge (Locked by Default)
+          const keyLockOverlay = document.getElementById('apiKeyLockOverlay');
+          if (keyLockOverlay) keyLockOverlay.style.display = 'flex';
+
+          const wsLockBanner = document.getElementById('workspaceLockBanner');
+          if (wsLockBanner) wsLockBanner.style.display = 'flex';
+
           const keyEl = document.getElementById('liveApiKeyText');
-          if (keyEl) keyEl.textContent = 'sk_free_starter_7894f28a01cb99e4';
+          if (keyEl) {
+            keyEl.style.filter = 'blur(4px)';
+            keyEl.style.letterSpacing = '2px';
+            keyEl.textContent = 'sk_live_sec_••••••••••••••••••••••••••••';
+          }
 
           const badgeEl = document.getElementById('apiKeyTierBadge');
           if (badgeEl) {
             badgeEl.className = 'badge-status';
-            badgeEl.style.background = 'rgba(100, 116, 139, 0.15)';
-            badgeEl.style.color = '#475569';
-            badgeEl.style.border = '1px solid rgba(100, 116, 139, 0.3)';
-            badgeEl.textContent = 'FREE TIER (500 Calls Cap)';
+            badgeEl.style.background = 'rgba(239, 68, 68, 0.1)';
+            badgeEl.style.color = '#ef4444';
+            badgeEl.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            badgeEl.textContent = '🔒 LOCKED (PAID PRO ONLY)';
           }
 
           // Show Upgrade Banner
