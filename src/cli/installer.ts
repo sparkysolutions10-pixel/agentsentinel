@@ -34,7 +34,7 @@ export function getClaudeDesktopConfigPath(): string {
 
 export function installToClaudeDesktop(
   apiKey: string = 'sk_demo_pixel_2026',
-  remoteUrl: string = 'https://agentsentinel-production.up.railway.app/sse'
+  remoteUrl: string = 'https://mcp.getagentsentinel.com/sse'
 ): InstallResult {
   const configPath = getClaudeDesktopConfigPath();
   const configDir = path.dirname(configPath);

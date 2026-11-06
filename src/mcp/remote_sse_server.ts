@@ -287,7 +287,7 @@ export class AgentSentinelRemoteSseServer {
     const account = this.apiKeys.get(cleanToken);
 
     if (!account) {
-      return { valid: false, error: 'Invalid API key. Generate a free key at https://sparkysolutions10-pixel.github.io/agentsentinel/' };
+      return { valid: false, error: 'Invalid API key. Generate a free key at https://getagentsentinel.com/' };
     }
 
     // 🛡️ Subscription Expiry Enforcement: Block expired keys when 30-day billing cycle ends
@@ -297,7 +297,7 @@ export class AgentSentinelRemoteSseServer {
         account.subscriptionStatus = 'expired';
         return {
           valid: false,
-          error: `Subscription expired on ${new Date(account.expiresAt).toLocaleDateString()}. Please renew at https://sparkysolutions10-pixel.github.io/agentsentinel/ to restore 1,000,000 monthly quota.`,
+          error: `Subscription expired on ${new Date(account.expiresAt).toLocaleDateString()}. Please renew at https://getagentsentinel.com/ to restore 1,000,000 monthly quota.`,
         };
       }
     }
@@ -309,7 +309,7 @@ export class AgentSentinelRemoteSseServer {
     if (account.quotaUsed >= account.quotaLimit) {
       return {
         valid: false,
-        error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://sparkysolutions10-pixel.github.io/agentsentinel/`,
+        error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://getagentsentinel.com/`,
       };
     }
 
@@ -323,7 +323,7 @@ export class AgentSentinelRemoteSseServer {
       if (this.globalDailyFreeRequestsCount >= this.GLOBAL_DAILY_FREE_CAP) {
         return {
           valid: false,
-          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://sparkysolutions10-pixel.github.io/agentsentinel/ for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
+          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://getagentsentinel.com/ for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
         };
       }
     }
@@ -797,7 +797,7 @@ export class AgentSentinelRemoteSseServer {
       status: 'HEALTHY_ONLINE',
       protocol: 'Model Context Protocol (JSON-RPC 2.0 over SSE)',
       brand: 'AgentSentinel by Sparky Solutions',
-      docs: 'https://sparkysolutions10-pixel.github.io/agentsentinel/',
+      docs: 'https://getagentsentinel.com/',
       toolsCount: 12,
       capabilities: [
         'Zero-Trust Runtime AST Firewall (51+ Invariants)',

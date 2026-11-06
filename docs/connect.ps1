@@ -1,6 +1,6 @@
 # ==============================================================================
 # AgentSentinel 1-Click Multi-Agent Connector (Claude Desktop + Cursor IDE)
-# Usage: irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex
+# Usage: irm https://getagentsentinel.com/connect.ps1 | iex
 # ==============================================================================
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -11,7 +11,7 @@ Write-Host "====================================================================
 Write-Host ""
 
 $platform = [System.Environment]::OSVersion.Platform
-$endpointUrl = "https://agentsentinel-production.up.railway.app/sse"
+$endpointUrl = "https://mcp.getagentsentinel.com/sse"
 
 # 1. Resolve Target Configuration Paths
 $targets = @()

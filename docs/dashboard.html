@@ -913,8 +913,8 @@
               <span style="font-size: 11px; color: #0284c7; font-weight: 600;">Universal Protocol</span>
             </div>
             <div class="api-key-container">
-              <div class="api-key-code" id="liveSseEndpointText">https://agentsentinel-production.up.railway.app/sse</div>
-              <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
+              <div class="api-key-code" id="liveSseEndpointText">https://mcp.getagentsentinel.com/sse</div>
+              <button onclick="copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy Endpoint
               </button>
@@ -1051,10 +1051,10 @@
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   Download .BAT
                 </a>
-                <button onclick="copyToClipboard('irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex', this, 'Copied Command!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Command</button>
+                <button onclick="copyToClipboard('irm https://getagentsentinel.com/connect.ps1 | iex', this, 'Copied Command!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Command</button>
               </div>
             </div>
-            <pre class="code-snippet">irm https://sparkysolutions10-pixel.github.io/agentsentinel/connect.ps1 | iex</pre>
+            <pre class="code-snippet">irm https://getagentsentinel.com/connect.ps1 | iex</pre>
           </div>
 
           <!-- SETUP TAB 2: Claude Desktop -->
@@ -1084,11 +1084,11 @@
               In Cursor IDE: Go to <strong>Settings &gt; Features &gt; MCP Servers &gt; Add New MCP Server</strong>:
             </p>
             <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-              <button onclick="copyToClipboard('https://agentsentinel-production.up.railway.app/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy SSE URL</button>
+              <button onclick="copyToClipboard('https://mcp.getagentsentinel.com/sse', this, 'Copied URL!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy SSE URL</button>
             </div>
             <pre class="code-snippet">Name: AgentSentinel
 Type: sse
-URL:  https://agentsentinel-production.up.railway.app/sse</pre>
+URL:  https://mcp.getagentsentinel.com/sse</pre>
           </div>
 
           <!-- SETUP TAB 4: Viral GitHub README Badge -->
@@ -1102,11 +1102,11 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
                 <img src="https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square" alt="AgentSentinel Verified" style="height: 24px; border-radius: 4px;" />
               </div>
               <div style="display: flex; gap: 8px;">
-                <button onclick="copyToClipboard('[![Security: AgentSentinel](https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square)](https://sparkysolutions10-pixel.github.io/agentsentinel/)', this, 'Copied Markdown!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Markdown</button>
+                <button onclick="copyToClipboard('[![Security: AgentSentinel](https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square)](https://getagentsentinel.com/)', this, 'Copied Markdown!')" class="btn-action-primary" style="font-size: 11px; padding: 6px 14px;">Copy Markdown</button>
                 <button onclick="copyHtmlBadge(this)" class="btn-action-outline" style="font-size: 11px; padding: 6px 14px;">Copy HTML</button>
               </div>
             </div>
-            <pre class="code-snippet">[![Security: AgentSentinel](https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square)](https://sparkysolutions10-pixel.github.io/agentsentinel/)</pre>
+            <pre class="code-snippet">[![Security: AgentSentinel](https://img.shields.io/badge/🛡️_Security-AgentSentinel_Verified-0284c7?style=flat-square)](https://getagentsentinel.com/)</pre>
           </div>
         </div>
       </div>
@@ -1357,6 +1357,11 @@ URL:  https://agentsentinel-production.up.railway.app/sse</pre>
           prompt('Copy to clipboard: Ctrl+C, Enter', str);
         }
       }
+    }
+
+    function copyHtmlBadge(btn) {
+      const htmlCode = '<a href="https://getagentsentinel.com/" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%9B%A1%EF%B8%8F_Security-AgentSentinel_Verified-0284c7?style=flat-square" alt="AgentSentinel Verified" /></a>';
+      copyToClipboard(htmlCode, btn, 'Copied HTML!');
     }
 
     function switchSetupTab(tabId) {
