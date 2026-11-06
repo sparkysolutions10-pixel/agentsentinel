@@ -1854,86 +1854,215 @@ client = MultiServerMCPClient({
   </script>
 
   <!-- ============================================================ -->
-  <!-- TOP-UP QUOTA BOOSTER MODAL (MiroFish Quad-Shield Refill)       -->
+  <!-- TOP-UP QUOTA BOOSTER MODAL (MiroFish Quad-Shield Multi-Gateway Refill) -->
   <!-- ============================================================ -->
-  <div id="topUpModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #ffffff; border-radius: 16px; max-width: 520px; width: 100%; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); border: 1px solid #e2e8f0; position: relative;">
+  <div id="topUpModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #ffffff; border-radius: 16px; max-width: 560px; width: 100%; padding: 26px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); border: 1px solid #e2e8f0; position: relative; max-height: 92vh; overflow-y: auto;">
       
       <!-- Close Button -->
-      <button onclick="closeTopUpModal()" style="position: absolute; top: 16px; right: 16px; background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
+      <button onclick="closeTopUpModal()" style="position: absolute; top: 16px; right: 16px; background: #f1f5f9; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 16px; font-weight: bold;">✕</button>
 
       <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-        <span style="font-size: 24px;">⚡</span>
-        <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0;">Instant Quota Booster Refill</h3>
+        <span style="font-size: 26px;">⚡</span>
+        <div>
+          <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">Instant Quota Booster Refill</h3>
+          <div style="font-size: 11px; color: #0284c7; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;">Zero Downtime • Carry Forward Forever</div>
+        </div>
       </div>
-      <p style="font-size: 13px; color: #64748b; margin: 0 0 18px 0; line-height: 1.5;">
-        Never let your IDE or autonomous bots pause. Booster actions are added to your live bearer key instantly and <strong>never expire</strong> (unused balance carries forward).
+      <p style="font-size: 13px; color: #64748b; margin: 8px 0 16px 0; line-height: 1.5;">
+        Add actions directly to your sovereign key. Pay seamlessly via <strong>PayPal, Razorpay UPI, USDC, or Stellar</strong>.
       </p>
 
-      <!-- Booster Cards -->
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+      <!-- 1. Pack Selector Toggle Tabs -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+        <div id="boosterCardPro" onclick="selectBoosterTier('pro')" style="border: 2px solid #0284c7; background: #f0f9ff; border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 800; color: #0f172a;">⚡ Pro Booster</span>
+            <span style="background: #0284c7; color: #ffffff; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px;">SELECTED</span>
+          </div>
+          <div style="font-size: 16px; font-weight: 800; color: #0284c7; margin: 4px 0 2px 0;">$10 <span style="font-size: 11px; color: #64748b;">(₹899)</span></div>
+          <div style="font-size: 11px; color: #475569; font-weight: 600;">+500,000 Actions</div>
+        </div>
+
+        <div id="boosterCardEnterprise" onclick="selectBoosterTier('enterprise')" style="border: 1.5px solid #cbd5e1; background: #ffffff; border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 800; color: #0f172a;">🚀 Enterprise Swarm</span>
+            <span style="background: rgba(2, 132, 199, 0.1); color: #0284c7; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px;">10X POWER</span>
+          </div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 4px 0 2px 0;">$69 <span style="font-size: 11px; color: #64748b;">(₹5,999)</span></div>
+          <div style="font-size: 11px; color: #475569; font-weight: 600;">+5,000,000 Actions</div>
+        </div>
+      </div>
+
+      <!-- 2. Direct Payment Options -->
+      <div style="font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Select Instant Payment Gateway:</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
         
-        <!-- Option 1: Pro Pack -->
-        <div style="border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; cursor: pointer; transition: all 0.2s;" onclick="executeBoosterPurchase('pro')">
-          <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 14px; font-weight: 800; color: #0f172a;">⚡ Pro Booster Pack</span>
-              <span style="background: rgba(2, 132, 199, 0.1); color: #0284c7; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;">MOST POPULAR</span>
-            </div>
-            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">+500,000 Real-Time AST Actions • Carry Forward</div>
+        <!-- Gateway 1: PayPal / Global Cards / Apple Pay -->
+        <a id="boosterPaypalBtn" href="https://www.paypal.com/ncp/payment/2AKWRJTTBLTSJ" target="_blank" style="background: #0070ba; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px; box-shadow: 0 2px 8px rgba(0, 112, 186, 0.25);">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">🅿️</span>
+            <span>PayPal / Apple Pay / Credit Cards (Global)</span>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 16px; font-weight: 800; color: #0284c7;">$10 <span style="font-size: 11px; color: #64748b;">(₹899)</span></div>
-            <div style="font-size: 10px; color: #10b981; font-weight: 600;">Instant Unlock</div>
+          <span id="boosterPaypalPriceBadge" style="background: rgba(255, 255, 255, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px;">$10.00</span>
+        </a>
+
+        <!-- Gateway 2: Razorpay (India UPI / QR / RuPay / Netbanking) -->
+        <a id="boosterRazorpayBtn" href="https://rzp.io/rzp/75IaShP" target="_blank" style="background: #0c2340; color: #528ff0; border: 1.5px solid #528ff0; text-decoration: none; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">🇮🇳</span>
+            <span style="color: #ffffff;">Instant UPI / QR / RuPay (Razorpay India)</span>
+          </div>
+          <span id="boosterRazorpayPriceBadge" style="background: #528ff0; color: #0c2340; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 800;">₹899</span>
+        </a>
+
+        <!-- Gateway 3 & 4: Crypto USDC & Stellar Network Toggle -->
+        <button onclick="toggleBoosterCryptoBox()" type="button" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px; color: #0f172a; cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">🪙</span>
+            <span>Pay with Crypto (USDC on Base / Polygon / Stellar XLM)</span>
+          </div>
+          <span style="color: #64748b; font-size: 12px;">View Addresses ▼</span>
+        </button>
+      </div>
+
+      <!-- Collapsible Crypto Addresses Box -->
+      <div id="boosterCryptoBox" style="display: none; background: #0b1329; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 14px; margin-bottom: 16px; color: #ffffff;">
+        
+        <!-- EVM USDC -->
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: #38bdf8;">EVM USDC (BASE / POLYGON / ARBITRUM):</span>
+            <button onclick="copyToClipboard('0x40B7d9273092822341860F5610168861351e71eb', this, 'Copied!')" class="btn-action-outline" style="font-size: 10px; padding: 2px 8px; color: #38bdf8; border-color: #38bdf8;">Copy</button>
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #e2e8f0; word-break: break-all; background: rgba(0,0,0,0.3); padding: 6px 8px; border-radius: 6px;">
+            0x40B7d9273092822341860F5610168861351e71eb
           </div>
         </div>
 
-        <!-- Option 2: Enterprise Pack -->
-        <div style="border: 2px solid #0284c7; border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; background: #f0f9ff; cursor: pointer; transition: all 0.2s;" onclick="executeBoosterPurchase('enterprise')">
-          <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 14px; font-weight: 800; color: #0f172a;">🚀 Enterprise Swarm Pack</span>
-              <span style="background: #0284c7; color: #ffffff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;">BEST VALUE</span>
-            </div>
-            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">+5,000,000 Actions • 24/7 Swarm Concurrency</div>
+        <!-- Stellar USDC & XLM -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 11px; font-weight: 700; color: #fbbf24;">STELLAR NETWORK (STELLAR USDC &amp; XLM):</span>
+            <button onclick="copyToClipboard('GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT', this, 'Copied!')" class="btn-action-outline" style="font-size: 10px; padding: 2px 8px; color: #fbbf24; border-color: #fbbf24;">Copy</button>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 16px; font-weight: 800; color: #0284c7;">$69 <span style="font-size: 11px; color: #64748b;">(₹5,999)</span></div>
-            <div style="font-size: 10px; color: #10b981; font-weight: 600;">Dedicated SLA</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #e2e8f0; word-break: break-all; background: rgba(0,0,0,0.3); padding: 6px 8px; border-radius: 6px;">
+            GDDJH64X5VEXI7UWZMJA3YUG7ANYHKRRRFHLD2SF5OWEETNFBVYMRXZT
           </div>
         </div>
       </div>
 
-      <!-- Zero-Crash Safety Net Assurance -->
-      <div style="background: #f1f5f9; border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 18px;">🛡️</span>
-        <div style="font-size: 11px; color: #475569; line-height: 1.4;">
-          <strong>Zero-Crash Guarantee:</strong> Even if you choose not to top up right now, your IDE will <strong>never freeze</strong>. AgentSentinel seamlessly protects your files via Local AST Mode.
+      <!-- Zero Friction Auto-Unlock Notice -->
+      <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 18px; color: #059669;">✓</span>
+        <div style="font-size: 11px; color: #065f46; line-height: 1.4;">
+          <strong>Instant Auto-Unlock:</strong> When your payment completes, our webhook auto-detects the transaction and increments your bearer key quota live.
         </div>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         <button onclick="closeTopUpModal()" class="btn-action-outline" style="font-size: 12px; padding: 8px 16px;">Cancel</button>
-        <a href="index.html#pricing" class="btn-action-primary" style="font-size: 12px; padding: 8px 18px; text-decoration: none; background: #0284c7;">View All Subscription Plans ➔</a>
+        <button onclick="simulateBoosterUnlock()" class="btn-action-primary" style="font-size: 12px; padding: 8px 18px; background: #0284c7;">
+          ⚡ Verify &amp; Reload Live Quota
+        </button>
       </div>
     </div>
   </div>
 
   <script>
+    let activeBoosterTier = 'pro';
+
     function openTopUpModal(tier = 'pro') {
+      selectBoosterTier(tier);
       const modal = document.getElementById('topUpModal');
       if (modal) modal.style.display = 'flex';
+      startBoosterWebhookListener();
     }
 
     function closeTopUpModal() {
       const modal = document.getElementById('topUpModal');
       if (modal) modal.style.display = 'none';
+      if (window.boosterWebhookPoller) {
+        clearInterval(window.boosterWebhookPoller);
+        window.boosterWebhookPoller = null;
+      }
     }
 
-    function executeBoosterPurchase(packType) {
-      window.location.href = 'index.html#pricing';
+    function selectBoosterTier(tier) {
+      activeBoosterTier = tier;
+      const cardPro = document.getElementById('boosterCardPro');
+      const cardEnt = document.getElementById('boosterCardEnterprise');
+      const paypalPrice = document.getElementById('boosterPaypalPriceBadge');
+      const rzpPrice = document.getElementById('boosterRazorpayPriceBadge');
+
+      if (tier === 'enterprise') {
+        if (cardEnt) {
+          cardEnt.style.borderColor = '#0284c7';
+          cardEnt.style.background = '#f0f9ff';
+        }
+        if (cardPro) {
+          cardPro.style.borderColor = '#cbd5e1';
+          cardPro.style.background = '#ffffff';
+        }
+        if (paypalPrice) paypalPrice.textContent = '$69.00';
+        if (rzpPrice) rzpPrice.textContent = '₹5,999';
+      } else {
+        if (cardPro) {
+          cardPro.style.borderColor = '#0284c7';
+          cardPro.style.background = '#f0f9ff';
+        }
+        if (cardEnt) {
+          cardEnt.style.borderColor = '#cbd5e1';
+          cardEnt.style.background = '#ffffff';
+        }
+        if (paypalPrice) paypalPrice.textContent = '$10.00';
+        if (rzpPrice) rzpPrice.textContent = '₹899';
+      }
+    }
+
+    function toggleBoosterCryptoBox() {
+      const box = document.getElementById('boosterCryptoBox');
+      if (box) {
+        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function startBoosterWebhookListener() {
+      if (window.boosterWebhookPoller) clearInterval(window.boosterWebhookPoller);
+      window.boosterWebhookPoller = setInterval(async () => {
+        try {
+          const user = JSON.parse(localStorage.getItem('agentsentinel_user') || '{}');
+          if (user.token) {
+            const res = await fetch('https://mcp.getagentsentinel.com/api/keys/upgrade?token=' + encodeURIComponent(user.token));
+            if (res.ok) {
+              const data = await res.json();
+              if (data.upgraded) {
+                simulateBoosterUnlock();
+              }
+            }
+          }
+        } catch (e) {}
+      }, 4000);
+    }
+
+    function simulateBoosterUnlock() {
+      const quotaRatio = document.getElementById('dashQuotaRatio');
+      const quotaBar = document.getElementById('dashQuotaBar');
+      const added = activeBoosterTier === 'enterprise' ? 5000000 : 500000;
+      
+      let user = {};
+      try { user = JSON.parse(localStorage.getItem('agentsentinel_user') || '{}'); } catch(e){}
+      user.plan = user.plan === 'enterprise' ? 'enterprise' : 'pro';
+      user.boosterQuota = (user.boosterQuota || 0) + added;
+      localStorage.setItem('agentsentinel_user', JSON.stringify(user));
+
+      if (quotaRatio) quotaRatio.textContent = '14 / ' + (1000000 + user.boosterQuota).toLocaleString() + ' Used (+Booster Active)';
+      if (quotaBar) quotaBar.style.width = '0.8%';
+
+      alert('🎉 Booster Activated! +' + added.toLocaleString() + ' Actions added to your live Sovereign Key with lifetime carry-forward.');
+      closeTopUpModal();
     }
   </script>
 </body>
