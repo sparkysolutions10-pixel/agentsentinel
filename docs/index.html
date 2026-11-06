@@ -3928,7 +3928,51 @@
     } else {
       if (usdBtn) usdBtn.classList.add('active');
       if (inrBtn) inrBtn.classList.remove('active');
-      if (curr1) curr1.textContent = '
+      if (curr1) curr1.textContent = '$';
+      if (amt1) amt1.textContent = '9';
+      if (curr2) curr2.textContent = '$';
+      if (amt2) amt2.textContent = '29';
+      if (curr3) curr3.textContent = '$';
+      if (amt3) amt3.textContent = '199';
+      if (bCurr1) bCurr1.textContent = '$';
+      if (bAmt1) bAmt1.textContent = '10';
+      if (bCurr2) bCurr2.textContent = '$';
+      if (bAmt2) bAmt2.textContent = '69';
+      if (btnB1) btnB1.textContent = 'Refill +500,000 Actions ($10 / ₹899) ➔';
+      if (btnB2) btnB2.textContent = 'Refill +5,000,000 Actions ($69 / ₹5,999) ➔';
+    }
+  }
+
+  function upgradeToPro() {
+    checkoutPlan('pro');
+  }
+
+  function copyToClipboard(text, btn, successMsg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        if (btn) {
+          const orig = btn.textContent;
+          btn.textContent = successMsg || 'Copied!';
+          setTimeout(() => { btn.textContent = orig; }, 2000);
+        }
+      }).catch(() => fallbackCopy(text, btn, successMsg));
+    } else {
+      fallbackCopy(text, btn, successMsg);
+    }
+  }
+
+  function fallbackCopy(text, btn, successMsg) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = successMsg || 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
   }
 
   function checkoutPlan(plan) {
