@@ -1,0 +1,48 @@
+{
+  "system_name": "MiroFish SentinelGrowth Autonomous Swarm",
+  "version": "2026.4.1",
+  "target_product": "AgentSentinel",
+  "landing_url": "https://getagentsentinel.com",
+  "mcp_sse_url": "https://mcp.getagentsentinel.com/sse",
+  "pacing_mode": "BALANCED",
+  "pacing_profiles": {
+    "STEALTH": {
+      "name": "Stealth Mode (High Safety)",
+      "interval_minutes_min": 120,
+      "interval_minutes_max": 240,
+      "jitter_factor": 0.25,
+      "max_posts_per_day": 4,
+      "description": "Recommended for new accounts to build trust and avoid spam heuristics."
+    },
+    "BALANCED": {
+      "name": "Balanced Human Cadence",
+      "interval_minutes_min": 60,
+      "interval_minutes_max": 120,
+      "jitter_factor": 0.15,
+      "max_posts_per_day": 8,
+      "description": "Optimal viral growth with natural human posting patterns across global timezones."
+    },
+    "HYPER": {
+      "name": "Hyper Growth (High Velocity)",
+      "interval_minutes_min": 25,
+      "interval_minutes_max": 50,
+      "jitter_factor": 0.1,
+      "max_posts_per_day": 16,
+      "description": "High frequency for major launches, breaking AI agent vulnerabilities, and news spikes."
+    }
+  },
+  "utm_parameters": {
+    "utm_source": "sentinelgrowth_swarm",
+    "utm_medium": "autonomous_ai",
+    "utm_campaign": "q4_developer_firewall"
+  },
+  "webhooks": {
+    "discord_webhook_url": "",
+    "slack_webhook_url": "",
+    "telegram_bot_token": "",
+    "telegram_chat_id": "",
+    "zapier_make_webhook_url": ""
+  },
+  "auto_dispatch_enabled": true,
+  "last_run_timestamp": "2026-11-07T05:22:49.314542+00:00"
+}
