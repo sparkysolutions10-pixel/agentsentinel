@@ -18,6 +18,7 @@ COPY package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY docs ./docs
 COPY data ./data
+COPY growth_engine ./growth_engine
 
 EXPOSE 3000
 

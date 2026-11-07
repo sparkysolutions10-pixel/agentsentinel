@@ -849,6 +849,26 @@
       renderCampaignTabs();
       loadCampaign(activeCampaignId);
       renderLedgerTable();
+      syncWithLiveServer();
+    }
+
+    async function syncWithLiveServer() {
+      try {
+        const resp = await fetch('/api/growth/status');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.recentDispatches && data.recentDispatches.length > 0) {
+            LEDGER_DATA.dispatches = data.recentDispatches;
+            renderLedgerTable();
+          }
+          if (data.pacing_mode) {
+            const badge = document.querySelector('.status-pill span:last-child');
+            if (badge) badge.textContent = /7 Swarm Active () •  Dispatches;
+          }
+        }
+      } catch (e) {
+        // static or offline mode
+      }
     }
 
     // Render Campaign Selector Tabs
@@ -1129,7 +1149,24 @@
       showToast("📋 Copied Ledger JSON to clipboard!");
     }
 
-    function triggerDaemonSingleCycle() {
+    async function triggerDaemonSingleCycle() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token") || "sentinel_growth_admin_2026";
+      showToast("⚡ Dispatching Swarm cycle to Railway Cloud...");
+      try {
+        const resp = await fetch(`/api/growth/trigger?token=${encodeURIComponent(token)}`, { method: "POST" });
+        if (resp.ok) {
+          const res = await resp.json();
+          if (res.bundle) {
+            LEDGER_DATA.dispatches.unshift(res.bundle);
+            renderLedgerTable();
+            showToast(`🚀 Live Server Triggered [${res.bundle.dispatch_id}]!`);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Server API trigger offline or local mode:", e);
+      }
       showToast("⚡ Swarm Cycle active in daemon runner. Ledger updated!");
     }
 

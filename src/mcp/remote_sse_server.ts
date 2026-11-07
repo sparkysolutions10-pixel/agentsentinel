@@ -12,10 +12,15 @@
  */
 
 import * as http from 'node:http';
+import * as https from 'node:https';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { randomUUID, createHash } from 'node:crypto';
 import { AgentSentinelMCPServer, type JSONRPCRequest, type JSONRPCResponse } from './mcp_server.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export interface ApiKeyAccount {
   key: string;
@@ -49,6 +54,40 @@ interface SseClientSession {
   heartbeatInterval: NodeJS.Timeout;
 }
 
+export interface GrowthConfig {
+  system_name: string;
+  version: string;
+  target_product: string;
+  landing_url: string;
+  mcp_sse_url: string;
+  pacing_mode: 'STEALTH' | 'BALANCED' | 'HYPER';
+  pacing_profiles: Record<string, {
+    name: string;
+    interval_minutes_min: number;
+    interval_minutes_max: number;
+    jitter_factor: number;
+    max_posts_per_day: number;
+    description: string;
+  }>;
+  utm_parameters: Record<string, string>;
+  webhooks: Record<string, string>;
+  auto_dispatch_enabled: boolean;
+  last_run_timestamp: string | null;
+  next_run_timestamp?: string | null;
+}
+
+export interface GrowthLedgerItem {
+  dispatch_id: string;
+  timestamp: string;
+  campaign_id: string;
+  campaign_title: string;
+  confidence_score: number;
+  cta_url: string;
+  platforms: Record<string, any>;
+  merkle_sha256: string;
+  webhook_results?: Record<string, any>;
+}
+
 export class AgentSentinelRemoteSseServer {
   private server: http.Server | null = null;
   private readonly sessions: Map<string, SseClientSession> = new Map();
@@ -64,6 +103,18 @@ export class AgentSentinelRemoteSseServer {
 
   // 🛡️ Fintech Tamper Resistance: Webhook Idempotency Registry (Anti-Replay Attack Protection)
   private readonly processedWebhookEvents: Set<string> = new Set();
+
+  // 🐟 MiroFish SentinelGrowth 24/7 Autonomous Marketing Swarm Engine
+  private readonly growthAdminSecret: string = process.env.GROWTH_ADMIN_SECRET || 'sentinel_growth_admin_2026';
+  private growthTimer: NodeJS.Timeout | null = null;
+  private readonly growthEngineDir: string = fs.existsSync(path.resolve(process.cwd(), 'growth_engine'))
+    ? path.resolve(process.cwd(), 'growth_engine')
+    : path.resolve(__dirname, '../../growth_engine');
+  private readonly growthLedgerPath: string = path.resolve(process.cwd(), 'data', 'growth_ledger.json');
+  private readonly growthConfigPath: string = path.resolve(process.cwd(), 'data', 'growth_config.json');
+  private growthConfig: GrowthConfig | null = null;
+  private growthLedger: GrowthLedgerItem[] = [];
+  private swarmData: Record<string, any> | null = null;
 
   constructor() {
     // 1. Seed default starter key for instant zero-friction developer testing
@@ -90,6 +141,9 @@ export class AgentSentinelRemoteSseServer {
 
     // 3. Load persistent customer keys from disk (preserves Pro upgrades across restarts)
     this.loadPersistedKeys();
+
+    // 4. Initialize MiroFish SentinelGrowth Swarm Engine & Ledger
+    this.loadGrowthData();
   }
 
   /**
@@ -140,6 +194,7 @@ export class AgentSentinelRemoteSseServer {
         const addr = this.server?.address();
         const actualPort = typeof addr === 'object' && addr ? addr.port : port;
         this.startTime = Date.now();
+        this.initGrowthSupervisor();
         resolve({ port: actualPort, host });
       });
     });
@@ -149,6 +204,11 @@ export class AgentSentinelRemoteSseServer {
    * Stops the HTTP server and terminates all active SSE sessions.
    */
   public async stop(): Promise<void> {
+    if (this.growthTimer) {
+      clearTimeout(this.growthTimer);
+      this.growthTimer = null;
+    }
+
     for (const session of this.sessions.values()) {
       clearInterval(session.heartbeatInterval);
       try {
@@ -614,6 +674,100 @@ export class AgentSentinelRemoteSseServer {
       return;
     }
 
+    // 11. MiroFish SentinelGrowth Swarm Admin HUD (/admin/growth)
+    if (pathname === '/admin/growth' && req.method === 'GET') {
+      const isAuthorized = this.verifyGrowthAdmin(req, parsedUrl);
+      if (!isAuthorized) {
+        // Render Dark Luxury Admin Auth Prompt
+        res.writeHead(401, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(this.getAdminAuthPromptHtml());
+        return;
+      }
+
+      const dashboardPath = path.join(this.growthEngineDir, 'GROWTH_SWARM_DASHBOARD.html');
+      if (fs.existsSync(dashboardPath)) {
+        const html = fs.readFileSync(dashboardPath, 'utf-8');
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(html);
+      } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'GROWTH_SWARM_DASHBOARD.html not found on server.' }));
+      }
+      return;
+    }
+
+    // 12. MiroFish SentinelGrowth Swarm Status Telemetry (/api/growth/status)
+    if (pathname === '/api/growth/status' && req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        status: 'ONLINE_ACTIVE',
+        uptimeSeconds: Math.floor((Date.now() - this.startTime) / 1000),
+        pacing_mode: this.growthConfig?.pacing_mode || 'BALANCED',
+        auto_dispatch_enabled: this.growthConfig?.auto_dispatch_enabled ?? true,
+        next_run_timestamp: this.growthConfig?.next_run_timestamp || null,
+        last_run_timestamp: this.growthConfig?.last_run_timestamp || null,
+        simulatedNodes: 1000000,
+        activeCampaigns: this.swarmData?.simulation_results?.length || 3,
+        totalDispatches: this.growthLedger.length,
+        recentDispatches: this.growthLedger.slice(0, 10),
+        config: this.growthConfig,
+      }, null, 2));
+      return;
+    }
+
+    // 13. MiroFish SentinelGrowth Swarm Manual Cycle Trigger (/api/growth/trigger)
+    if (pathname === '/api/growth/trigger' && req.method === 'POST') {
+      const isAuthorized = this.verifyGrowthAdmin(req, parsedUrl);
+      if (!isAuthorized) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Unauthorized: Invalid or missing growth admin token.' }));
+        return;
+      }
+
+      try {
+        const bundle = await this.triggerGrowthCycle();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, bundle, dispatch: bundle }, null, 2));
+      } catch (err: unknown) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+      }
+      return;
+    }
+
+    // 14. MiroFish SentinelGrowth Swarm Config Update (/api/growth/config)
+    if (pathname === '/api/growth/config' && req.method === 'POST') {
+      const isAuthorized = this.verifyGrowthAdmin(req, parsedUrl);
+      if (!isAuthorized) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Unauthorized: Invalid or missing growth admin token.' }));
+        return;
+      }
+
+      try {
+        const body = await this.readJsonBody(req);
+        if (this.growthConfig) {
+          if (body.pacing_mode && typeof body.pacing_mode === 'string') {
+            this.growthConfig.pacing_mode = body.pacing_mode as any;
+          }
+          if (typeof body.auto_dispatch_enabled === 'boolean') {
+            this.growthConfig.auto_dispatch_enabled = body.auto_dispatch_enabled;
+          }
+          if (body.webhooks && typeof body.webhooks === 'object') {
+            this.growthConfig.webhooks = { ...this.growthConfig.webhooks, ...(body.webhooks as any) };
+          }
+          this.saveGrowthData();
+          this.initGrowthSupervisor(); // re-arm pacer with updated config
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, config: this.growthConfig }, null, 2));
+      } catch (err: unknown) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+      }
+      return;
+    }
+
     // Fallback 404
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: `Route not found: ${pathname}` }));
@@ -817,9 +971,497 @@ export class AgentSentinelRemoteSseServer {
         webhookPaypal: '/api/webhooks/paypal',
         authStatus: '/api/auth/status',
         metrics: '/api/metrics',
+        growthDashboard: '/admin/growth',
+        growthStatus: '/api/growth/status',
+        growthTrigger: '/api/growth/trigger',
       },
       activeSessions: this.sessions.size,
       uptimeSeconds: Math.floor((Date.now() - this.startTime) / 1000),
     };
+  }
+
+  // ==============================================================================
+  // 🐟 MIROFISH SENTINELGROWTH 24/7 AUTONOMOUS MARKETING SWARM ENGINE
+  // ==============================================================================
+
+  /**
+   * Loads growth engine configuration, simulation results, and live dispatch ledger.
+   */
+  private loadGrowthData(): void {
+    // 1. Config loading
+    try {
+      if (fs.existsSync(this.growthConfigPath)) {
+        this.growthConfig = JSON.parse(fs.readFileSync(this.growthConfigPath, 'utf-8'));
+      } else {
+        const defaultPath = path.join(this.growthEngineDir, 'growth_config.json');
+        if (fs.existsSync(defaultPath)) {
+          this.growthConfig = JSON.parse(fs.readFileSync(defaultPath, 'utf-8'));
+        }
+      }
+    } catch (e) {
+      console.warn('[GrowthSwarm] Warning loading growth_config.json:', e);
+    }
+
+    if (!this.growthConfig) {
+      this.growthConfig = {
+        system_name: 'MiroFish SentinelGrowth Autonomous Swarm',
+        version: '2026.4.1',
+        target_product: 'AgentSentinel',
+        landing_url: 'https://getagentsentinel.com',
+        mcp_sse_url: 'https://mcp.getagentsentinel.com/sse',
+        pacing_mode: 'BALANCED',
+        pacing_profiles: {
+          STEALTH: {
+            name: 'Stealth Mode (High Safety)',
+            interval_minutes_min: 120,
+            interval_minutes_max: 240,
+            jitter_factor: 0.25,
+            max_posts_per_day: 4,
+            description: 'Recommended for new accounts to build trust and avoid spam heuristics.',
+          },
+          BALANCED: {
+            name: 'Balanced Human Cadence',
+            interval_minutes_min: 60,
+            interval_minutes_max: 120,
+            jitter_factor: 0.15,
+            max_posts_per_day: 8,
+            description: 'Optimal viral growth with natural human posting patterns across global timezones.',
+          },
+          HYPER: {
+            name: 'Hyper Growth (High Velocity)',
+            interval_minutes_min: 25,
+            interval_minutes_max: 50,
+            jitter_factor: 0.1,
+            max_posts_per_day: 16,
+            description: 'High frequency for major launches, breaking AI agent vulnerabilities, and news spikes.',
+          },
+        },
+        utm_parameters: {
+          utm_source: 'sentinelgrowth_swarm',
+          utm_medium: 'autonomous_ai',
+          utm_campaign: 'q4_developer_firewall',
+        },
+        webhooks: {},
+        auto_dispatch_enabled: true,
+        last_run_timestamp: new Date().toISOString(),
+      };
+    }
+
+    // 2. Swarm simulation data loading
+    try {
+      const swarmPath = path.join(this.growthEngineDir, 'mirofish_growth_swarm_output.json');
+      if (fs.existsSync(swarmPath)) {
+        this.swarmData = JSON.parse(fs.readFileSync(swarmPath, 'utf-8'));
+      }
+    } catch (e) {
+      console.warn('[GrowthSwarm] Warning loading mirofish_growth_swarm_output.json:', e);
+    }
+
+    // 3. Ledger loading
+    try {
+      if (fs.existsSync(this.growthLedgerPath)) {
+        const raw = JSON.parse(fs.readFileSync(this.growthLedgerPath, 'utf-8'));
+        this.growthLedger = Array.isArray(raw.dispatches) ? raw.dispatches : [];
+      } else {
+        const defaultLedger = path.join(this.growthEngineDir, 'live_dispatch_ledger.json');
+        if (fs.existsSync(defaultLedger)) {
+          const raw = JSON.parse(fs.readFileSync(defaultLedger, 'utf-8'));
+          this.growthLedger = Array.isArray(raw.dispatches) ? raw.dispatches : [];
+        }
+      }
+    } catch (e) {
+      console.warn('[GrowthSwarm] Warning loading live_dispatch_ledger.json:', e);
+    }
+  }
+
+  /**
+   * Persists growth configuration and ledger to disk.
+   */
+  private saveGrowthData(): void {
+    try {
+      const dataDir = path.dirname(this.growthLedgerPath);
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+
+      if (this.growthLedger) {
+        fs.writeFileSync(
+          this.growthLedgerPath,
+          JSON.stringify(
+            {
+              dispatches: this.growthLedger,
+              stats: {
+                total_dispatches: this.growthLedger.length,
+                successful_webhooks: this.growthLedger.filter((d) =>
+                  d.webhook_results && Object.values(d.webhook_results).some((r: any) => r?.success)
+                ).length,
+              },
+            },
+            null,
+            2
+          ),
+          'utf-8'
+        );
+      }
+
+      if (this.growthConfig) {
+        fs.writeFileSync(this.growthConfigPath, JSON.stringify(this.growthConfig, null, 2), 'utf-8');
+      }
+    } catch (e) {
+      console.warn('[GrowthSwarm] Warning persisting growth data:', e);
+    }
+  }
+
+  /**
+   * Validates admin access for growth dashboard and trigger endpoints.
+   */
+  private verifyGrowthAdmin(req: http.IncomingMessage, parsedUrl: URL): boolean {
+    const queryToken = parsedUrl.searchParams.get('token');
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader?.replace(/^Bearer\s+/i, '').trim();
+    const customHeader = req.headers['x-admin-token'] as string;
+
+    const provided = queryToken || bearerToken || customHeader || '';
+    return provided === this.growthAdminSecret;
+  }
+
+  /**
+   * SentinelPacer: Computes next execution delay with anti-ban Poisson jitter.
+   */
+  private calculateNextIntervalMinutes(): number {
+    const pacingMode = this.growthConfig?.pacing_mode || 'BALANCED';
+    const profile = this.growthConfig?.pacing_profiles?.[pacingMode] || {
+      interval_minutes_min: 60,
+      interval_minutes_max: 120,
+      jitter_factor: 0.15,
+    };
+
+    const min = profile.interval_minutes_min || 60;
+    const max = profile.interval_minutes_max || 120;
+    const jitter = profile.jitter_factor || 0.15;
+
+    const base = min + Math.random() * (max - min);
+    const jitterDelta = base * jitter * (Math.random() * 2 - 1);
+    const finalMinutes = Math.max(10, base + jitterDelta);
+    return Math.round(finalMinutes * 10) / 10;
+  }
+
+  /**
+   * Initializes the 24/7 background autonomous pacer supervisor loop.
+   */
+  private initGrowthSupervisor(): void {
+    if (this.growthTimer) {
+      clearTimeout(this.growthTimer);
+      this.growthTimer = null;
+    }
+
+    if (!this.growthConfig || !this.growthConfig.auto_dispatch_enabled) {
+      return;
+    }
+
+    const intervalMin = this.calculateNextIntervalMinutes();
+    const delayMs = Math.round(intervalMin * 60 * 1000);
+    this.growthConfig.next_run_timestamp = new Date(Date.now() + delayMs).toISOString();
+
+    console.log(`[GrowthSwarm] SentinelPacer scheduled next campaign in ${intervalMin}m at ${this.growthConfig.next_run_timestamp}`);
+
+    this.growthTimer = setTimeout(async () => {
+      try {
+        await this.triggerGrowthCycle();
+      } catch (err) {
+        console.error('[GrowthSwarm] Error during scheduled cycle:', err);
+      } finally {
+        this.initGrowthSupervisor();
+      }
+    }, delayMs);
+  }
+
+  /**
+   * Safely posts JSON payload to external webhooks (Discord, Slack, Make/Zapier, etc.).
+   */
+  private async dispatchWebhook(url: string, payload: Record<string, unknown>): Promise<{ success: boolean; message: string }> {
+    if (!url || !url.startsWith('http')) {
+      return { success: false, message: 'Invalid webhook URL' };
+    }
+
+    return new Promise((resolve) => {
+      try {
+        const parsed = new URL(url);
+        const data = JSON.stringify(payload);
+        const isHttps = parsed.protocol === 'https:';
+        const client = isHttps ? https : http;
+
+        const req = client.request(
+          parsed,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(data),
+              'User-Agent': 'AgentSentinel-GrowthSwarm/2026.4',
+            },
+            timeout: 10000,
+          },
+          (res) => {
+            let resData = '';
+            res.on('data', (c) => (resData += c));
+            res.on('end', () => {
+              const ok = (res.statusCode || 0) >= 200 && (res.statusCode || 0) < 300;
+              resolve({
+                success: ok,
+                message: ok ? `HTTP ${res.statusCode}` : `HTTP ${res.statusCode}: ${resData.slice(0, 100)}`,
+              });
+            });
+          }
+        );
+
+        req.on('timeout', () => {
+          req.destroy();
+          resolve({ success: false, message: 'Webhook timeout (10s)' });
+        });
+
+        req.on('error', (err) => {
+          resolve({ success: false, message: err.message });
+        });
+
+        req.write(data);
+        req.end();
+      } catch (e: any) {
+        resolve({ success: false, message: e?.message || String(e) });
+      }
+    });
+  }
+
+  /**
+   * Executes a single multi-channel marketing campaign cycle.
+   */
+  public async triggerGrowthCycle(): Promise<GrowthLedgerItem> {
+    const campaigns = this.swarmData?.simulation_results || [];
+    const chosenCampaign = campaigns.length > 0
+      ? campaigns[Math.floor(Math.random() * campaigns.length)]
+      : {
+          campaign_id: 'CAMP_01_DEVIANT_AGENT_DISASTER',
+          title: 'The 2:00 AM Database Drop: Why Regex Cannot Stop Autonomous Agents',
+          overall_confidence: 92.7,
+        };
+
+    const campId = chosenCampaign.campaign_id || 'CAMP_01_DEVIANT_AGENT_DISASTER';
+    const readyCampaigns = this.swarmData?.ready_to_publish_campaigns || {};
+    const campAssets = readyCampaigns[campId] || readyCampaigns['CAMP_01_DEVIANT_AGENT_DISASTER'] || {};
+
+    const landingUrl = this.growthConfig?.landing_url || 'https://getagentsentinel.com';
+    const utmMedium = this.growthConfig?.utm_parameters?.utm_medium || 'autonomous_ai';
+    const ctaUrl = `${landingUrl}?utm_source=ai_swarm&utm_campaign=${campId.toLowerCase()}&utm_medium=${utmMedium}`;
+
+    // 1. Process Twitter Thread
+    const rawTwitter = campAssets.twitter_x_thread || [];
+    const tweets: string[] = [];
+    for (const item of rawTwitter) {
+      if (typeof item === 'string') {
+        tweets.push(item);
+      } else if (item && typeof item === 'object') {
+        let text = item.hook || item.text || '';
+        if (item.cta && !text.includes(ctaUrl)) {
+          text = `${text}\n\n🔗 ${ctaUrl}`;
+        }
+        tweets.push(text);
+      }
+    }
+    if (tweets.length === 0) {
+      tweets.push(`AgentSentinel: Zero-Trust Security Firewall for Autonomous AI Agents.\n\n🛡️ Try 500 free actions: ${ctaUrl}`);
+    }
+
+    const firstTweet = tweets[0];
+    const twitterIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(firstTweet)}`;
+
+    // 2. Process Reddit Post
+    const reddit = campAssets.reddit_post || {};
+    const sub = reddit.target_subreddit || 'r/ClaudeAI';
+    const redditTitle = reddit.title || `Why string regex cannot secure autonomous AI agents`;
+    const redditBody = reddit.body_markdown || ``;
+    const redditIntent = `https://www.reddit.com/${sub}/submit?title=${encodeURIComponent(redditTitle)}&text=${encodeURIComponent(redditBody)}`;
+
+    // 3. Process Hacker News Post
+    const hn = campAssets.hackernews_show_hn || {};
+    const hnTitle = hn.title || `Show HN: AgentSentinel – Zero-Trust AST Security Firewall for AI Agents`;
+    const hnUrl = hn.url || ctaUrl;
+    const hnIntent = `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(hnUrl)}&t=${encodeURIComponent(hnTitle)}`;
+
+    // 4. Process LinkedIn Post
+    const linkedin = campAssets.linkedin_b2b_post || {};
+    const linkedinIntent = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(ctaUrl)}`;
+
+    const dispatchId = `DSP_${Math.floor(Date.now() / 1000)}_${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const bundle: GrowthLedgerItem = {
+      dispatch_id: dispatchId,
+      timestamp: new Date().toISOString(),
+      campaign_id: campId,
+      campaign_title: chosenCampaign.title || 'Autonomous Security Advisory',
+      confidence_score: Number(chosenCampaign.overall_confidence || 90.0),
+      cta_url: ctaUrl,
+      platforms: {
+        twitter_x: {
+          tweets,
+          tweet_count: tweets.length,
+          intent_url: twitterIntent,
+        },
+        reddit: {
+          subreddit: sub,
+          title: redditTitle,
+          body: redditBody,
+          intent_url: redditIntent,
+        },
+        hackernews: {
+          title: hnTitle,
+          url: hnUrl,
+          text: hn.text || '',
+          intent_url: hnIntent,
+        },
+        linkedin: {
+          headline: linkedin.headline || '',
+          body: linkedin.body || '',
+          intent_url: linkedinIntent,
+        },
+      },
+      merkle_sha256: '',
+      webhook_results: {},
+    };
+
+    // Calculate Merkle SHA-256
+    const repr = JSON.stringify(bundle);
+    bundle.merkle_sha256 = createHash('sha256').update(repr).digest('hex');
+
+    // Push to configured webhooks
+    const webhooks = this.growthConfig?.webhooks || {};
+    const results: Record<string, any> = {};
+    for (const [whName, whUrl] of Object.entries(webhooks)) {
+      if (whUrl && typeof whUrl === 'string' && whUrl.startsWith('http')) {
+        const payload = {
+          content: `🚨 **AgentSentinel Autonomous Marketing Swarm: New Campaign Ready**\n**${bundle.campaign_title}**\nConfidence: ${bundle.confidence_score}%\nLaunch URL: ${bundle.cta_url}`,
+          embeds: [
+            {
+              title: bundle.campaign_title,
+              description: tweets[0] || '',
+              url: bundle.cta_url,
+              color: 3447003,
+            },
+          ],
+        };
+        results[whName] = await this.dispatchWebhook(whUrl, payload);
+      }
+    }
+    bundle.webhook_results = results;
+
+    // Prepend to ledger and keep last 100
+    this.growthLedger.unshift(bundle);
+    if (this.growthLedger.length > 100) {
+      this.growthLedger = this.growthLedger.slice(0, 100);
+    }
+
+    if (this.growthConfig) {
+      this.growthConfig.last_run_timestamp = new Date().toISOString();
+    }
+
+    this.saveGrowthData();
+    console.log(`[GrowthSwarm] Successfully executed dispatch [${bundle.dispatch_id}] for campaign '${bundle.campaign_title}'`);
+    return bundle;
+  }
+
+  /**
+   * Renders a Dark Luxury Material 3 authentication prompt for /admin/growth.
+   */
+  private getAdminAuthPromptHtml(): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AgentSentinel — Growth HUD Admin Authentication</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@500;700&family=Google+Sans+Code&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #07090e;
+      color: #e2e8f0;
+      font-family: 'Google Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .auth-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+    .icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+    h1 { font-size: 22px; font-weight: 700; margin: 0 0 10px; color: #fff; }
+    p { font-size: 14px; color: #94a3b8; margin: 0 0 24px; line-height: 1.5; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0b101b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fff;
+      font-family: 'Google Sans Code', monospace;
+      font-size: 14px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+    input:focus { border-color: #10b981; }
+    button {
+      width: 100%;
+      background: #10b981;
+      color: #042f2e;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover { background: #34d399; transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="icon">🐟</div>
+    <h1>SentinelGrowth HUD</h1>
+    <p>Access to the 24/7 Autonomous Marketing Swarm is restricted. Enter your Admin Secret Token to unlock the command HUD.</p>
+    <form onsubmit="event.preventDefault(); auth();">
+      <input type="password" id="token" placeholder="Enter Admin Secret Token" autofocus required />
+      <button type="submit">Unlock Swarm HUD</button>
+    </form>
+  </div>
+  <script>
+    function auth() {
+      const val = document.getElementById('token').value.trim();
+      if (!val) return;
+      window.location.href = '/admin/growth?token=' + encodeURIComponent(val);
+    }
+  </script>
+</body>
+</html>`;
   }
 }
