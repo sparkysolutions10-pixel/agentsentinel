@@ -5,7 +5,7 @@
     "plan": "pro",
     "createdAt": "2026-11-06T00:00:00.000Z",
     "quotaLimit": 1000000,
-    "quotaUsed": 0,
+    "quotaUsed": 1,
     "status": "active"
   },
   {
@@ -14,6 +14,59 @@
     "plan": "free",
     "createdAt": "2026-11-06T00:00:00.000Z",
     "quotaLimit": 500,
+    "quotaUsed": 0,
+    "status": "active"
+  },
+  {
+    "key": "sk_free_a0c9017f88d62e4b60a91d61",
+    "email": "developer@example.com",
+    "plan": "free",
+    "createdAt": "2026-11-15T16:06:42.868Z",
+    "quotaLimit": 500,
+    "quotaUsed": 0,
+    "status": "active"
+  },
+  {
+    "key": "sk_free_fabde8052a4dfddbddff43db",
+    "email": "pro_user@example.com",
+    "plan": "pro",
+    "createdAt": "2026-11-15T16:06:42.876Z",
+    "quotaLimit": 1000000,
+    "quotaUsed": 0,
+    "status": "active",
+    "subscriptionStatus": "active",
+    "expiresAt": 1797350802883
+  },
+  {
+    "key": "sk_free_3d3e6179b0424f29790d3671",
+    "email": "expired_dev@example.com",
+    "plan": "pro",
+    "createdAt": "2026-11-15T16:06:42.939Z",
+    "quotaLimit": 1000000,
+    "quotaUsed": 0,
+    "status": "suspended",
+    "subscriptionStatus": "expired",
+    "expiresAt": 1794672402942
+  },
+  {
+    "key": "sk_live_46ecf649c6177527da2acbd0",
+    "email": "razorpay_buyer@domain.com",
+    "plan": "pro",
+    "createdAt": "2026-11-15T16:06:42.995Z",
+    "expiresAt": 1797350802995,
+    "subscriptionStatus": "active",
+    "quotaLimit": 1000000,
+    "quotaUsed": 0,
+    "status": "active"
+  },
+  {
+    "key": "sk_ent_2526c2e89c08f3e23ac87b4f",
+    "email": "enterprise_buyer@paypal.com",
+    "plan": "enterprise",
+    "createdAt": "2026-11-15T16:06:43.004Z",
+    "expiresAt": 1797350803004,
+    "subscriptionStatus": "active",
+    "quotaLimit": 10000000,
     "quotaUsed": 0,
     "status": "active"
   }

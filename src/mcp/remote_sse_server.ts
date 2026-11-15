@@ -99,7 +99,7 @@ export class AgentSentinelRemoteSseServer {
   // 🛡️ Global Server-Wide Free Tier Circuit Breaker (Zero Out-of-Pocket Liability Protection)
   private globalDailyFreeRequestsCount: number = 0;
   private lastDailyResetTimestamp: number = Date.now();
-  private readonly GLOBAL_DAILY_FREE_CAP: number = 25_000;
+  private readonly GLOBAL_DAILY_FREE_CAP: number = 100;
 
   // 🛡️ Fintech Tamper Resistance: Webhook Idempotency Registry (Anti-Replay Attack Protection)
   private readonly processedWebhookEvents: Set<string> = new Set();
@@ -134,7 +134,7 @@ export class AgentSentinelRemoteSseServer {
       email: 'guest@community.agentsentinel.dev',
       plan: 'free',
       createdAt: new Date().toISOString(),
-      quotaLimit: 500,
+      quotaLimit: 5,
       quotaUsed: 0,
       status: 'active',
     });
@@ -245,7 +245,7 @@ export class AgentSentinelRemoteSseServer {
       email: email.trim().toLowerCase(),
       plan,
       createdAt: new Date().toISOString(),
-      quotaLimit: plan === 'pro' ? 1_000_000 : 500,
+      quotaLimit: plan === 'pro' ? 1_000_000 : 5,
       quotaUsed: 0,
       status: 'active',
     };
@@ -334,7 +334,7 @@ export class AgentSentinelRemoteSseServer {
           email: 'guest@community.agentsentinel.dev',
           plan: 'free',
           createdAt: new Date().toISOString(),
-          quotaLimit: 500,
+          quotaLimit: 5,
           quotaUsed: 0,
           status: 'active',
         };
@@ -347,7 +347,7 @@ export class AgentSentinelRemoteSseServer {
     const account = this.apiKeys.get(cleanToken);
 
     if (!account) {
-      return { valid: false, error: 'Invalid API key. Generate a free key at https://getagentsentinel.com/' };
+      return { valid: false, error: 'Invalid API key. Generate a key at https://getagentsentinel.com/' };
     }
 
     // 🛡️ Subscription Expiry Enforcement: Block expired keys when 30-day billing cycle ends
@@ -357,7 +357,7 @@ export class AgentSentinelRemoteSseServer {
         account.subscriptionStatus = 'expired';
         return {
           valid: false,
-          error: `Subscription expired on ${new Date(account.expiresAt).toLocaleDateString()}. Please renew at https://getagentsentinel.com/ to restore 1,000,000 monthly quota.`,
+          error: `Subscription expired on ${new Date(account.expiresAt).toLocaleDateString()}. Please renew at https://getagentsentinel.com/ to restore active cloud quota.`,
         };
       }
     }
@@ -369,7 +369,7 @@ export class AgentSentinelRemoteSseServer {
     if (account.quotaUsed >= account.quotaLimit) {
       return {
         valid: false,
-        error: `Monthly quota exceeded (${account.quotaUsed}/${account.quotaLimit}). Upgrade to Pro at https://getagentsentinel.com/`,
+        error: `Trial quota exceeded (${account.quotaUsed}/${account.quotaLimit} scans used). Upgrade to AgentSentinel Pro ($299/mo) at https://getagentsentinel.com/ to unlock unlimited continuous AST protection.`,
       };
     }
 
@@ -383,7 +383,7 @@ export class AgentSentinelRemoteSseServer {
       if (this.globalDailyFreeRequestsCount >= this.GLOBAL_DAILY_FREE_CAP) {
         return {
           valid: false,
-          error: `Global daily free community capacity reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro at https://getagentsentinel.com/ for dedicated cloud bandwidth or run locally with npx @sparkysolutions/agentsentinel`,
+          error: `Global server safety limit reached (${this.GLOBAL_DAILY_FREE_CAP} calls/day). Upgrade to Pro ($299/mo) at https://getagentsentinel.com/ for dedicated priority bandwidth or run locally via GitHub Action.`,
         };
       }
     }
