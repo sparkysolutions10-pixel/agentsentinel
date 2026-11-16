@@ -1,0 +1,1 @@
+{"version":3,"file":"unicode_homoglyph_detector.d.ts","sourceRoot":"","sources":["../../src/utils/unicode_homoglyph_detector.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,qBAAa,wBAAwB;IACnC,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,aAAa,CAYnC;WAEY,aAAa,CAAC,KAAK,EAAE,MAAM,GAAG,OAAO;WAUrC,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;WAShC,eAAe,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;CAUrD"}

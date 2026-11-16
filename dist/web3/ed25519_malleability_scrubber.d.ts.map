@@ -1,0 +1,1 @@
+{"version":3,"file":"ed25519_malleability_scrubber.d.ts","sourceRoot":"","sources":["../../src/web3/ed25519_malleability_scrubber.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAKlG,MAAM,WAAW,yBAAyB;IACxC,mBAAmB,CAAC,EAAE,OAAO,CAAC;CAC/B;AAED,wBAAgB,6BAA6B,CAAC,MAAM,GAAE,yBAA8B,GAAG,YAAY,CAkElG"}

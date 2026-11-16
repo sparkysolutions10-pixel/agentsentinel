@@ -1,0 +1,1 @@
+{"version":3,"file":"agent_delegation_validator.d.ts","sourceRoot":"","sources":["../../src/web3/agent_delegation_validator.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,qBAAqB;IACpC,sBAAsB,CAAC,EAAE,OAAO,CAAC;IACjC,mBAAmB,CAAC,EAAE,MAAM,CAAC;CAC9B;AAED,wBAAgB,yBAAyB,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CAgD1F"}

@@ -1,0 +1,144 @@
+/**
+ * High-Entropy Secret & Credential Pattern Matcher.
+ * Scans tool call parameters and payloads for leaked API keys, tokens,
+ * passwords, and high-entropy cryptographic strings.
+ */
+import { Verdict } from '../types.js';
+import { calculateShannonEntropy } from './shannon_entropy.js';
+export { calculateShannonEntropy } from './shannon_entropy.js';
+/**
+ * Redacts secret string, preserving first and last 3 characters for diagnosis.
+ */
+export function redactSecret(secret) {
+    if (!secret)
+        return '';
+    if (secret.length <= 8)
+        return '********';
+    const prefix = secret.slice(0, 3);
+    const suffix = secret.slice(-3);
+    return `${prefix}***${suffix}`;
+}
+// Built-in secret patterns
+const SECRET_REGEX_PATTERNS = [
+    // Generic Bearer Token
+    {
+        name: 'Bearer Token',
+        pattern: /\bBearer\s+([a-zA-Z0-9_\-\.]{24,})\b/gi,
+        minEntropy: 3.5,
+    },
+    // Key-value assignment (api_key="...", database_password="...", token="...")
+    {
+        name: 'Secret Assignment',
+        pattern: /(?:[a-zA-Z0-9_]*(?:api[_-]?key|secret|token|password|passwd|private[_-]?key)[a-zA-Z0-9_]*)\s*[:=]\s*['"]([^'"\r\n]{8,})['"]/gi,
+        minEntropy: 3.0,
+    },
+    // High-entropy 32-character or 64-character hex tokens
+    {
+        name: 'High-Entropy Hex Token',
+        pattern: /\b[0-9a-fA-F]{32,64}\b/g,
+        minEntropy: 3.4,
+        minLength: 32,
+    },
+    // High-entropy Base64 secret strings
+    {
+        name: 'High-Entropy Base64 Secret',
+        pattern: /\b[A-Za-z0-9+/=]{24,}\b/g,
+        minEntropy: 4.2,
+        minLength: 24,
+    },
+];
+/**
+ * Scans a plain text string for high-entropy secrets and credential signatures.
+ */
+export function scanStringForSecrets(text, minEntropyThreshold = 3.6) {
+    if (!text || typeof text !== 'string')
+        return [];
+    const results = [];
+    const seenMatches = new Set();
+    for (const { name, pattern, minEntropy, minLength } of SECRET_REGEX_PATTERNS) {
+        pattern.lastIndex = 0;
+        let match;
+        while ((match = pattern.exec(text)) !== null) {
+            const candidate = match[1] || match[0];
+            if (!candidate || seenMatches.has(candidate))
+                continue;
+            if (minLength && candidate.length < minLength)
+                continue;
+            const entropy = calculateShannonEntropy(candidate);
+            const threshold = minEntropy ?? minEntropyThreshold;
+            if (entropy >= threshold) {
+                seenMatches.add(candidate);
+                results.push({
+                    secretType: name,
+                    matchedText: candidate,
+                    redactedText: redactSecret(candidate),
+                    entropy: parseFloat(entropy.toFixed(2)),
+                });
+            }
+        }
+    }
+    return results;
+}
+/**
+ * Recursively scans arbitrary tool call parameters for secrets.
+ */
+export function scanContextForSecrets(ctx, minEntropyThreshold = 3.6) {
+    if (!ctx.params || typeof ctx.params !== 'object') {
+        return [];
+    }
+    const allMatches = [];
+    function traverse(obj, currentPath) {
+        if (obj === null || obj === undefined)
+            return;
+        if (typeof obj === 'string') {
+            const matches = scanStringForSecrets(obj, minEntropyThreshold);
+            for (const m of matches) {
+                m.location = currentPath;
+                allMatches.push(m);
+            }
+            return;
+        }
+        if (Array.isArray(obj)) {
+            obj.forEach((item, index) => traverse(item, `${currentPath}[${index}]`));
+            return;
+        }
+        if (typeof obj === 'object') {
+            for (const [key, val] of Object.entries(obj)) {
+                const nextPath = currentPath ? `${currentPath}.${key}` : key;
+                traverse(val, nextPath);
+            }
+        }
+    }
+    traverse(ctx.params, '');
+    return allMatches;
+}
+/**
+ * Creates SentinelRule to guard against credential leakage in tool parameters.
+ */
+export function createHighEntropySecretGuardRule(options) {
+    const minEntropy = options?.minEntropyThreshold ?? 3.6;
+    return {
+        id: 'secrets-detect-high-entropy',
+        name: 'Block Leaked High-Entropy Secrets and Credentials',
+        category: 'secrets',
+        priority: 980,
+        enabled: true,
+        evaluate: (ctx) => {
+            const matches = scanContextForSecrets(ctx, minEntropy);
+            if (matches.length > 0) {
+                const first = matches[0];
+                const countDesc = matches.length > 1 ? ` (${matches.length} secrets detected)` : '';
+                return {
+                    ruleId: 'secrets-detect-high-entropy',
+                    ruleName: 'Block Leaked High-Entropy Secrets and Credentials',
+                    severity: 'critical',
+                    verdict: Verdict.BLOCK,
+                    reason: `Potential credential leakage intercepted in '${first.location || 'params'}': ${first.secretType} [${first.redactedText}] (entropy: ${first.entropy})${countDesc}`,
+                };
+            }
+            return null;
+        },
+    };
+}
+export const highEntropySecretGuardRule = createHighEntropySecretGuardRule();
+//# sourceMappingURL=entropy_matcher.js.map

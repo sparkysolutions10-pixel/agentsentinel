@@ -1,0 +1,1 @@
+{"version":3,"file":"safe_file_reader.js","sourceRoot":"","sources":["../../src/utils/safe_file_reader.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,cAAc;IAClB,MAAM,CAAC,UAAU,CAAC,SAAiB,EAAE,WAAmB,EAAE,GAAG,IAAI,GAAG,IAAI;QAC7E,OAAO,SAAS,IAAI,CAAC,IAAI,SAAS,IAAI,QAAQ,CAAC;IACjD,CAAC;CACF"}

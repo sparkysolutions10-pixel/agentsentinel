@@ -1,0 +1,1 @@
+{"version":3,"file":"file_extension_allowlist.d.ts","sourceRoot":"","sources":["../../src/utils/file_extension_allowlist.ts"],"names":[],"mappings":"AAEA;;GAEG;AAEH,qBAAa,sBAAsB;IACjC,OAAO,CAAC,iBAAiB,CAAc;gBAE3B,iBAAiB,EAAE,MAAM,EAAE;IAMhC,SAAS,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO;IAMpC,kBAAkB,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO;IAO7C,oBAAoB,IAAI,MAAM,EAAE;CAGxC"}

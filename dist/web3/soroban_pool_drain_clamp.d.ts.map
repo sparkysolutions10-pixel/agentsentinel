@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_pool_drain_clamp.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_pool_drain_clamp.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,sBAAsB;IACrC,eAAe,CAAC,EAAE,MAAM,CAAC;CAC1B;AAED,wBAAgB,+BAA+B,CAAC,MAAM,GAAE,sBAA2B,GAAG,YAAY,CAqCjG"}

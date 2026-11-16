@@ -1,0 +1,1 @@
+{"version":3,"file":"session_inactivity_timeout_guard.js","sourceRoot":"","sources":["../../src/utils/session_inactivity_timeout_guard.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,6BAA6B;IACjC,MAAM,CAAC,UAAU,CAAC,YAAoB,EAAE,YAAoB,MAAM,EAAE,QAAgB,IAAI,CAAC,GAAG,EAAE;QACnG,OAAO,KAAK,GAAG,YAAY,IAAI,SAAS,CAAC;IAC3C,CAAC;CACF"}

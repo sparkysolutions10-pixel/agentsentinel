@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_call_depth_limiter.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_call_depth_limiter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,sBAAsB;IACrC,YAAY,CAAC,EAAE,MAAM,CAAC;CACvB;AAED,wBAAgB,iCAAiC,CAAC,MAAM,GAAE,sBAA2B,GAAG,YAAY,CAuDnG"}

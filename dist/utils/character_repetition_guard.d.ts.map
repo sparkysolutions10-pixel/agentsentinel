@@ -1,0 +1,1 @@
+{"version":3,"file":"character_repetition_guard.d.ts","sourceRoot":"","sources":["../../src/utils/character_repetition_guard.ts"],"names":[],"mappings":"AAAA,qBAAa,wBAAwB;WACrB,sBAAsB,CAAC,KAAK,EAAE,MAAM,EAAE,cAAc,GAAE,MAAW,GAAG,OAAO;WAM3E,QAAQ,CAAC,KAAK,EAAE,MAAM,EAAE,cAAc,GAAE,MAAW,GAAG,MAAM;CAK3E"}

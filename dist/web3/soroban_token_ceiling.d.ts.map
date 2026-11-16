@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_token_ceiling.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_token_ceiling.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,yBAAyB;IACxC,iBAAiB,CAAC,EAAE,MAAM,CAAC;IAC3B,qBAAqB,CAAC,EAAE,MAAM,EAAE,CAAC;CAClC;AAED,wBAAgB,qCAAqC,CAAC,MAAM,GAAE,yBAA8B,GAAG,YAAY,CA+C1G"}

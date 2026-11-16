@@ -1,0 +1,1 @@
+{"version":3,"file":"beaver_triples.d.ts","sourceRoot":"","sources":["../../src/crypto/beaver_triples.ts"],"names":[],"mappings":"AAEA,MAAM,WAAW,YAAY;IAC3B,CAAC,EAAE,MAAM,CAAC;IACV,CAAC,EAAE,MAAM,CAAC;IACV,CAAC,EAAE,MAAM,CAAC;CACX;AAED,qBAAa,qBAAqB;WAClB,cAAc,CAAC,QAAQ,SAAO,GAAG,YAAY;WAM7C,cAAc,CAAC,CAAC,EAAE,MAAM,EAAE,CAAC,EAAE,MAAM,EAAE,MAAM,EAAE,YAAY,GAAG,MAAM;CAKjF"}

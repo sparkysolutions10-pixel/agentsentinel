@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_rpc_failover.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_rpc_failover.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,wBAAwB;IACvC,YAAY,CAAC,EAAE,MAAM,CAAC;IACtB,YAAY,CAAC,EAAE,MAAM,CAAC;IACtB,iBAAiB,CAAC,EAAE,MAAM,EAAE,CAAC;CAC9B;AAED,wBAAgB,4BAA4B,CAAC,MAAM,GAAE,wBAA6B,GAAG,YAAY,CAkDhG"}

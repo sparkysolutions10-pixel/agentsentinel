@@ -1,0 +1,1 @@
+{"version":3,"file":"session_inactivity_timeout_guard.d.ts","sourceRoot":"","sources":["../../src/utils/session_inactivity_timeout_guard.ts"],"names":[],"mappings":"AAAA,qBAAa,6BAA6B;WAC1B,UAAU,CAAC,YAAY,EAAE,MAAM,EAAE,SAAS,GAAE,MAAe,EAAE,KAAK,GAAE,MAAmB,GAAG,OAAO;CAGhH"}

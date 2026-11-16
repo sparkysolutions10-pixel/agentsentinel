@@ -1,0 +1,1 @@
+{"version":3,"file":"semver_range_matcher.d.ts","sourceRoot":"","sources":["../../src/utils/semver_range_matcher.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,qBAAa,kBAAkB;WACf,SAAS,CAAC,OAAO,EAAE,MAAM,EAAE,KAAK,EAAE,MAAM,GAAG,OAAO;IAgDhE,OAAO,CAAC,MAAM,CAAC,KAAK;IAapB,OAAO,CAAC,MAAM,CAAC,OAAO;CAKvB"}

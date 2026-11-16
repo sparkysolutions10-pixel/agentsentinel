@@ -1,0 +1,1 @@
+{"version":3,"file":"runtime_environment_detector.d.ts","sourceRoot":"","sources":["../../src/utils/runtime_environment_detector.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,UAAU,GAAG,KAAK,GAAG,MAAM,GAAG,MAAM,GAAG,SAAS,GAAG,SAAS,CAAC;AAEzE,qBAAa,0BAA0B;WACvB,MAAM,IAAI,UAAU;CAOnC"}

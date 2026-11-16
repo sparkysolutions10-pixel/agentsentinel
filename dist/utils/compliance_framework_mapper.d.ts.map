@@ -1,0 +1,1 @@
+{"version":3,"file":"compliance_framework_mapper.d.ts","sourceRoot":"","sources":["../../src/utils/compliance_framework_mapper.ts"],"names":[],"mappings":"AAAA,qBAAa,yBAAyB;IACpC,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,QAAQ,CAK9B;WAEY,WAAW,CAAC,QAAQ,EAAE,MAAM,GAAG;QAAE,QAAQ,EAAE,MAAM,CAAC;QAAC,IAAI,EAAE,MAAM,CAAA;KAAE,GAAG,IAAI;CAGvF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"subentry_count_limiter.d.ts","sourceRoot":"","sources":["../../src/web3/subentry_count_limiter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,mBAAmB;IAClC,aAAa,CAAC,EAAE,MAAM,CAAC;CACxB;AAED,wBAAgB,uBAAuB,CAAC,MAAM,GAAE,mBAAwB,GAAG,YAAY,CAkCtF"}

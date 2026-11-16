@@ -1,0 +1,1 @@
+{"version":3,"file":"crypto_benchmark.d.ts","sourceRoot":"","sources":["../../src/crypto/crypto_benchmark.ts"],"names":[],"mappings":"AAEA,MAAM,WAAW,qBAAqB;IACpC,mBAAmB,EAAE,MAAM,CAAC;IAC5B,eAAe,EAAE,MAAM,CAAC;IACxB,eAAe,EAAE,MAAM,CAAC;IACxB,gBAAgB,EAAE,MAAM,CAAC;CAC1B;AAED,wBAAgB,6BAA6B,CAAC,UAAU,SAAQ,GAAG,qBAAqB,CAmBvF"}

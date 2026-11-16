@@ -1,0 +1,1 @@
+{"version":3,"file":"html_tag_sanitizer.d.ts","sourceRoot":"","sources":["../../src/utils/html_tag_sanitizer.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,qBAAa,gBAAgB;IAC3B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,UAAU,CAMhC;WAEY,MAAM,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;WAK7B,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;WAKhC,mBAAmB,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;CAMzD"}

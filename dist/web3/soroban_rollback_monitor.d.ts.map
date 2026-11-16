@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_rollback_monitor.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_rollback_monitor.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,qBAAqB;IACpC,wBAAwB,CAAC,EAAE,OAAO,CAAC;CACpC;AAED,wBAAgB,gCAAgC,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CAsCjG"}

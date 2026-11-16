@@ -1,0 +1,1 @@
+{"version":3,"file":"role_based_access_evaluator.d.ts","sourceRoot":"","sources":["../../src/utils/role_based_access_evaluator.ts"],"names":[],"mappings":"AAAA,qBAAa,wBAAwB;WACrB,aAAa,CAAC,OAAO,EAAE,MAAM,EAAE,EAAE,QAAQ,EAAE,MAAM,GAAG,OAAO;CAY1E"}

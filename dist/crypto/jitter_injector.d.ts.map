@@ -1,0 +1,1 @@
+{"version":3,"file":"jitter_injector.d.ts","sourceRoot":"","sources":["../../src/crypto/jitter_injector.ts"],"names":[],"mappings":"AAEA,qBAAa,qBAAqB;WAClB,2BAA2B,CAAC,KAAK,GAAE,MAAW,EAAE,KAAK,GAAE,MAAY,GAAG,MAAM;WAMtE,cAAc,CAAC,KAAK,GAAE,MAAU,EAAE,KAAK,GAAE,MAAU,GAAG,OAAO,CAAC,IAAI,CAAC;CAMxF"}

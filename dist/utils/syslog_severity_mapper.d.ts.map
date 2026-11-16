@@ -1,0 +1,1 @@
+{"version":3,"file":"syslog_severity_mapper.d.ts","sourceRoot":"","sources":["../../src/utils/syslog_severity_mapper.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;IAC/B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,YAAY,CAOlC;WAEY,gBAAgB,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;CAItD"}

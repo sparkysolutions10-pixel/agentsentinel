@@ -1,0 +1,1 @@
+{"version":3,"file":"read_bytes_ceiling.d.ts","sourceRoot":"","sources":["../../src/web3/read_bytes_ceiling.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,eAAe;IAC9B,YAAY,CAAC,EAAE,MAAM,CAAC;CACvB;AAED,wBAAgB,0BAA0B,CAAC,MAAM,GAAE,eAAoB,GAAG,YAAY,CAiCrF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"dotfile_access_blocker.d.ts","sourceRoot":"","sources":["../../src/utils/dotfile_access_blocker.ts"],"names":[],"mappings":"AAEA;;GAEG;AAEH,qBAAa,oBAAoB;IAC/B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,iBAAiB,CAStC;WAEW,oBAAoB,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO;WAQ/C,oBAAoB,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO;CAW9D"}

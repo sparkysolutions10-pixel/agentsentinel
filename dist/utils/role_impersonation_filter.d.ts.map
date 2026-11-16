@@ -1,0 +1,1 @@
+{"version":3,"file":"role_impersonation_filter.d.ts","sourceRoot":"","sources":["../../src/utils/role_impersonation_filter.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,uBAAuB;IAClC,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,kBAAkB,CAOxC;WAEY,eAAe,CAAC,MAAM,EAAE,MAAM,GAAG,OAAO;CASvD"}

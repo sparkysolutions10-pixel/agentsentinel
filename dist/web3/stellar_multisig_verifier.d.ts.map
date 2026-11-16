@@ -1,0 +1,1 @@
+{"version":3,"file":"stellar_multisig_verifier.d.ts","sourceRoot":"","sources":["../../src/web3/stellar_multisig_verifier.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,qBAAqB;IACpC,sBAAsB,CAAC,EAAE,KAAK,GAAG,QAAQ,GAAG,MAAM,CAAC;CACpD;AAED,wBAAgB,iCAAiC,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CAuClG"}

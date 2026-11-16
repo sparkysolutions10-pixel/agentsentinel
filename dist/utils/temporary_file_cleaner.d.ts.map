@@ -1,0 +1,1 @@
+{"version":3,"file":"temporary_file_cleaner.d.ts","sourceRoot":"","sources":["../../src/utils/temporary_file_cleaner.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;IAC/B,OAAO,CAAC,KAAK,CAA0B;IAEhC,QAAQ,CAAC,QAAQ,EAAE,MAAM,GAAG,IAAI;IAIhC,UAAU,CAAC,QAAQ,EAAE,MAAM,GAAG,IAAI;IAIlC,eAAe,IAAI,MAAM,EAAE;CAGnC"}

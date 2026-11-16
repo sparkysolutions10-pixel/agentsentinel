@@ -1,0 +1,1 @@
+{"version":3,"file":"cors_origin_validator.d.ts","sourceRoot":"","sources":["../../src/utils/cors_origin_validator.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,mBAAmB;WAChB,eAAe,CAAC,MAAM,EAAE,MAAM,EAAE,eAAe,EAAE,MAAM,EAAE,GAAG,OAAO;CAuBlF"}

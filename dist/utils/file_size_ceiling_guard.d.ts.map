@@ -1,0 +1,1 @@
+{"version":3,"file":"file_size_ceiling_guard.d.ts","sourceRoot":"","sources":["../../src/utils/file_size_ceiling_guard.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,qBAAa,oBAAoB;IAC/B,gBAAuB,iBAAiB,SAAoB;WAE9C,eAAe,CAAC,SAAS,EAAE,MAAM,EAAE,QAAQ,GAAE,MAA+B,GAAG,OAAO;WAOtF,mBAAmB,CAAC,SAAS,EAAE,MAAM,EAAE,QAAQ,GAAE,MAA+B,GAAG,IAAI;CAKtG"}

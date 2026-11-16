@@ -1,0 +1,1 @@
+{"version":3,"file":"enterprise_license_validator.d.ts","sourceRoot":"","sources":["../../src/utils/enterprise_license_validator.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,cAAc;IAC7B,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,MAAM,CAAC;IACd,SAAS,EAAE,MAAM,CAAC;CACnB;AAED,qBAAa,0BAA0B;WACvB,OAAO,CAAC,OAAO,EAAE,cAAc,EAAE,KAAK,GAAE,MAAmB,GAAG,OAAO;CAIpF"}

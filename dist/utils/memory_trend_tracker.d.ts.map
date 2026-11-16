@@ -1,0 +1,1 @@
+{"version":3,"file":"memory_trend_tracker.d.ts","sourceRoot":"","sources":["../../src/utils/memory_trend_tracker.ts"],"names":[],"mappings":"AAAA,qBAAa,kBAAkB;IAC7B,OAAO,CAAC,OAAO,CAAuD;IAE/D,SAAS,CAAC,SAAS,EAAE,MAAM,EAAE,SAAS,GAAE,MAAmB,GAAG,IAAI;IAIlE,mBAAmB,IAAI,MAAM;CAQrC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"wasm_magic_byte_validator.d.ts","sourceRoot":"","sources":["../../src/utils/wasm_magic_byte_validator.ts"],"names":[],"mappings":"AAAA,qBAAa,sBAAsB;WACnB,YAAY,CAAC,MAAM,EAAE,MAAM,GAAG,UAAU,GAAG,OAAO;CAIjE"}

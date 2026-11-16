@@ -1,0 +1,1 @@
+{"version":3,"file":"worker_pool_limiter.d.ts","sourceRoot":"","sources":["../../src/utils/worker_pool_limiter.ts"],"names":[],"mappings":"AAAA,qBAAa,iBAAiB;IAC5B,OAAO,CAAC,WAAW,CAAS;IAC5B,OAAO,CAAC,OAAO,CAAa;IAC5B,OAAO,CAAC,KAAK,CAAyB;gBAE1B,WAAW,EAAE,MAAM;IAIlB,GAAG,CAAC,CAAC,EAAE,IAAI,EAAE,MAAM,OAAO,CAAC,CAAC,CAAC,GAAG,OAAO,CAAC,CAAC,CAAC;IAiBhD,cAAc,IAAI,MAAM;CAGhC"}

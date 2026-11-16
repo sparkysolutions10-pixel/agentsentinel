@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_wasm_header.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_wasm_header.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,uBAAuB;IACtC,iBAAiB,CAAC,EAAE,OAAO,CAAC;CAC7B;AAMD,wBAAgB,oCAAoC,CAAC,MAAM,GAAE,uBAA4B,GAAG,YAAY,CAmDvG"}

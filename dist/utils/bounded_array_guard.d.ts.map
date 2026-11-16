@@ -1,0 +1,1 @@
+{"version":3,"file":"bounded_array_guard.d.ts","sourceRoot":"","sources":["../../src/utils/bounded_array_guard.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,iBAAiB;WACd,cAAc,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,GAAE,MAAU,EAAE,GAAG,GAAE,MAAY,GAAG,OAAO;WAKzE,UAAU,CAAC,CAAC,EAAE,GAAG,EAAE,CAAC,EAAE,EAAE,GAAG,GAAE,MAAY,GAAG,CAAC,EAAE;CAK9D"}

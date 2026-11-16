@@ -1,0 +1,1 @@
+{"version":3,"file":"bridge_relayer_signatures.d.ts","sourceRoot":"","sources":["../../src/web3/bridge_relayer_signatures.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,4BAA4B;IAC3C,SAAS,CAAC,EAAE,MAAM,CAAC;IACnB,kBAAkB,CAAC,EAAE,MAAM,EAAE,CAAC;CAC/B;AAED,wBAAgB,gCAAgC,CAAC,MAAM,GAAE,4BAAiC,GAAG,YAAY,CA+DxG"}

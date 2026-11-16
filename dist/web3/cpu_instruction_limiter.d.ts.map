@@ -1,0 +1,1 @@
+{"version":3,"file":"cpu_instruction_limiter.d.ts","sourceRoot":"","sources":["../../src/web3/cpu_instruction_limiter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,oBAAoB;IACnC,kBAAkB,CAAC,EAAE,MAAM,CAAC;CAC7B;AAED,wBAAgB,+BAA+B,CAAC,MAAM,GAAE,oBAAyB,GAAG,YAAY,CAiC/F"}

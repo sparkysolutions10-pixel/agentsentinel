@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_ttl_monitor.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_ttl_monitor.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,uBAAuB;IACtC,aAAa,CAAC,EAAE,MAAM,CAAC;IACvB,iBAAiB,CAAC,EAAE,MAAM,CAAC;CAC5B;AAED,wBAAgB,2BAA2B,CAAC,MAAM,GAAE,uBAA4B,GAAG,YAAY,CAkE9F"}

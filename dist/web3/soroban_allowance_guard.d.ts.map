@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_allowance_guard.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_allowance_guard.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,sBAAsB;IACrC,kBAAkB,CAAC,EAAE,MAAM,CAAC;IAC5B,oBAAoB,CAAC,EAAE,MAAM,CAAC;CAC/B;AAID,wBAAgB,qCAAqC,CAAC,MAAM,GAAE,sBAA2B,GAAG,YAAY,CAsDvG"}

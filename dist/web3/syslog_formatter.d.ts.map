@@ -1,0 +1,1 @@
+{"version":3,"file":"syslog_formatter.d.ts","sourceRoot":"","sources":["../../src/web3/syslog_formatter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,gBAAgB,EAAE,eAAe,EAAE,MAAM,aAAa,CAAC;AAEhE,qBAAa,uBAAuB;WACpB,MAAM,CAClB,QAAQ,EAAE,eAAe,EACzB,UAAU,EAAE,gBAAgB,EAC5B,QAAQ,SAAwB,GAC/B,MAAM;CAUV"}

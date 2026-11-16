@@ -1,0 +1,1 @@
+{"version":3,"file":"mime_type_resolver.d.ts","sourceRoot":"","sources":["../../src/utils/mime_type_resolver.ts"],"names":[],"mappings":"AAAA,qBAAa,gBAAgB;IAC3B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,QAAQ,CAS9B;WAEY,OAAO,CAAC,aAAa,EAAE,MAAM,GAAG,MAAM;CAKrD"}

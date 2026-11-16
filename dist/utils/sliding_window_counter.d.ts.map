@@ -1,0 +1,1 @@
+{"version":3,"file":"sliding_window_counter.d.ts","sourceRoot":"","sources":["../../src/utils/sliding_window_counter.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;IAC/B,OAAO,CAAC,QAAQ,CAAS;IACzB,OAAO,CAAC,MAAM,CAAgB;gBAElB,QAAQ,EAAE,MAAM;IAIrB,SAAS,CAAC,KAAK,GAAE,MAAU,EAAE,GAAG,GAAE,MAAmB,GAAG,IAAI;IAO5D,QAAQ,CAAC,GAAG,GAAE,MAAmB,GAAG,MAAM;IAKjD,OAAO,CAAC,KAAK;CAMd"}

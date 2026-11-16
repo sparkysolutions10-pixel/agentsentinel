@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_fee_budget_guard.d.ts","sourceRoot":"","sources":["../../src/utils/soroban_fee_budget_guard.ts"],"names":[],"mappings":"AAAA,qBAAa,qBAAqB;WAClB,cAAc,CAAC,YAAY,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,eAAe,EAAE,MAAM,EAAE,aAAa,EAAE,MAAM,GAAG,OAAO;CAGhI"}

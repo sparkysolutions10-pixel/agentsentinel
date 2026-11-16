@@ -1,0 +1,1 @@
+{"version":3,"file":"object_depth_limiter.d.ts","sourceRoot":"","sources":["../../src/utils/object_depth_limiter.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,kBAAkB;WACf,cAAc,CAAC,GAAG,EAAE,OAAO,EAAE,YAAY,GAAE,MAAU,GAAG,MAAM;WAkB9D,gBAAgB,CAAC,GAAG,EAAE,OAAO,EAAE,QAAQ,GAAE,MAAU,GAAG,OAAO;CAG5E"}

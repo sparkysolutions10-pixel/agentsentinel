@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_clawback_detector.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_clawback_detector.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,qBAAqB;IACpC,sBAAsB,CAAC,EAAE,OAAO,CAAC;CAClC;AAED,wBAAgB,iCAAiC,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CA4ClG"}

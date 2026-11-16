@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_callback_detector.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_callback_detector.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,qBAAqB;IACpC,YAAY,CAAC,EAAE,MAAM,CAAC;IACtB,qBAAqB,CAAC,EAAE,OAAO,CAAC;CACjC;AAED,wBAAgB,iCAAiC,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CAwClG"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ofac_sanctions_filter.d.ts","sourceRoot":"","sources":["../../src/web3/ofac_sanctions_filter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AASlG,MAAM,WAAW,mBAAmB;IAClC,yBAAyB,CAAC,EAAE,MAAM,EAAE,CAAC;CACtC;AAED,wBAAgB,uBAAuB,CAAC,MAAM,GAAE,mBAAwB,GAAG,YAAY,CAqCtF"}

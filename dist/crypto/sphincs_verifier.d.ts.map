@@ -1,0 +1,1 @@
+{"version":3,"file":"sphincs_verifier.d.ts","sourceRoot":"","sources":["../../src/crypto/sphincs_verifier.ts"],"names":[],"mappings":"AAEA,qBAAa,wBAAwB;WACrB,sBAAsB,CAAC,OAAO,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,GAAG,OAAO;WAMtF,mBAAmB,CAAC,OAAO,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,GAAG,MAAM;CAI9E"}

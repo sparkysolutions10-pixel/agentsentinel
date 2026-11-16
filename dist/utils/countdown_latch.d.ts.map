@@ -1,0 +1,1 @@
+{"version":3,"file":"countdown_latch.d.ts","sourceRoot":"","sources":["../../src/utils/countdown_latch.ts"],"names":[],"mappings":"AAAA,qBAAa,cAAc;IACzB,OAAO,CAAC,KAAK,CAAS;IACtB,OAAO,CAAC,OAAO,CAAgB;IAC/B,OAAO,CAAC,OAAO,CAAc;gBAEjB,KAAK,EAAE,MAAM;IAUlB,SAAS,IAAI,IAAI;IASX,IAAI,IAAI,OAAO,CAAC,IAAI,CAAC;IAI3B,QAAQ,IAAI,MAAM;CAG1B"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"subdomain_extractor.d.ts","sourceRoot":"","sources":["../../src/utils/subdomain_extractor.ts"],"names":[],"mappings":"AAAA,qBAAa,kBAAkB;WACf,OAAO,CAAC,QAAQ,EAAE,MAAM,GAAG;QAAE,SAAS,EAAE,MAAM,GAAG,IAAI,CAAC;QAAC,UAAU,EAAE,MAAM,CAAA;KAAE,GAAG,IAAI;CAajG"}

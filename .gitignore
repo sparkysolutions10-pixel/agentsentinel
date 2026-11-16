@@ -1,5 +1,7 @@
 node_modules/
-dist/
+!dist/action.js
+!dist/**/*.js
+!dist/**/*.d.ts
 coverage/
 *.log
 .DS_Store

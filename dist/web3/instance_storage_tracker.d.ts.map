@@ -1,0 +1,1 @@
+{"version":3,"file":"instance_storage_tracker.d.ts","sourceRoot":"","sources":["../../src/web3/instance_storage_tracker.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,sBAAsB;IACrC,sBAAsB,CAAC,EAAE,MAAM,CAAC;CACjC;AAED,wBAAgB,gCAAgC,CAAC,MAAM,GAAE,sBAA2B,GAAG,YAAY,CAgDlG"}

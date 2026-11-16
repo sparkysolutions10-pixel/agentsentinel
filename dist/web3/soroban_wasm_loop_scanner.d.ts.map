@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_wasm_loop_scanner.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_wasm_loop_scanner.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,4BAA4B;IAC3C,mBAAmB,CAAC,EAAE,MAAM,CAAC;CAC9B;AAED,wBAAgB,gCAAgC,CAAC,MAAM,GAAE,4BAAiC,GAAG,YAAY,CAyDxG"}

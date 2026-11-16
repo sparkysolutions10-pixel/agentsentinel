@@ -1,0 +1,1 @@
+{"version":3,"file":"http_method_allowlist.d.ts","sourceRoot":"","sources":["../../src/utils/http_method_allowlist.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,mBAAmB;IAC9B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,qBAAqB,CAA8B;WAE7D,OAAO,CAAC,MAAM,EAAE,MAAM,EAAE,OAAO,GAAE,MAAM,EAAoB,GAAG,OAAO;WAOrE,YAAY,CAAC,MAAM,EAAE,MAAM,GAAG,OAAO;CAIpD"}

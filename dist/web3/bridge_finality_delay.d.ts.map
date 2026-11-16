@@ -1,0 +1,1 @@
+{"version":3,"file":"bridge_finality_delay.d.ts","sourceRoot":"","sources":["../../src/web3/bridge_finality_delay.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,yBAAyB;IACxC,gBAAgB,CAAC,EAAE,MAAM,CAAC;CAC3B;AAED,wBAAgB,6BAA6B,CAAC,MAAM,GAAE,yBAA8B,GAAG,YAAY,CA6ClG"}

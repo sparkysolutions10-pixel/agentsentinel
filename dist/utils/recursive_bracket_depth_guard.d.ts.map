@@ -1,0 +1,1 @@
+{"version":3,"file":"recursive_bracket_depth_guard.d.ts","sourceRoot":"","sources":["../../src/utils/recursive_bracket_depth_guard.ts"],"names":[],"mappings":"AAAA,qBAAa,0BAA0B;WACvB,WAAW,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;WAgBlC,MAAM,CAAC,KAAK,EAAE,MAAM,EAAE,eAAe,GAAE,MAAW,GAAG,OAAO;CAG3E"}

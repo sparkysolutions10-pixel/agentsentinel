@@ -1,0 +1,1 @@
+{"version":3,"file":"clawback_issuer_flag_guard.d.ts","sourceRoot":"","sources":["../../src/web3/clawback_issuer_flag_guard.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,oBAAoB;IACnC,mBAAmB,CAAC,EAAE,OAAO,CAAC;CAC/B;AAED,wBAAgB,4BAA4B,CAAC,MAAM,GAAE,oBAAyB,GAAG,YAAY,CAwC5F"}

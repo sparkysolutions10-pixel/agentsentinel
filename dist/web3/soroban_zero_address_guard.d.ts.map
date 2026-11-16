@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_zero_address_guard.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_zero_address_guard.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,wBAAwB;IACvC,0BAA0B,CAAC,EAAE,MAAM,EAAE,CAAC;CACvC;AASD,wBAAgB,2CAA2C,CAAC,MAAM,GAAE,wBAA6B,GAAG,YAAY,CA8C/G"}

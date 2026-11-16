@@ -1,0 +1,1 @@
+{"version":3,"file":"storage_rent_rebate.d.ts","sourceRoot":"","sources":["../../src/web3/storage_rent_rebate.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,MAAM,WAAW,YAAY;IAC3B,uBAAuB,CAAC,EAAE,MAAM,CAAC;CAClC;AAED,qBAAa,2BAA2B;IACtC,OAAO,CAAC,gBAAgB,CAAS;gBAErB,MAAM,GAAE,YAAiB;IAI9B,sBAAsB,CAAC,QAAQ,EAAE,MAAM,EAAE,gBAAgB,EAAE,MAAM,GAAG,MAAM;CAMlF"}

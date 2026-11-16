@@ -1,0 +1,1 @@
+{"version":3,"file":"system_role_spoof_guard.d.ts","sourceRoot":"","sources":["../../src/utils/system_role_spoof_guard.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;IAC/B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,YAAY,CAOlC;WAEY,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,OAAO;CAIhD"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"heartbeat_monitor.d.ts","sourceRoot":"","sources":["../../src/utils/heartbeat_monitor.ts"],"names":[],"mappings":"AAAA,qBAAa,gBAAgB;IAC3B,OAAO,CAAC,cAAc,CAAkC;IACxD,OAAO,CAAC,SAAS,CAAS;gBAEd,SAAS,GAAE,MAAc;IAI9B,eAAe,CAAC,EAAE,EAAE,MAAM,EAAE,GAAG,GAAE,MAAmB,GAAG,IAAI;IAI3D,OAAO,CAAC,EAAE,EAAE,MAAM,EAAE,GAAG,GAAE,MAAmB,GAAG,OAAO;CAK9D"}

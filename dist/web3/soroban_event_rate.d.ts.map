@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_event_rate.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_event_rate.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,sBAAsB;IACrC,uBAAuB,CAAC,EAAE,MAAM,CAAC;CAClC;AAED,wBAAgB,kCAAkC,CAAC,MAAM,GAAE,sBAA2B,GAAG,YAAY,CAiCpG"}

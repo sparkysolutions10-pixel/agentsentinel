@@ -1,0 +1,1 @@
+{"version":3,"file":"sep10_webauth_validator.d.ts","sourceRoot":"","sources":["../../src/web3/sep10_webauth_validator.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,oBAAoB;IACnC,kBAAkB,CAAC,EAAE,MAAM,CAAC;IAC5B,qBAAqB,CAAC,EAAE,MAAM,CAAC;CAChC;AAED,wBAAgB,sBAAsB,CAAC,MAAM,GAAE,oBAAyB,GAAG,YAAY,CAmDtF"}

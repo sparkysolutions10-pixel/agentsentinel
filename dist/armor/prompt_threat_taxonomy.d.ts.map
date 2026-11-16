@@ -1,0 +1,1 @@
+{"version":3,"file":"prompt_threat_taxonomy.d.ts","sourceRoot":"","sources":["../../src/armor/prompt_threat_taxonomy.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,cAAc;IAC7B,OAAO,EAAE,MAAM,CAAC;IAChB,YAAY,EAAE,MAAM,CAAC;IACrB,QAAQ,EAAE,MAAM,CAAC;IACjB,WAAW,EAAE,MAAM,CAAC;CACrB;AAED,wBAAgB,uBAAuB,CAAC,aAAa,EAAE,MAAM,GAAG,cAAc,CAwB7E"}

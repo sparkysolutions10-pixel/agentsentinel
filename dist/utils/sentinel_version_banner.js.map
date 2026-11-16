@@ -1,0 +1,1 @@
+{"version":3,"file":"sentinel_version_banner.js","sourceRoot":"","sources":["../../src/utils/sentinel_version_banner.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,qBAAqB;IACzB,MAAM,CAAC,SAAS,CAAC,UAAkB,OAAO;QAC/C,OAAO;YACL,gEAAgE;YAChE,0DAA0D,OAAO,EAAE;YACnE,8DAA8D;YAC9D,gEAAgE;SACjE,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC;IACf,CAAC;CACF"}

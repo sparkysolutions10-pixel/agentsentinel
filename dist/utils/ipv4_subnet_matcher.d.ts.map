@@ -1,0 +1,1 @@
+{"version":3,"file":"ipv4_subnet_matcher.d.ts","sourceRoot":"","sources":["../../src/utils/ipv4_subnet_matcher.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,iBAAiB;WACd,OAAO,CAAC,EAAE,EAAE,MAAM,GAAG,MAAM;WAY3B,UAAU,CAAC,EAAE,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,GAAG,OAAO;CAe5D"}

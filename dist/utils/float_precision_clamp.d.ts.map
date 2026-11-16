@@ -1,0 +1,1 @@
+{"version":3,"file":"float_precision_clamp.d.ts","sourceRoot":"","sources":["../../src/utils/float_precision_clamp.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,mBAAmB;WAChB,KAAK,CAAC,GAAG,EAAE,MAAM,EAAE,QAAQ,GAAE,MAAU,GAAG,MAAM;WAMhD,iBAAiB,CAAC,GAAG,EAAE,MAAM,EAAE,WAAW,EAAE,MAAM,GAAG,OAAO;CAO3E"}

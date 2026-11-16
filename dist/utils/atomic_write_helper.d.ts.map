@@ -1,0 +1,1 @@
+{"version":3,"file":"atomic_write_helper.d.ts","sourceRoot":"","sources":["../../src/utils/atomic_write_helper.ts"],"names":[],"mappings":"AAGA;;GAEG;AAEH,qBAAa,iBAAiB;WACd,cAAc,CAAC,cAAc,EAAE,MAAM,GAAG,MAAM;WAO9C,aAAa,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO;CAIvD"}

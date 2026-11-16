@@ -1,0 +1,1 @@
+{"version":3,"file":"byte_size_formatter.d.ts","sourceRoot":"","sources":["../../src/utils/byte_size_formatter.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,iBAAiB;IAC5B,OAAO,CAAC,MAAM,CAAC,QAAQ,CAAC,KAAK,CAAuC;WAEtD,MAAM,CAAC,KAAK,EAAE,MAAM,EAAE,QAAQ,GAAE,MAAU,GAAG,MAAM;WAUnD,KAAK,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM;CAmBzC"}

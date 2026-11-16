@@ -1,0 +1,1 @@
+{"version":3,"file":"redos_attack_detector.d.ts","sourceRoot":"","sources":["../../src/web3/redos_attack_detector.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AASH,qBAAa,mBAAmB;WAChB,iBAAiB,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO;WAI3C,SAAS,CAAC,OAAO,EAAE,MAAM,EAAE,KAAK,EAAE,MAAM,EAAE,SAAS,SAAK,GAAG,OAAO;CAejF"}

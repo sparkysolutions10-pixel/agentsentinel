@@ -1,0 +1,1 @@
+{"version":3,"file":"high_risk_domain_blocker.d.ts","sourceRoot":"","sources":["../../src/web3/high_risk_domain_blocker.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAQlG,MAAM,WAAW,qBAAqB;IACpC,eAAe,CAAC,EAAE,MAAM,EAAE,CAAC;CAC5B;AAED,wBAAgB,+BAA+B,CAAC,MAAM,GAAE,qBAA0B,GAAG,YAAY,CAmChG"}

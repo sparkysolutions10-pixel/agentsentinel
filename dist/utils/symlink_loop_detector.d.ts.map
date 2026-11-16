@@ -1,0 +1,1 @@
+{"version":3,"file":"symlink_loop_detector.d.ts","sourceRoot":"","sources":["../../src/utils/symlink_loop_detector.ts"],"names":[],"mappings":"AAEA;;GAEG;AAEH,qBAAa,mBAAmB;IAC9B,OAAO,CAAC,YAAY,CAA0B;IAEvC,YAAY,CAAC,gBAAgB,EAAE,MAAM,GAAG,OAAO;IAU/C,QAAQ,CAAC,gBAAgB,EAAE,MAAM,GAAG,OAAO;IAK3C,eAAe,IAAI,MAAM;IAIzB,KAAK,IAAI,IAAI;CAGrB"}

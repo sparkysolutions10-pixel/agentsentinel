@@ -1,0 +1,1 @@
+{"version":3,"file":"weight_commitment.d.ts","sourceRoot":"","sources":["../../src/crypto/weight_commitment.ts"],"names":[],"mappings":"AAEA,qBAAa,qBAAqB;WAClB,iBAAiB,CAAC,aAAa,EAAE,MAAM,GAAG,MAAM;WAIhD,gBAAgB,CAAC,aAAa,EAAE,MAAM,EAAE,kBAAkB,EAAE,MAAM,GAAG,OAAO;CAG3F"}

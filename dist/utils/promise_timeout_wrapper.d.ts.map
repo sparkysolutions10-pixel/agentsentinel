@@ -1,0 +1,1 @@
+{"version":3,"file":"promise_timeout_wrapper.d.ts","sourceRoot":"","sources":["../../src/utils/promise_timeout_wrapper.ts"],"names":[],"mappings":"AAAA,qBAAa,qBAAqB;WACZ,WAAW,CAAC,CAAC,EAAE,OAAO,EAAE,OAAO,CAAC,CAAC,CAAC,EAAE,SAAS,EAAE,MAAM,EAAE,YAAY,GAAE,MAA8B,GAAG,OAAO,CAAC,CAAC,CAAC;CAYrI"}

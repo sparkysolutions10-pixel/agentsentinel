@@ -1,0 +1,1 @@
+{"version":3,"file":"string_length_ceiling_guard.d.ts","sourceRoot":"","sources":["../../src/utils/string_length_ceiling_guard.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,wBAAwB;WACrB,eAAe,CAAC,GAAG,EAAE,OAAO,EAAE,QAAQ,GAAE,MAAa,GAAG,OAAO;WAK/D,QAAQ,CAAC,GAAG,EAAE,MAAM,EAAE,QAAQ,GAAE,MAAY,EAAE,MAAM,GAAE,MAAc,GAAG,MAAM;CAM5F"}

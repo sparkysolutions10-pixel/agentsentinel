@@ -1,0 +1,16 @@
+export * from './tokenizer.js';
+export * from './destructive.js';
+export * from './diskwipe.js';
+export * from './forkbomb.js';
+export * from './reverseshell.js';
+export * from './base64exec.js';
+export * from './curlpipe.js';
+export * from './privesc.js';
+export * from './shutdown.js';
+export * from './cron.js';
+export * from './firewall.js';
+export * from './envleak.js';
+export * from './powershell_bypass.js';
+export * from './timeout.js';
+export * from './cwd_confinement.js';
+//# sourceMappingURL=index.d.ts.map

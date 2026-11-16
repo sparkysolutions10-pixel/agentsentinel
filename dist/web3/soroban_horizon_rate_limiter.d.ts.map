@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_horizon_rate_limiter.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_horizon_rate_limiter.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,6BAA6B;IAC5C,oBAAoB,CAAC,EAAE,MAAM,CAAC;IAC9B,UAAU,CAAC,EAAE,MAAM,CAAC;CACrB;AAED,wBAAgB,mCAAmC,CAAC,MAAM,GAAE,6BAAkC,GAAG,YAAY,CAmD5G"}

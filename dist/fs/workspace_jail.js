@@ -1,0 +1,173 @@
+/**
+ * Allowed Workspace Directory Jail Validator.
+ * Confines all filesystem read, write, edit, and delete operations strictly
+ * within specified allowed workspace root boundaries across POSIX and Windows.
+ */
+import path from 'path';
+import { Verdict } from '../types.js';
+import { DEFAULT_FS_PATH_FIELDS, normalizePathEncodings } from './path_traversal.js';
+/**
+ * Normalizes a path string for cross-platform comparison.
+ * Standardizes separators to `/`, resolves drive letter casing on Windows,
+ * and strips trailing slashes.
+ */
+export function normalizeJailPath(p) {
+    if (!p || typeof p !== 'string')
+        return '';
+    const decoded = normalizePathEncodings(p.trim());
+    // Replace backslashes with forward slashes
+    let normalized = decoded.replace(/\\/g, '/');
+    // Normalize Windows drive letter to lowercase (e.g. C:/ -> c:/)
+    let drivePrefix = '';
+    if (/^[a-zA-Z]:/.test(normalized)) {
+        drivePrefix = normalized[0].toLowerCase() + ':';
+        normalized = normalized.slice(2);
+    }
+    // Resolve dot segments (. and ..) cross-platform using posix normalization
+    if (normalized.startsWith('/')) {
+        normalized = path.posix.normalize(normalized);
+    }
+    else {
+        normalized = path.posix.normalize('/' + normalized);
+    }
+    normalized = drivePrefix + normalized;
+    // Remove redundant slashes
+    normalized = normalized.replace(/\/+/g, '/');
+    // Strip trailing slash unless root
+    const minLen = drivePrefix ? 3 : 1;
+    if (normalized.length > minLen && normalized.endsWith('/')) {
+        normalized = normalized.slice(0, -1);
+    }
+    return normalized;
+}
+/**
+ * Checks whether targetPath resolves strictly within one of the allowed roots.
+ */
+export function isInsideWorkspaceJail(targetPath, allowedRoots, baseDir) {
+    return inspectWorkspaceJail(targetPath, allowedRoots, baseDir).isAllowed;
+}
+/**
+ * Inspects a target path against the allowed workspace roots.
+ */
+export function inspectWorkspaceJail(targetPath, allowedRoots, baseDir) {
+    if (!targetPath || typeof targetPath !== 'string') {
+        return { isAllowed: false, resolvedPath: '', reason: 'Empty or invalid target path' };
+    }
+    if (!allowedRoots || allowedRoots.length === 0) {
+        return { isAllowed: false, resolvedPath: targetPath, reason: 'No allowed workspace roots defined' };
+    }
+    const effectiveBase = baseDir || (typeof process !== 'undefined' && process.cwd ? process.cwd() : '/');
+    // 🛡️ Windows UNC / SMB Network Share & Extended Device Namespace Protection
+    const trimmed = targetPath.trim();
+    const isUncOrDevice = /^(\\\\[^\s]+|[\/\\]{2}(?:\?|\.)[\/\\])/i.test(trimmed);
+    if (isUncOrDevice) {
+        return {
+            isAllowed: false,
+            resolvedPath: targetPath,
+            reason: `UNC network share or device path is strictly confined outside workspace jail: '${targetPath}'`,
+        };
+    }
+    // Determine if target path is absolute (POSIX / or Windows C:/)
+    const isPosixAbsolute = targetPath.startsWith('/');
+    const isWinAbsolute = /^[a-zA-Z]:[/\\]/.test(targetPath);
+    let normalizedTarget;
+    if (isPosixAbsolute || isWinAbsolute) {
+        normalizedTarget = normalizeJailPath(targetPath);
+    }
+    else {
+        // Relative path: resolve against effectiveBase
+        const normBase = normalizeJailPath(effectiveBase);
+        const normRel = normalizeJailPath(targetPath);
+        normalizedTarget = normalizeJailPath(normBase + '/' + normRel);
+    }
+    const targetHasDrive = /^[a-zA-Z]:/.test(normalizedTarget);
+    // Check against each allowed root
+    for (const root of allowedRoots) {
+        const normalizedRoot = normalizeJailPath(root);
+        const rootHasDrive = /^[a-zA-Z]:/.test(normalizedRoot);
+        if (targetHasDrive && rootHasDrive) {
+            const targetDrive = normalizedTarget[0].toLowerCase();
+            const rootDrive = normalizedRoot[0].toLowerCase();
+            // Different drive letters can never be inside each other
+            if (targetDrive !== rootDrive) {
+                continue;
+            }
+            // Windows paths on the same drive are case-insensitive
+            const targetLower = normalizedTarget.toLowerCase();
+            const rootLower = normalizedRoot.toLowerCase();
+            if (targetLower === rootLower) {
+                return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+            }
+            const rootWithSlash = rootLower.endsWith('/') ? rootLower : rootLower + '/';
+            if (targetLower.startsWith(rootWithSlash)) {
+                return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+            }
+            continue;
+        }
+        // Direct match
+        if (normalizedTarget === normalizedRoot) {
+            return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+        }
+        const rootWithSlash = normalizedRoot.endsWith('/') ? normalizedRoot : normalizedRoot + '/';
+        if (normalizedTarget.startsWith(rootWithSlash)) {
+            return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+        }
+        // Cross-platform drive-agnostic fallback (e.g. relative base or POSIX root)
+        if (!targetHasDrive || !rootHasDrive) {
+            const targetWithoutDrive = normalizedTarget.replace(/^[a-zA-Z]:/, '');
+            const rootWithoutDrive = normalizedRoot.replace(/^[a-zA-Z]:/, '');
+            if (targetWithoutDrive === rootWithoutDrive) {
+                return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+            }
+            const rootWithoutDriveWithSlash = rootWithoutDrive.endsWith('/') ? rootWithoutDrive : rootWithoutDrive + '/';
+            if (targetWithoutDrive.startsWith(rootWithoutDriveWithSlash)) {
+                return { isAllowed: true, resolvedPath: normalizedTarget, matchingRoot: normalizedRoot };
+            }
+        }
+    }
+    return {
+        isAllowed: false,
+        resolvedPath: normalizedTarget,
+        reason: `Target path '${targetPath}' (${normalizedTarget}) escapes outside allowed workspace boundaries [${allowedRoots.join(', ')}]`,
+    };
+}
+/**
+ * Creates SentinelRule to enforce workspace directory jail.
+ */
+export function createWorkspaceJailGuardRule(options) {
+    const allowedRoots = options.allowedRoots;
+    const baseDir = options.defaultBaseDir;
+    const pathFields = options.pathFields || DEFAULT_FS_PATH_FIELDS;
+    return {
+        id: 'fs-workspace-jail-validator',
+        name: 'Confine Filesystem Operations Within Workspace Jail Roots',
+        category: 'fs',
+        priority: 970,
+        enabled: true,
+        evaluate: (ctx) => {
+            if (!ctx.params || typeof ctx.params !== 'object') {
+                return null;
+            }
+            for (const field of pathFields) {
+                const val = ctx.params[field];
+                if (typeof val === 'string' && val.trim() !== '') {
+                    const inspection = inspectWorkspaceJail(val, allowedRoots, baseDir);
+                    if (!inspection.isAllowed) {
+                        return {
+                            ruleId: 'fs-workspace-jail-validator',
+                            ruleName: 'Confine Filesystem Operations Within Workspace Jail Roots',
+                            severity: 'critical',
+                            verdict: Verdict.BLOCK,
+                            reason: `Filesystem operation outside workspace jail intercepted: ${inspection.reason}`,
+                        };
+                    }
+                }
+            }
+            return null;
+        },
+    };
+}
+export const defaultWorkspaceJailGuardRule = createWorkspaceJailGuardRule({
+    allowedRoots: typeof process !== 'undefined' && process.cwd ? [process.cwd()] : ['/workspace'],
+});
+//# sourceMappingURL=workspace_jail.js.map

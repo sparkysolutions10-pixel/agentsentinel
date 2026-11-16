@@ -1,0 +1,1 @@
+{"version":3,"file":"soroban_wasm_allowlist.d.ts","sourceRoot":"","sources":["../../src/web3/soroban_wasm_allowlist.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,0BAA0B;IACzC,iBAAiB,EAAE,MAAM,EAAE,CAAC;IAC5B,sBAAsB,CAAC,EAAE,OAAO,CAAC;CAClC;AAED,wBAAgB,8BAA8B,CAAC,MAAM,EAAE,0BAA0B,GAAG,YAAY,CAyC/F"}

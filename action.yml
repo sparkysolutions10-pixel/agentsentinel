@@ -1,0 +1,36 @@
+name: 'AgentSentinel AI Security Gate'
+description: 'Zero-trust AST runtime firewall & prompt injection interceptor for autonomous AI agents, tools, and MCP servers.'
+author: 'Sparky Solutions (Mukesh Biswas)'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  api-key:
+    description: 'AgentSentinel Pro/Enterprise license key (optional for 5-scan free trial)'
+    required: false
+    default: ''
+  path:
+    description: 'Directory path or repository root to audit'
+    required: false
+    default: '.'
+  strict:
+    description: 'Fail CI build with exit code 1 if critical vulnerabilities are detected'
+    required: false
+    default: 'true'
+  policy:
+    description: 'Path to custom declarative agentsentinel.policy.json'
+    required: false
+    default: ''
+
+outputs:
+  threats-detected:
+    description: 'Total count of intercepted vulnerabilities'
+  verdict:
+    description: 'Gate verdict: PASS or BLOCK'
+  files-scanned:
+    description: 'Total number of scanned codebase files'
+
+runs:
+  using: 'node20'
+  main: 'dist/action.js'

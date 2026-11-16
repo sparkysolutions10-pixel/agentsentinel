@@ -1,0 +1,1 @@
+{"version":3,"file":"master_omni_loader.d.ts","sourceRoot":"","sources":["../../src/utils/master_omni_loader.ts"],"names":[],"mappings":"AAoGA,qBAAa,gBAAgB;IAC3B,gBAAuB,aAAa,OAAO;WAE7B,OAAO,IAAI;QAAE,WAAW,EAAE,MAAM,CAAC;QAAC,QAAQ,EAAE,OAAO,CAAA;KAAE;CAkCpE"}

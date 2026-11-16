@@ -1,0 +1,1 @@
+{"version":3,"file":"chmod_permission_guard.js","sourceRoot":"","sources":["../../src/utils/chmod_permission_guard.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,oBAAoB;IACxB,MAAM,CAAC,gBAAgB,CAAC,SAAiB;QAC9C,iEAAiE;QACjE,MAAM,SAAS,GAAG,SAAS,GAAG,KAAK,CAAC;QACpC,OAAO,CAAC,SAAS,GAAG,KAAK,CAAC,KAAK,CAAC,CAAC;IACnC,CAAC;CACF"}

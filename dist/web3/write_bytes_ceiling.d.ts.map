@@ -1,0 +1,1 @@
+{"version":3,"file":"write_bytes_ceiling.d.ts","sourceRoot":"","sources":["../../src/web3/write_bytes_ceiling.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,EAAE,YAAY,EAAyD,MAAM,aAAa,CAAC;AAElG,MAAM,WAAW,gBAAgB;IAC/B,aAAa,CAAC,EAAE,MAAM,CAAC;CACxB;AAED,wBAAgB,2BAA2B,CAAC,MAAM,GAAE,gBAAqB,GAAG,YAAY,CAiCvF"}
