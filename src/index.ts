@@ -325,3 +325,4 @@ export class SentinelEngine {
   }
 }
 export * from './crypto/index.js';
+export * from './web3/address_poisoning_guard.js';
