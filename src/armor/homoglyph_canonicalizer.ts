@@ -26,7 +26,11 @@ export function canonicalizeHomoglyphs(text: string): string {
 }
 
 export function createHomoglyphCanonicalizerRule(): SentinelRule {
-  const BLOCKED_WORDS = ['ignore', 'bypass', 'admin', 'system', 'jailbreak', 'password', 'root'];
+  const BLOCKED_WORDS = [
+    'ignore', 'bypass', 'admin', 'system', 'jailbreak', 'password', 'root',
+    'drop table', 'drop database', 'truncate', 'delete from', 'rm -rf',
+    'grant all', 'shutdown', 'reboot', 'mkfs', 'union select', 'exec', 'eval'
+  ];
 
   return {
     id: 'armor-homoglyph-canonicalizer',

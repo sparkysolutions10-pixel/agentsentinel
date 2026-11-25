@@ -72,7 +72,7 @@ function isPublicHashContext(contextHint?: string): boolean {
  */
 function isExplicitPrivateKeyContext(contextHint?: string): boolean {
   if (!contextHint) return false;
-  return /(?:private_?key|priv_?key|signer|secret|seed|wallet_?key|credential|auth_?key|mnemonic)/i.test(contextHint);
+  return /(?:private_?key|priv_?key|signer|secret|seed|wallet_?key|credential|auth_?key|mnemonic|stellar_?key|eth_?key|api_?key|bearer|token|headers\..*key)/i.test(contextHint);
 }
 
 /**
@@ -115,6 +115,23 @@ export function detectWeb3Keys(text: string, contextHint?: string): Web3KeyMatch
       startIndex: match.index,
       endIndex: match.index + rawKey.length,
     });
+  }
+
+  // 1b. Detect Stellar Secret Seeds or Secret Tokens in explicit key context
+  if (isExplicitPrivateKeyContext(contextHint)) {
+    const rawTrimmed = text.trim();
+    if (/^S[2-7A-Za-z0-9]{30,70}$/.test(rawTrimmed)) {
+      if (!matches.some((m) => m.rawKey === rawTrimmed)) {
+        matches.push({
+          chain: 'Stellar',
+          keyType: 'StellarSecretSeed',
+          rawKey: rawTrimmed,
+          redactedKey: maskWeb3Key(rawTrimmed, 'Stellar'),
+          startIndex: 0,
+          endIndex: rawTrimmed.length,
+        });
+      }
+    }
   }
 
   // 2. Detect Bitcoin WIF keys

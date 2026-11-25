@@ -7,7 +7,12 @@ export function stripInvisibleUnicode(text: string): string {
 }
 
 export function createInvisibleUnicodeStripperRule(): SentinelRule {
-  const BLOCKED_WORDS = ['ignore', 'system', 'admin', 'bypass', 'jailbreak'];
+  const BLOCKED_WORDS = [
+    'ignore', 'system', 'admin', 'bypass', 'jailbreak',
+    'rm', 'rf', 'drop', 'table', 'truncate', 'delete',
+    'curl', 'wget', 'cat', 'mkfs', 'dd', 'powershell',
+    'bash', 'eval', 'exec', 'chmod', 'chown', 'shadow', 'passwd'
+  ];
 
   return {
     id: 'armor-invisible-unicode-stripper',
@@ -25,6 +30,8 @@ export function createInvisibleUnicodeStripperRule(): SentinelRule {
       }
 
       const stripped = stripInvisibleUnicode(rawText).toLowerCase();
+      const isExecContext = ctx.category === 'shell' || ctx.category === 'sql' || ctx.category === 'fs' ||
+        /(?:bash|sh|exec|eval|cmd|powershell|sql|query|system)/i.test(ctx.toolName);
 
       for (const word of BLOCKED_WORDS) {
         if (stripped.includes(word) && !rawText.toLowerCase().includes(word)) {
@@ -37,6 +44,17 @@ export function createInvisibleUnicodeStripperRule(): SentinelRule {
             detectedPattern: `invisible-char-${word}`
           };
         }
+      }
+
+      if (isExecContext) {
+        return {
+          ruleId: 'armor-invisible-unicode-stripper',
+          ruleName: 'Zero-Width Character and Invisible Unicode Stripper',
+          severity: 'critical',
+          verdict: Verdict.BLOCK,
+          reason: 'Zero-width invisible characters detected inside executable command payload.',
+          detectedPattern: 'zero-width-in-executable'
+        };
       }
 
       return {
