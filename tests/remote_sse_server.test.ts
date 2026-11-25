@@ -59,7 +59,7 @@ describe('AgentSentinelRemoteSseServer', () => {
     expect(data.success).toBe(true);
     expect(data.account.key).toMatch(/^sk_free_/);
     expect(data.account.plan).toBe('free');
-    expect(data.account.quotaLimit).toBe(500);
+    expect(data.account.quotaLimit).toBe(5);
   });
 
   it('should upgrade an existing key via /api/keys/upgrade', async () => {
